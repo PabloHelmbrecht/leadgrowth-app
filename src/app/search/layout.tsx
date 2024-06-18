@@ -2,12 +2,6 @@ import "~/styles/globals.css";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
-export const metadata = {
-  title: "Lead Growth",
-  description: "Last gen prospecting tool",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
-
 export default function RootLayout({
   children,
 }: {
