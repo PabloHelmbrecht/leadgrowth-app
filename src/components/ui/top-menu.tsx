@@ -1,5 +1,10 @@
 "use client"
 
+//Activities Data
+
+
+//Notifications Data
+
 //UI
 import { Button } from "~/components/ui/button"
 
@@ -43,6 +48,8 @@ import {
 } from "~/components/ui/sheet"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
+
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert"
 
 //React
 import { useState } from "react"
@@ -114,6 +121,7 @@ function SidebarButton() {
     <Button
       variant={"secondary"}
       className="aspect-square p-2"
+      size={'sm'}
       onClick={() => setIsOpen(!isOpen)}
     >
       <CaretLeft
@@ -162,6 +170,7 @@ function SearchBar() {
           role="combobox"
           aria-expanded={open}
           className=" w-64 justify-between"
+          size={'sm'}
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
@@ -204,7 +213,7 @@ function SearchBar() {
 function SettingsButton() {
   return (
     <Link href={"/settings"}>
-      <Button variant={"secondary"} className="aspect-square p-2">
+      <Button variant={"secondary"} className="aspect-square p-2" size={'sm'}>
         <Gear width={20} height={20} weight="bold" alt="close sidebar icon" />
       </Button>
     </Link>
@@ -215,7 +224,7 @@ function NotificationsButton() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={"secondary"} className="aspect-square p-2">
+        <Button variant={"secondary"} className="aspect-square p-2" size={'sm'}>
           <Bell
             width={20}
             height={20}
@@ -228,7 +237,7 @@ function NotificationsButton() {
         <SheetHeader className="pb-6">
           <SheetTitle>Activities & Notifications</SheetTitle>
           <SheetDescription>
-            Review your most recent activities and notifications.
+            Review your most recent activities and notifications
           </SheetDescription>
         </SheetHeader>
         <div className="grid gap-4 py-4 pt-6">
@@ -250,7 +259,7 @@ function ProfileButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"terciary"} className="aspect-square p-2 ">
+        <Button variant={"terciary"} className="aspect-square p-2 " size={'sm'}>
           <User width={20} height={20} weight="bold" alt="close sidebar icon" />
         </Button>
       </DropdownMenuTrigger>

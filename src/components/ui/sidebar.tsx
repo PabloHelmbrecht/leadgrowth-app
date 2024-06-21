@@ -73,7 +73,7 @@ function Sidebar({
   return (
     <div
       className={cn(
-        "premium-transition flex  h-screen	 max-w-56 flex-col items-start gap-8 bg-white px-4 py-6",
+        "premium-transition flex  h-screen max-w-48 flex-col items-start gap-8 bg-white px-4 py-6",
         className,
         isOpen ? "w-56" : "  w-24 ",
       )}
@@ -116,16 +116,17 @@ function SidebarBlock({
           <Link href={item.path} key={key} className="flex justify-center">
             <Button
               variant={item.path === pathname ? "terciary" : "ghost"}
+              size={'sm'}
               className={cn(
-                "flex w-full flex-row flex-wrap items-center gap-4 overflow-hidden",
+                "flex w-full flex-row flex-wrap items-center gap-3 overflow-hidden",
                 isOpen ? "justify-start" : " h-fit w-fit justify-center p-2",
               )}
             >
               <item.icon
-                width={24}
-                height={24}
+                width={20}
+                height={20}
                 weight="bold"
-                className="aspect-square min-w-6"
+                className="aspect-square min-w-5"
                 alt="sidebar menu icon"
               />
               {isOpen && item.name}
