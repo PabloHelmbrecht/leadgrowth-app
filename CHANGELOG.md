@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.5...v0.1.6) (2024-06-21)
+
+
+### Features
+
+* **sidebar/error:** add sidebar and error handling ([0c7f641](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/0c7f641dabec77bd059810fccb184788755afc4d))
+
 ### [0.1.5](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.4...v0.1.5) (2024-06-18)
 
 ### [0.1.4](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.3...v0.1.4) (2024-06-18)
