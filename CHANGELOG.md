@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.7...v0.1.8) (2024-06-21)
+
+
+### Features
+
+* **menu:** add top menu with functional buttons and collapsable sidebar ([4a09cf6](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/4a09cf627e0c3c3ccbe52a297e2d0cf94c579ac7))
+
 ### [0.1.7](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.6...v0.1.7) (2024-06-21)
 
 ### [0.1.6](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.5...v0.1.6) (2024-06-21)
