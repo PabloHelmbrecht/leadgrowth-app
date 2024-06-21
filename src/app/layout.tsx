@@ -1,7 +1,14 @@
+//Styles
 import "~/styles/globals.css"
 
+//TRPC
 import { TRPCReactProvider } from "~/trpc/react"
+
+//UI Components
 import { Sidebar } from "~/components/ui/sidebar"
+import { TopMenu } from "~/components/ui/top-menu"
+
+//Fonts
 import { Inter } from "next/font/google"
 
 const inter = Inter({
@@ -9,6 +16,7 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
+//Sitemetadata
 export const metadata = {
   title: "Lead Growth",
   description: "Last gen prospecting tool",
@@ -26,9 +34,11 @@ export default function RootLayout({
         <TRPCReactProvider>
           <div className="flex gap-[2px] bg-neutral-200">
             <Sidebar />
-            <div className="flex flex-shrink flex-grow flex-col gap-[2px] ">
-              <div className="bg-white"> Header</div>
-              <div className="">{children}</div>
+            <div className="flex h-screen w-full flex-col gap-[2px] ">
+              <TopMenu />
+              <div className=" flex w-full flex-grow overflow-scroll">
+                {children}
+              </div>
             </div>
           </div>
         </TRPCReactProvider>
