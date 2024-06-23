@@ -1,7 +1,100 @@
 "use client"
+ 
+//React
+import { useState, type ReactElement } from "react"
 
 //Activities Data
+type Activity = {
+  type:
+    | "system"
+    | "note"
+    | "click"
+    | "open"
+    | "email sent"
+    | "email scheduled"
+    | "unsubscription"
+    | "email bounced"
+    | "call"
+    | "linkedin"
+  timestamp: Date
+  title: ReactElement | string
+  description: ReactElement | string
+  path?: string
+}
 
+const activitiesData: Activity[] = [
+  {
+    type: "system",
+    timestamp: new Date("2024-06-22T03:24:00"),
+    title: <div>System Update</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "note",
+    timestamp: new Date(),
+    title: <div>Notes</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "click",
+    timestamp: new Date("2024-06-21T03:24:00"),
+    title: <div>Email clicked</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "open",
+    timestamp: new Date("2024-06-12T03:24:00"),
+    title: <div>Email opened</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "email sent",
+    timestamp: new Date("2024-05-22T03:24:00"),
+    title: <div>Email sent</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "email scheduled",
+    timestamp: new Date("2023-06-22T03:24:00"),
+    title: <div>Email scheduled</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+
+  {
+    type: "unsubscription",
+    timestamp: new Date("2023-06-22T03:24:00"),
+    title: <div>Prospect unsubscribed</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "email bounced",
+    timestamp: new Date("2023-06-22T03:24:00"),
+    title: <div>Email bounced</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "call",
+    timestamp: new Date("2023-06-22T03:24:00"),
+    title: <div>Prospect called</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "linkedin",
+    timestamp: new Date("2023-06-22T03:24:00"),
+    title: <div>Likedin activity</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+]
 
 //Notifications Data
 
@@ -51,11 +144,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert"
 
-//React
-import { useState } from "react"
+import { Badge } from "~/components/ui/badge"
+
+import { ScrollArea } from "~/components/ui/scroll-area"
 
 //Next
 import Link from "next/link"
+
+//DayJS
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
+dayjs.extend(relativeTime)
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
@@ -72,6 +171,13 @@ import {
   User,
   Bell,
   Check,
+  CursorClick,
+  Note,
+  Clock,
+  Prohibit,
+  HandPalm,
+  Phone,
+  LinkedinLogo,
 } from "@phosphor-icons/react/dist/ssr"
 import {
   CreditCard,
@@ -86,6 +192,7 @@ import {
   Cloud,
   Chat,
   SignOut,
+  Eye, PaperPlaneRight,
 } from "@phosphor-icons/react/dist/ssr"
 
 function TopMenu({
@@ -121,14 +228,14 @@ function SidebarButton() {
     <Button
       variant={"secondary"}
       className="aspect-square p-2"
-      size={'sm'}
+      size={"sm"}
       onClick={() => setIsOpen(!isOpen)}
     >
       <CaretLeft
         width={20}
         height={20}
         weight="bold"
-        alt="close sidebar icon"
+        alt="Close Sidebar"
         className={cn(`${isOpen || "rotate-180"} premium-transition	`)}
       />
     </Button>
@@ -170,12 +277,15 @@ function SearchBar() {
           role="combobox"
           aria-expanded={open}
           className=" w-64 justify-between"
-          size={'sm'}
+          size={"sm"}
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
             : "Search prospects..."}
-          <MagnifyingGlass className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <MagnifyingGlass
+            className="ml-2 h-4 w-4 shrink-0 opacity-50"
+            alt="Search Prospects"
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0">
@@ -213,8 +323,8 @@ function SearchBar() {
 function SettingsButton() {
   return (
     <Link href={"/settings"}>
-      <Button variant={"secondary"} className="aspect-square p-2" size={'sm'}>
-        <Gear width={20} height={20} weight="bold" alt="close sidebar icon" />
+      <Button variant={"secondary"} className="aspect-square p-2" size={"sm"}>
+        <Gear width={20} height={20} weight="bold" alt="Settings" />
       </Button>
     </Link>
   )
@@ -224,32 +334,60 @@ function NotificationsButton() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant={"secondary"} className="aspect-square p-2" size={'sm'}>
+        <Button
+          variant={"secondary"}
+          className="relative aspect-square p-2"
+          size={"sm"}
+        >
           <Bell
             width={20}
             height={20}
             weight="bold"
-            alt="open notifications button"
+            alt="Activities and Notifications"
           />
+          <div className="absolute -right-1 -top-1 aspect-square w-3 rounded-full bg-danger-500" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="divide-y divide-neutral-200 ">
-        <SheetHeader className="pb-6">
+      <SheetContent className="flex flex-col divide-y divide-neutral-200">
+        <SheetHeader className=" pb-6">
           <SheetTitle>Activities & Notifications</SheetTitle>
           <SheetDescription>
             Review your most recent activities and notifications
           </SheetDescription>
         </SheetHeader>
-        <div className="grid gap-4 py-4 pt-6">
-          <Tabs defaultValue="activities" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="activities">Activities</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            </TabsList>
-            <TabsContent value="activities">activities</TabsContent>
-            <TabsContent value="notifications">notifications</TabsContent>
-          </Tabs>
-        </div>
+        <Tabs
+          defaultValue="activities"
+          className="h-fill-available flex w-full flex-col py-6"
+        >
+          <TabsList className="grid w-full flex-initial grid-cols-2">
+            <TabsTrigger value="activities">Activities</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="activities"
+            className="  mb-28 mt-5  w-[calc(100%+1rem)] flex-1 overflow-y-scroll  "
+          >
+            <ScrollArea className="h-full w-full overflow-x-visible overscroll-x-none">
+              <div className="flex flex-col items-start justify-start gap-4 pr-4 ">
+                {activitiesData.map((activity, key) => (
+                  <ActivityBlock {...activity} key={key} />
+                ))}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+          <TabsContent
+            value="notifications"
+            className="  mb-28 mt-5  w-[calc(100%+1rem)] flex-1 overflow-y-scroll  "
+          >
+            <ScrollArea className="h-full w-full overflow-x-visible overscroll-x-none">
+              <div className="flex flex-col items-start justify-start gap-4 pr-4 ">
+                {activitiesData.map((activity, key) => (
+                  <ActivityBlock {...activity} key={key} />
+                ))}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
       </SheetContent>
     </Sheet>
   )
@@ -259,8 +397,8 @@ function ProfileButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"terciary"} className="aspect-square p-2 " size={'sm'}>
-          <User width={20} height={20} weight="bold" alt="close sidebar icon" />
+        <Button variant={"terciary"} className="aspect-square p-2 " size={"sm"}>
+          <User width={20} height={20} weight="bold" alt="Settings" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="absolute -right-5 w-56">
@@ -347,3 +485,62 @@ function ProfileButton() {
   )
 }
 export { TopMenu }
+
+function ActivityBlock({
+  type,
+  timestamp,
+  title,
+  description,
+  path,
+  className = "",
+}: Activity & { className?: string }) {
+  const typeParams = {
+    system: {icon:<Gear weight="bold" />, color:'bg-slate-100 text-slate-600 '},
+    note: {icon:<Note weight="bold" />, color:'bg-slate-100 text-slate-600 '},
+    click: {icon:<CursorClick weight="bold" />, color:'bg-slate-100 text-slate-600 '},
+    open: {icon:<Eye weight="bold" />, color:'bg-slate-100 text-slate-600 '},
+    "email sent": {icon:<PaperPlaneRight weight="bold" />, color:'bg-success-100 text-success-600 '},
+    "email scheduled": {icon:<Clock weight="bold" />, color:'bg-primary-100 text-primary-600 '},
+    unsubscription: {icon:<HandPalm weight="bold" />, color:'bg-danger-100 text-danger-600 '},
+    "email bounced": {icon:<Prohibit weight="bold" />, color:'bg-danger-100 text-danger-600 '},
+    call: {icon:<Phone weight="bold" />, color:'bg-violet-100 text-violet-600 '},
+    linkedin: {icon:<LinkedinLogo weight="bold" />, color:'bg-primary-100 text-primary-600 '},
+  }
+
+  let activityBlock = (
+    <Alert
+      className={cn(
+        "flex flex-row items-start justify-start gap-3",
+        path ? "" : className,
+      )}
+    >
+      <div className={cn("flex items-center justify-center overflow-clip rounded-full [&>svg]:w-7 [&>svg]:aspect-square aspect-square",typeParams[type]?.color)}>
+        {typeParams[type]?.icon}
+      </div>
+      <div>
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription className="flex flex-col gap-2">
+          {description}
+          <div className="flex w-full flex-row items-center justify-start">
+            <Badge className="w-fit text-xs" variant={"secondary"}>
+              {dayjs(timestamp).fromNow()}
+            </Badge>
+          </div>
+        </AlertDescription>
+      </div>
+    </Alert>
+  )
+
+  if (path) {
+    activityBlock = (
+      <Link
+        href={path}
+        className={cn("flex flex-row items-start justify-start ", className)}
+      >
+        {activityBlock}
+      </Link>
+    )
+  }
+
+  return activityBlock
+}

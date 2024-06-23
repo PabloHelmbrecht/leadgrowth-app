@@ -116,7 +116,7 @@ function SidebarBlock({
           <Link href={item.path} key={key} className="flex justify-center">
             <Button
               variant={item.path === pathname ? "terciary" : "ghost"}
-              size={'sm'}
+              size={"sm"}
               className={cn(
                 "flex w-full flex-row flex-wrap items-center gap-3 overflow-hidden",
                 isOpen ? "justify-start" : " h-fit w-fit justify-center p-2",
@@ -127,7 +127,7 @@ function SidebarBlock({
                 height={20}
                 weight="bold"
                 className="aspect-square min-w-5"
-                alt="sidebar menu icon"
+                alt={item.name}
               />
               {isOpen && item.name}
             </Button>

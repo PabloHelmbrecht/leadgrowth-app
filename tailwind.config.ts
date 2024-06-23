@@ -42,7 +42,7 @@ const config = {
         neutral: colors.slate,
         danger: colors.red,
         warning: colors.amber,
-        sucess: colors.emerald,
+        success: colors.emerald,
         primary: {
           100: '#e5f1ff',
           200: '#b4d7ff',

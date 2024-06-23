@@ -15,3 +15,7 @@
   transition-timing-function: cubic-bezier(.32,.72,0,1);
   transition: all .25s;
 }
+
+.h-fill-available {
+  height: -webkit-fill-available;
+}
