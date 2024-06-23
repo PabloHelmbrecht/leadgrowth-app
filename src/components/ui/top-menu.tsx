@@ -1,5 +1,5 @@
 "use client"
- 
+
 //React
 import { useState, type ReactElement } from "react"
 
@@ -97,6 +97,40 @@ const activitiesData: Activity[] = [
 ]
 
 //Notifications Data
+type Notification = {
+  priority: "low" | "medium" | "high"
+  timestamp: Date
+  title: ReactElement | string
+  description: ReactElement | string
+  unseen?: boolean
+  path?: string
+}
+
+const notificationsData: Notification[] = [
+  {
+    priority: "low",
+    timestamp: new Date("2024-06-22T03:24:00"),
+    title: <div>Priority Low</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+    unseen: true,
+  },
+  {
+    priority: "medium",
+    timestamp: new Date(),
+    title: <div>Priority Medium</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+    
+  },
+  {
+    priority: "high",
+    timestamp: new Date("2024-06-21T03:24:00"),
+    title: <div>Priority High</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+]
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -178,6 +212,8 @@ import {
   HandPalm,
   Phone,
   LinkedinLogo,
+  Fire,
+  BellRinging,
 } from "@phosphor-icons/react/dist/ssr"
 import {
   CreditCard,
@@ -192,7 +228,8 @@ import {
   Cloud,
   Chat,
   SignOut,
-  Eye, PaperPlaneRight,
+  Eye,
+  PaperPlaneRight,
 } from "@phosphor-icons/react/dist/ssr"
 
 function TopMenu({
@@ -381,9 +418,13 @@ function NotificationsButton() {
           >
             <ScrollArea className="h-full w-full overflow-x-visible overscroll-x-none">
               <div className="flex flex-col items-start justify-start gap-4 pr-4 ">
-                {activitiesData.map((activity, key) => (
-                  <ActivityBlock {...activity} key={key} />
-                ))}
+                {notificationsData
+                  .sort((a, b) => {
+                    return Number(b.unseen === true) - Number(a.unseen === true)
+                  })
+                  .map((notification, key) => (
+                    <NotificationBlock {...notification} key={key} />
+                  ))}
               </div>
             </ScrollArea>
           </TabsContent>
@@ -495,16 +536,46 @@ function ActivityBlock({
   className = "",
 }: Activity & { className?: string }) {
   const typeParams = {
-    system: {icon:<Gear weight="bold" />, color:'bg-slate-100 text-slate-600 '},
-    note: {icon:<Note weight="bold" />, color:'bg-slate-100 text-slate-600 '},
-    click: {icon:<CursorClick weight="bold" />, color:'bg-slate-100 text-slate-600 '},
-    open: {icon:<Eye weight="bold" />, color:'bg-slate-100 text-slate-600 '},
-    "email sent": {icon:<PaperPlaneRight weight="bold" />, color:'bg-success-100 text-success-600 '},
-    "email scheduled": {icon:<Clock weight="bold" />, color:'bg-primary-100 text-primary-600 '},
-    unsubscription: {icon:<HandPalm weight="bold" />, color:'bg-danger-100 text-danger-600 '},
-    "email bounced": {icon:<Prohibit weight="bold" />, color:'bg-danger-100 text-danger-600 '},
-    call: {icon:<Phone weight="bold" />, color:'bg-violet-100 text-violet-600 '},
-    linkedin: {icon:<LinkedinLogo weight="bold" />, color:'bg-primary-100 text-primary-600 '},
+    system: {
+      icon: <Gear weight="bold" />,
+      color: "bg-slate-100 text-slate-600 ",
+    },
+    note: {
+      icon: <Note weight="bold" />,
+      color: "bg-slate-100 text-slate-600 ",
+    },
+    click: {
+      icon: <CursorClick weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    open: {
+      icon: <Eye weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    "email sent": {
+      icon: <PaperPlaneRight weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    "email scheduled": {
+      icon: <Clock weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    unsubscription: {
+      icon: <HandPalm weight="bold" />,
+      color: "bg-danger-100 text-danger-600 ",
+    },
+    "email bounced": {
+      icon: <Prohibit weight="bold" />,
+      color: "bg-danger-100 text-danger-600 ",
+    },
+    call: {
+      icon: <Phone weight="bold" />,
+      color: "bg-violet-100 text-violet-600 ",
+    },
+    linkedin: {
+      icon: <LinkedinLogo weight="bold" />,
+      color: "bg-primary-100 text-primary-600 ",
+    },
   }
 
   let activityBlock = (
@@ -514,7 +585,12 @@ function ActivityBlock({
         path ? "" : className,
       )}
     >
-      <div className={cn("flex items-center justify-center overflow-clip rounded-full [&>svg]:w-7 [&>svg]:aspect-square aspect-square",typeParams[type]?.color)}>
+      <div
+        className={cn(
+          "flex aspect-square items-center justify-center overflow-clip rounded-full [&>svg]:aspect-square [&>svg]:w-7",
+          typeParams[type]?.color,
+        )}
+      >
         {typeParams[type]?.icon}
       </div>
       <div>
@@ -533,14 +609,78 @@ function ActivityBlock({
 
   if (path) {
     activityBlock = (
-      <Link
-        href={path}
-        className={cn("flex flex-row items-start justify-start ", className)}
-      >
+      <Link href={path} className={className}>
         {activityBlock}
       </Link>
     )
   }
 
   return activityBlock
+}
+
+function NotificationBlock({
+  priority,
+  timestamp,
+  title,
+  description,
+  unseen = false,
+  className = "",
+  path,
+}: Notification & { className?: string }) {
+  const priorityParams = {
+    low: {
+      icon: <Bell weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    medium: {
+      icon: <BellRinging weight="bold" />,
+      color: "bg-warning-100 text-warning-600 ",
+    },
+    high: {
+      icon: <Fire weight="bold" />,
+      color: "bg-danger-100 text-danger-600 ",
+    },
+  }
+
+  let notificationBlock = (
+    <Alert
+      className={cn(
+        "relative flex flex-row items-start justify-start gap-3",
+        path ? "" : className,
+      )}
+    >
+      <div
+        className={cn(
+          "flex aspect-square items-center justify-center overflow-clip rounded-full [&>svg]:aspect-square [&>svg]:w-7",
+          priorityParams[priority]?.color,
+        )}
+      >
+        {priorityParams[priority]?.icon}
+      </div>
+      <div>
+        <AlertTitle>{title}</AlertTitle>
+        <AlertDescription className="flex flex-col gap-2">
+          {description}
+          <div className="flex w-full flex-row items-center justify-start">
+            <Badge className="w-fit text-xs" variant={"secondary"}>
+              {dayjs(timestamp).fromNow()}
+            </Badge>
+          </div>
+        </AlertDescription>
+      </div>
+      {unseen && (
+        <div className="absolute right-3 top-3 aspect-square  w-3 rounded-full bg-primary-300" />
+      )}
+    </Alert>
+  )
+
+  if (path) {
+    notificationBlock = (
+      <Link href={path} className={className}>
+        {notificationBlock}
+      </Link>
+    )
+  }
+
+  return notificationBlock
 }
