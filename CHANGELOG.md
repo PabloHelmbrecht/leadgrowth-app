@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.9...v0.1.10) (2024-06-23)
+
+
+### Features
+
+* **activities and notifications bar:** add activities and notifications bar with custom activities ([eae46a7](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/eae46a7b1e07791c89493157de687ed7f4de582a))
+
 ### [0.1.9](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.8...v0.1.9) (2024-06-21)
 
 ### [0.1.8](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.7...v0.1.8) (2024-06-21)
