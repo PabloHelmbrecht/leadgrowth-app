@@ -73,17 +73,22 @@ function Sidebar({
   return (
     <div
       className={cn(
-        "premium-transition flex  h-screen max-w-48 flex-col items-start gap-8 bg-white px-4 py-6",
+        "premium-transition flex  h-screen max-w-48 flex-col items-start gap-8 bg-white  py-6",
         className,
-        isOpen ? "w-56" : "  w-24 ",
+        isOpen ? "w-56 min-w-48  px-4 " : "  w-20 px-3 ",
       )}
       {...props}
     >
-      <div className="w-full px-4">
+      <div
+        className={cn(
+          "w-full ",
+          isOpen ? "px-3" : "flex items-center justify-center",
+        )}
+      >
         <Image
           src={isOpen ? "/logo/logo_short.png" : "/logo/isologo.png"}
           alt={"Lead Growth logo"}
-          className={cn("min-h-8", isOpen ? "min-w-[102.4px]" : "min-w-8")}
+          className={cn("min-h-8", isOpen ? "min-w-[102.4px]" : "min-w-[32px]")}
           width={isOpen ? 102.4 : 32}
           height={32}
         />
@@ -109,7 +114,7 @@ function SidebarBlock({
 
   const pathname = usePathname()
   return (
-    <div className="flex w-full flex-col gap-2  py-4 first:pt-0 last:pb-0 ">
+    <div className="flex w-full flex-1 flex-col gap-2  py-4 first:pt-0 last:pb-0 ">
       {isOpen && <div className=" px-4 text-sm font-bold ">{title}</div>}
       <div className="flex flex-col gap-2">
         {items.map((item, key) => (

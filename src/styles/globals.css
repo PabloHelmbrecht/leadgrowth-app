@@ -8,14 +8,43 @@
   html {
     @apply text-neutral-800
   }
-  
+
 }
 
 .premium-transition {
-  transition-timing-function: cubic-bezier(.32,.72,0,1);
+  transition-timing-function: cubic-bezier(.32, .72, 0, 1);
   transition: all .25s;
 }
 
 .h-fill-available {
   height: -webkit-fill-available;
+}
+
+.scroll::-webkit-scrollbar {
+  transition-property: color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  width: 0.625rem;
+  height: 0.625rem;
+
+}
+
+
+.scroll::-webkit-scrollbar-thumb {
+  transition-property: color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  background-color: white;
+  position: relative;
+  flex: 1 1 0%;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+
+}
+
+.scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgb(226 232 240);
+
+
 }

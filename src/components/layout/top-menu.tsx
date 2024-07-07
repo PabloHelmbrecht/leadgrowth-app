@@ -10,6 +10,7 @@ type Activity = {
     | "note"
     | "click"
     | "open"
+    | "reply"
     | "email sent"
     | "email scheduled"
     | "unsubscription"
@@ -48,6 +49,13 @@ const activitiesData: Activity[] = [
     type: "open",
     timestamp: new Date("2024-06-12T03:24:00"),
     title: <div>Email opened</div>,
+    description: <div>Prospected added trough Linkedin extension</div>,
+    path: "/",
+  },
+  {
+    type: "reply",
+    timestamp: new Date("2024-06-12T03:24:00"),
+    title: <div>Email replied</div>,
     description: <div>Prospected added trough Linkedin extension</div>,
     path: "/",
   },
@@ -121,7 +129,6 @@ const notificationsData: Notification[] = [
     title: <div>Priority Medium</div>,
     description: <div>Prospected added trough Linkedin extension</div>,
     path: "/",
-    
   },
   {
     priority: "high",
@@ -214,6 +221,7 @@ import {
   LinkedinLogo,
   Fire,
   BellRinging,
+  ArrowUDownLeft,
 } from "@phosphor-icons/react/dist/ssr"
 import {
   CreditCard,
@@ -232,14 +240,14 @@ import {
   PaperPlaneRight,
 } from "@phosphor-icons/react/dist/ssr"
 
-function TopMenu({
+export function TopMenu({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "relative flex flex-row items-center justify-between bg-white px-8 py-4",
+        "relative flex flex-initial flex-row items-center justify-between bg-white px-8 py-4",
         className,
       )}
       {...props}
@@ -264,7 +272,7 @@ function SidebarButton() {
   return (
     <Button
       variant={"secondary"}
-      className="aspect-square p-2"
+      className="dark:hover:text-primary-50 aspect-square p-2 hover:text-primary-700"
       size={"sm"}
       onClick={() => setIsOpen(!isOpen)}
     >
@@ -360,7 +368,11 @@ function SearchBar() {
 function SettingsButton() {
   return (
     <Link href={"/settings"}>
-      <Button variant={"secondary"} className="aspect-square p-2" size={"sm"}>
+      <Button
+        variant={"secondary"}
+        className="dark:hover:text-primary-50 aspect-square p-2 hover:text-primary-700"
+        size={"sm"}
+      >
         <Gear width={20} height={20} weight="bold" alt="Settings" />
       </Button>
     </Link>
@@ -373,7 +385,7 @@ function NotificationsButton() {
       <SheetTrigger asChild>
         <Button
           variant={"secondary"}
-          className="relative aspect-square p-2"
+          className="dark:hover:text-primary-50 relative aspect-square p-2 hover:text-primary-700"
           size={"sm"}
         >
           <Bell
@@ -525,7 +537,6 @@ function ProfileButton() {
     </DropdownMenu>
   )
 }
-export { TopMenu }
 
 function ActivityBlock({
   type,
@@ -550,6 +561,10 @@ function ActivityBlock({
     },
     open: {
       icon: <Eye weight="bold" />,
+      color: "bg-success-100 text-success-600 ",
+    },
+    reply: {
+      icon: <ArrowUDownLeft weight="bold" />,
       color: "bg-success-100 text-success-600 ",
     },
     "email sent": {

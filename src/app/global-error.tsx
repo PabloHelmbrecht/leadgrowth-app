@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { ErrorBoundary } from "next/dist/client/components/error-boundary"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "~/components/ui/button"
+
+//Fonts
+import { Inter } from "next/font/google"
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
 
 ErrorBoundary
 export default function GlobalError({
@@ -16,7 +23,7 @@ export default function GlobalError({
 }) {
   console.error(error)
   return (
-    <html>
+    <html lang="en" className={`${inter.variable}`}>
       <body>
         <div className="flex h-full w-full flex-col items-center justify-center gap-8">
           <Image

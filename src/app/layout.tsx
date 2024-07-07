@@ -5,8 +5,8 @@ import "~/styles/globals.css"
 import { TRPCReactProvider } from "~/trpc/react"
 
 //UI Components
-import { Sidebar } from "~/components/ui/sidebar"
-import { TopMenu } from "~/components/ui/top-menu"
+import { Sidebar } from "~/components/layout/sidebar"
+import { TopMenu } from "~/components/layout/top-menu"
 
 //Fonts
 import { Inter } from "next/font/google"
@@ -34,9 +34,9 @@ export default function RootLayout({
         <TRPCReactProvider>
           <div className="flex gap-[2px] bg-neutral-200">
             <Sidebar />
-            <div className="flex h-screen w-full flex-col gap-[2px] ">
+            <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
               <TopMenu />
-              <div className=" flex w-full flex-grow overflow-scroll">
+              <div className=" flex w-full flex-1 overflow-hidden">
                 {children}
               </div>
             </div>

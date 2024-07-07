@@ -7,6 +7,7 @@ import { Search } from "lucide-react"
 
 import { cn } from "~/lib/utils"
 import { Dialog, DialogContent } from "~/components/ui/dialog"
+import { Button } from "~/components/ui/button"
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -142,6 +143,40 @@ const CommandShortcut = ({
 }
 CommandShortcut.displayName = "CommandShortcut"
 
+const CommandTagsGroup = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      className={cn(
+        "flex  flex-row flex-wrap gap-2 border-b px-3 py-1 text-sm font-normal",
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+CommandTagsGroup.displayName = "CommandTagsGroup"
+
+const CommandTag = React.forwardRef<
+  React.ElementRef<typeof Button>,
+  React.ComponentPropsWithoutRef<typeof Button>
+>(({ className, ...props }, ref) => (
+  <Button
+    ref={ref}
+    variant={"secondary"}
+    size={"sm"}
+    className={cn(
+      "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
+      className,
+    )}
+    {...props}
+  />
+))
+
+CommandTag.displayName = Button.displayName
+
 export {
   Command,
   CommandDialog,
@@ -152,4 +187,6 @@ export {
   CommandItem,
   CommandShortcut,
   CommandSeparator,
+  CommandTagsGroup,
+  CommandTag,
 }
