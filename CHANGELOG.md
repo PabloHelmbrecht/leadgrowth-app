@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.11...v0.1.12) (2024-07-07)
+
+
+### Features
+
+* **sequence data table:** added new data table for sequences with filters and actions ([b39c910](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/b39c910256d1275a905a7ec2a6d7b38d4abc85bc))
+
 ### [0.1.11](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.10...v0.1.11) (2024-06-23)
 
 ### [0.1.10](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.9...v0.1.10) (2024-06-23)
