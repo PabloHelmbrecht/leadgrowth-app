@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.12...v0.1.13) (2024-07-17)
+
+
+### Features
+
+* **sequence data table:** added link functionalities to each row ([66c8841](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/66c884137cbea149b4658aafb68ecdeb2f2f3963))
+* **sequence data table:** finished sequence data table functionalities ([7aa0e13](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/7aa0e13eddf75eb8e0edf4a04e84f10d8b1255a0))
+* **sequence view:** add top menu ([a3573b0](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/a3573b0f77cb95856d0bcafe87bb538375b8b60c))
+
+
+### Bug Fixes
+
+* **sidebar:** issue with subpaths on buttons styles ([e2d4de2](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/e2d4de282ffb2f0d7d9af30073e9b0c5a627eef4))
+
 ### [0.1.12](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.11...v0.1.12) (2024-07-07)
 
 
