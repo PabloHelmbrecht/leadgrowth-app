@@ -8,9 +8,9 @@ export function KPIColumn({
   label,
   onHoverValue,
 }: {
-  value: string|undefined
+  value: string | undefined
   label: string
-  onHoverValue?: string|undefined
+  onHoverValue?: string | undefined
 }) {
   const [isHover, setIsHover] = useState<boolean>(false)
 
@@ -21,7 +21,7 @@ export function KPIColumn({
       onMouseLeave={() => setIsHover(false)}
     >
       <div className="font-semibold">
-        {isHover && onHoverValue ? onHoverValue??"-" : value??"-"}
+        {isHover && onHoverValue ? onHoverValue ?? "-" : value ?? "-"}
       </div>
       <div>{label}</div>
     </div>

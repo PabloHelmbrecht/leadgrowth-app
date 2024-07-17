@@ -43,7 +43,7 @@ export const columns: ColumnDef<Sequence>[] = [
     accessorKey: "activeProspectsCount",
     cell: ({ row }: CellContext<Sequence, unknown>) => (
       <KPIColumn
-        value={String(row.getValue("activeProspectsCount")??"-")}
+        value={String(row.getValue("activeProspectsCount") ?? "-")}
         label="Active"
       />
     ),
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Sequence>[] = [
     accessorKey: "pausedProspectsCount",
     cell: ({ row }: CellContext<Sequence, unknown>) => (
       <KPIColumn
-        value={String(row.getValue("pausedProspectsCount")??"-")}
+        value={String(row.getValue("pausedProspectsCount") ?? "-")}
         label="Paused"
       />
     ),

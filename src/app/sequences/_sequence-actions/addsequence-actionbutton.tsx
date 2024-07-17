@@ -30,7 +30,7 @@ import {
   CommandList,
   CommandTagsGroup,
   CommandTag,
-  CommandTagSimple
+  CommandTagSimple,
 } from "~/components/ui/command"
 import {
   Popover,
@@ -81,21 +81,18 @@ export function AddSequence() {
   const form = useForm<z.infer<typeof cloneSequenceFormSquema>>({
     resolver: zodResolver(cloneSequenceFormSquema),
     defaultValues: {
-      tag: []
+      tag: [],
     },
   })
 
-
-
   const { toast } = useToast()
   const [, setSequencesMockData] = useAtom(sequencesMockDataAtom)
-  const [open,setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   function onSubmit(values: z.infer<typeof cloneSequenceFormSquema>) {
     try {
       const newSequenceId = makeId(9)
       setSequencesMockData((oldSequenceMockData) => {
-
         return [
           ...oldSequenceMockData,
           {
@@ -119,7 +116,6 @@ export function AddSequence() {
             Undo
           </ToastAction>
         ),
-        
       })
     } catch (e) {
       toast({
@@ -152,95 +148,96 @@ export function AddSequence() {
   }
 
   return (
-
     <Dialog open={open} onOpenChange={setOpen}>
-
       <DialogTrigger asChild>
-      <Button className="flex items-center justify-between gap-3 ">
-        
-            <Plus
-              width={20}
-              height={20}
-              weight="bold"
-              className="aspect-square min-w-5"
-              alt={"config sequence button"}
-            />
-            Add new sequence
-          </Button>
+        <Button className="flex items-center justify-between gap-3 ">
+          <Plus
+            width={20}
+            height={20}
+            weight="bold"
+            className="aspect-square min-w-5"
+            alt={"config sequence button"}
+          />
+          Add new sequence
+        </Button>
       </DialogTrigger>
 
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          id={`form-create-sequence`}
+          className="space-y-8"
+        >
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>Create Sequence</DialogTitle>
+              <DialogDescription>
+                Create a new sequence here. Click create sequence when youre
+                done.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-8">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sequence Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Select a sequence name..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      This is your new sequence name.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="tag"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col gap-0 ">
+                    <FormLabel className="pb-1">Tags</FormLabel>
 
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        id={`form-create-sequence`}
-        className="space-y-8"
-      >
-        <DialogContent className="sm:max-w-[525px]">
-          <DialogHeader>
-            <DialogTitle>Create Sequence</DialogTitle>
-            <DialogDescription>
-              Create a new sequence here. Click create sequence when
-              youre done.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-8">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sequence Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Select a sequence name..." {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your new sequence name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tag"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-0 ">
-                  <FormLabel className="pb-1">Tags</FormLabel>
+                    <TagInput field={field} form={form} />
 
-                  <TagInput field={field} form={form} />
+                    <FormDescription>
+                      This are your sequence tags.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="owner"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col gap-0 ">
+                    <FormLabel className="pb-1">Owner</FormLabel>
 
-                  <FormDescription>This are your sequence tags.</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="owner"
-              render={({ field }) => (
-                <FormItem className="flex flex-col gap-0 ">
-                  <FormLabel className="pb-1">Owner</FormLabel>
+                    <OwnerInput field={field} form={form} />
 
-                  <OwnerInput field={field} form={form} />
+                    <FormDescription>
+                      This is the new sequence owner.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-                  <FormDescription>
-                    This is the new sequence owner.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <DialogFooter>
-            <Button type="submit" form={`form-create-sequence`}>
-              Create Sequence
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </form>
-    </Form>
+            <DialogFooter>
+              <Button type="submit" form={`form-create-sequence`}>
+                Create Sequence
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </form>
+      </Form>
     </Dialog>
   )
 }
@@ -434,7 +431,7 @@ export function OwnerInput({
 }) {
   //Mock data
   const [ownersMockData] = useAtom(ownersMockDataAtom)
-  const [open,setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

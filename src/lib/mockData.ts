@@ -6,10 +6,10 @@ import { z } from "zod"
 //Schemas
 export const sequenceSchema = z.object({
   id: z.string(),
-  name: z.string({message: "Sequence must have a name"}),
+  name: z.string({ message: "Sequence must have a name" }),
   tag: z.array(z.string()),
   status: z.enum(["active", "paused", "archived"]),
-  owner: z.string({message: "Sequence must have an owner"}),
+  owner: z.string({ message: "Sequence must have an owner" }),
   activeProspectsCount: z.number().optional(),
   pausedProspectsCount: z.number().optional(),
   notSendCount: z.number().optional(),

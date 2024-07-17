@@ -163,22 +163,17 @@ const CommandTag = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button>
 >(({ className, ...props }, ref) => (
-
- 
-
   <Button
-      ref={ref}
-      variant={"secondary"}
-      size={"sm"}
-      className={cn(
-        "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
-        className,
-      )}
-      {...props}
-    />
-  )
-)
-
+    ref={ref}
+    variant={"secondary"}
+    size={"sm"}
+    className={cn(
+      "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
+      className,
+    )}
+    {...props}
+  />
+))
 
 CommandTag.displayName = Button.displayName
 
@@ -190,15 +185,15 @@ const CommandTagSimple = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors  disabled:pointer-events-none disabled:opacity-50",
-      buttonVariants({variant:"secondary",size:"sm"}),
+      buttonVariants({ variant: "secondary", size: "sm" }),
       "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
       className,
     )}
     {...props}
   />
-));
+))
 
-CommandTagSimple.displayName = 'CommandTagSimple';
+CommandTagSimple.displayName = "CommandTagSimple"
 
 export {
   Command,
@@ -212,5 +207,5 @@ export {
   CommandSeparator,
   CommandTagsGroup,
   CommandTag,
-  CommandTagSimple
+  CommandTagSimple,
 }

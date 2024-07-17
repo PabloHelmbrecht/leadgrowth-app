@@ -47,7 +47,6 @@ export function OwnerActionButton() {
       ),
     [sequenceMockData, rowSelection],
   )
-  
 
   return (
     <Popover>

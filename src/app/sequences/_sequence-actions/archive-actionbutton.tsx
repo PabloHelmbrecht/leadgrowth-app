@@ -95,7 +95,6 @@ export function ArchiveActionButton() {
                       Undo
                     </ToastAction>
                   ),
-                  
                 })
               } catch (e) {
                 console.error(e)

@@ -47,7 +47,7 @@ export default function SearchPage() {
             />
             Configure sequences
           </Button>
-          <AddSequence/>
+          <AddSequence />
         </div>
       </div>
 

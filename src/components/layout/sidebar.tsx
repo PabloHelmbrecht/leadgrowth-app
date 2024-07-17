@@ -113,6 +113,15 @@ function SidebarBlock({
   const [isOpen] = useAtom(sideBarAtom)
 
   const pathname = usePathname()
+
+  const isPath = (path:string):boolean => {
+
+    if(path === '/') return path===pathname
+
+    return pathname.startsWith(path)
+
+  }
+
   return (
     <div className="flex w-full flex-1 flex-col gap-2  py-4 first:pt-0 last:pb-0 ">
       {isOpen && <div className=" px-4 text-sm font-bold ">{title}</div>}
@@ -120,7 +129,7 @@ function SidebarBlock({
         {items.map((item, key) => (
           <Link href={item.path} key={key} className="flex justify-center">
             <Button
-              variant={item.path === pathname ? "terciary" : "ghost"}
+              variant={isPath(item.path)? "terciary" : "ghost"}
               size={"sm"}
               className={cn(
                 "flex w-full flex-row flex-wrap items-center gap-3 overflow-hidden",

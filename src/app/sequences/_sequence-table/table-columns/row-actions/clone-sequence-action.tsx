@@ -31,7 +31,7 @@ import {
   CommandList,
   CommandTagsGroup,
   CommandTag,
-  CommandTagSimple
+  CommandTagSimple,
 } from "~/components/ui/command"
 import {
   Popover,
@@ -88,8 +88,6 @@ export function CloneSequenceAction({ row }: CellContext<Sequence, unknown>) {
       owner: row.getValue("owner"),
     },
   })
-
-
 
   const [, setOpen] = useMultiDialog("dialog")
   const { toast } = useToast()
@@ -169,8 +167,8 @@ export function CloneSequenceAction({ row }: CellContext<Sequence, unknown>) {
           <DialogHeader>
             <DialogTitle>Clone Sequence</DialogTitle>
             <DialogDescription>
-              Make changes to your new cloned sequence here. Click create sequence when
-              youre done.
+              Make changes to your new cloned sequence here. Click create
+              sequence when youre done.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-8">
@@ -423,7 +421,7 @@ export function OwnerInput({
   //Mock data
   const [ownersMockData] = useAtom(ownersMockDataAtom)
 
-  const [open,setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
