@@ -1,6 +1,5 @@
 "use client"
 
-
 //NextJS
 import { useRouter } from "next/navigation"
 
@@ -56,7 +55,6 @@ export function DataTable<Sequence, TValue>({
   const [, setTableInstance] = useAtom(tableSequenceAtom)
   const [, setIsAllRowsSelected] = useAtom(IsAllRowsSelectedAtom)
   const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom)
-
 
   const router = useRouter()
 
@@ -159,7 +157,7 @@ export function DataTable<Sequence, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className="flex items-center justify-between"
-                    onClick={ () => {
+                    onClick={() => {
                       router.push(`/sequences/${row.id}/flow`)
                     }}
                   >
