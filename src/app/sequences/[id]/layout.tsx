@@ -1,19 +1,15 @@
 import { TopMenu } from "~/components/layout/sequence/top-menu"
 
-
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
+    <section className="flex-1 bg-red-500">
+      <TopMenu />
 
-      <section className="bg-red-500 flex-1">
-        <TopMenu/>
-
-        {children}
-      </section>
-
+      {children}
+    </section>
   )
 }

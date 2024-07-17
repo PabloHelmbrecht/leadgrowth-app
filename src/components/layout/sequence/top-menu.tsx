@@ -1,7 +1,6 @@
 //Next JS
 import Link from "next/link"
 
-
 //Class Merge
 import { cn } from "~/lib/utils"
 
@@ -9,17 +8,22 @@ import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
 
 //Icons
-import { CaretLeft, PaperPlaneRight, Users,CheckSquare, Newspaper, Gear } from "@phosphor-icons/react/dist/ssr"
+import {
+  CaretLeft,
+  PaperPlaneRight,
+  Users,
+  CheckSquare,
+  Newspaper,
+  Gear,
+} from "@phosphor-icons/react/dist/ssr"
 
-
-
-const actionButtons = [{ icon: PaperPlaneRight, name: "Flow", subPath: "/view" },
+const actionButtons = [
+  { icon: PaperPlaneRight, name: "Flow", subPath: "/view" },
   { icon: Users, name: "Contacts", subPath: "/view" },
   { icon: CheckSquare, name: "Tasks", subPath: "/tasks" },
   { icon: Newspaper, name: "Actions", subPath: "/actions" },
-  { icon: Gear, name: "Settings", subPath: "/settings" }
+  { icon: Gear, name: "Settings", subPath: "/settings" },
 ]
-
 
 export function TopMenu({
   className,
@@ -33,28 +37,24 @@ export function TopMenu({
       )}
       {...props}
     >
-      <Link href={'/sequences'}>
-      <Button
-        variant={"secondary"}
-        size={"sm"}
-        className={cn(
-          " font-regular flex h-fit w-fit items-center gap-2  rounded-full px-3 py-1",
-        )}
-      >
-        <CaretLeft
-          width={16}
-          height={16}
-          weight="bold"
-          className="aspect-square min-w-4"
-          alt={"config sequence button"}
-        />
-        Return to sequences
-      </Button>
+      <Link href={"/sequences"}>
+        <Button
+          variant={"secondary"}
+          size={"sm"}
+          className={cn(
+            " font-regular flex h-fit w-fit items-center gap-2  rounded-full px-3 py-1",
+          )}
+        >
+          <CaretLeft
+            width={16}
+            height={16}
+            weight="bold"
+            className="aspect-square min-w-4"
+            alt={"config sequence button"}
+          />
+          Return to sequences
+        </Button>
       </Link>
-
-
-
     </div>
   )
 }
-

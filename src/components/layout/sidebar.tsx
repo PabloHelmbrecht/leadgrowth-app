@@ -114,12 +114,10 @@ function SidebarBlock({
 
   const pathname = usePathname()
 
-  const isPath = (path:string):boolean => {
-
-    if(path === '/') return path===pathname
+  const isPath = (path: string): boolean => {
+    if (path === "/") return path === pathname
 
     return pathname.startsWith(path)
-
   }
 
   return (
@@ -129,7 +127,7 @@ function SidebarBlock({
         {items.map((item, key) => (
           <Link href={item.path} key={key} className="flex justify-center">
             <Button
-              variant={isPath(item.path)? "terciary" : "ghost"}
+              variant={isPath(item.path) ? "terciary" : "ghost"}
               size={"sm"}
               className={cn(
                 "flex w-full flex-row flex-wrap items-center gap-3 overflow-hidden",
