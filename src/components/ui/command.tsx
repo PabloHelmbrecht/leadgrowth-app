@@ -7,7 +7,7 @@ import { Search } from "lucide-react"
 
 import { cn } from "~/lib/utils"
 import { Dialog, DialogContent } from "~/components/ui/dialog"
-import { Button } from "~/components/ui/button"
+import { Button, buttonVariants } from "~/components/ui/button"
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -163,19 +163,42 @@ const CommandTag = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button>
 >(({ className, ...props }, ref) => (
+
+ 
+
   <Button
+      ref={ref}
+      variant={"secondary"}
+      size={"sm"}
+      className={cn(
+        "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
+        className,
+      )}
+      {...props}
+    />
+  )
+)
+
+
+CommandTag.displayName = Button.displayName
+
+const CommandTagSimple = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
     ref={ref}
-    variant={"secondary"}
-    size={"sm"}
     className={cn(
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors  disabled:pointer-events-none disabled:opacity-50",
+      buttonVariants({variant:"secondary",size:"sm"}),
       "h-fit w-fit rounded-sm px-2 py-1 font-normal hover:bg-neutral-200",
       className,
     )}
     {...props}
   />
-))
+));
 
-CommandTag.displayName = Button.displayName
+CommandTagSimple.displayName = 'CommandTagSimple';
 
 export {
   Command,
@@ -189,4 +212,5 @@ export {
   CommandSeparator,
   CommandTagsGroup,
   CommandTag,
+  CommandTagSimple
 }

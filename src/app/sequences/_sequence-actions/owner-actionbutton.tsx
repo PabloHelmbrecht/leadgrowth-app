@@ -1,7 +1,7 @@
 "use client"
 
 //React
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -28,17 +28,15 @@ import { User, Check } from "@phosphor-icons/react/dist/ssr"
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import { rowSelectionAtom } from "~/lib/store"
-import { ownersrMockDataAtom, sequencesMockDataAtom } from "~/lib/mockData"
+import { ownersMockDataAtom, sequencesMockDataAtom } from "~/lib/mockData"
 
 export function OwnerActionButton() {
   //Mock data
-  const [ownersMockData] = useAtom(ownersrMockDataAtom)
+  const [ownersMockData] = useAtom(ownersMockDataAtom)
   const [rowSelection] = useAtom(rowSelectionAtom)
   const [sequenceMockData, setSequencesMockData] = useAtom(
     sequencesMockDataAtom,
   )
-
-  const [open, setOpen] = useState(false)
 
   const selectedSequences = useMemo(
     () =>
@@ -49,9 +47,10 @@ export function OwnerActionButton() {
       ),
     [sequenceMockData, rowSelection],
   )
+  
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"secondary"}

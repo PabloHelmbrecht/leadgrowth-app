@@ -30,11 +30,11 @@ import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import { handlerColumnFiltersAtom, rowSelectionAtom } from "~/lib/store"
-import { ownersrMockDataAtom } from "~/lib/mockData"
+import { ownersMockDataAtom } from "~/lib/mockData"
 
 export function OwnerFilter() {
   //Mock data
-  const [ownersMockData] = useAtom(ownersrMockDataAtom)
+  const [ownersMockData] = useAtom(ownersMockDataAtom)
   const [rowSelection] = useAtom(rowSelectionAtom)
 
   const [open, setOpen] = useState(false)

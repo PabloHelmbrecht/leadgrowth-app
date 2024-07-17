@@ -1,7 +1,7 @@
 "use client"
 
 //React
-import { useState, useMemo } from "react"
+import { useMemo } from "react"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -56,10 +56,8 @@ export function TagActionButton() {
       )
   }, [rowSelection, sequenceMockData])
 
-  const [open, setOpen] = useState(false)
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"secondary"}

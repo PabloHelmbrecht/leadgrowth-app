@@ -4,20 +4,22 @@
 import { Button } from "~/components/ui/button"
 
 //Filters
-import { OwnerFilter } from "./owner-filter"
-import { StatusFilter } from "./status-filter"
-import { TagFilter } from "./tag-filter"
-import { SelectAllCheckbox } from "./selectall-checkbox"
-import { TagActionButton } from "./tag-actionbutton"
-import { OwnerActionButton } from "./owner-actionbutton"
-import { ArchiveActionButton } from "./archive-actionbutton"
-import { ClearFilterActionButton } from "./clearfilter-actionbutton"
+import { OwnerFilter } from "./_sequence-filters/owner-filter"
+import { StatusFilter } from "./_sequence-filters/status-filter"
+import { TagFilter } from "./_sequence-filters/tag-filter"
+import { SelectAllCheckbox } from "./_sequence-actions/selectall-checkbox"
+import { TagActionButton } from "./_sequence-actions/tag-actionbutton"
+import { OwnerActionButton } from "./_sequence-actions/owner-actionbutton"
+import { ArchiveActionButton } from "./_sequence-actions/archive-actionbutton"
+import { ClearFilterActionButton } from "./_sequence-actions/clearfilter-actionbutton"
+import { AddSequence } from "./_sequence-actions/addsequence-actionbutton"
 
 //Data Table
-import { DataTable, columns } from "./data-table"
+import { DataTable } from "./_sequence-table/data-table"
+import { columns } from "./_sequence-table/columns"
 
 //Icons
-import { Gear, Plus } from "@phosphor-icons/react/dist/ssr"
+import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
@@ -45,16 +47,7 @@ export default function SearchPage() {
             />
             Configure sequences
           </Button>
-          <Button className="flex items-center justify-between gap-3 ">
-            <Plus
-              width={20}
-              height={20}
-              weight="bold"
-              className="aspect-square min-w-5"
-              alt={"config sequence button"}
-            />
-            Add new sequence
-          </Button>
+          <AddSequence/>
         </div>
       </div>
 

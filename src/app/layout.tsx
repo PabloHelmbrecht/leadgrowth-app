@@ -7,6 +7,7 @@ import { TRPCReactProvider } from "~/trpc/react"
 //UI Components
 import { Sidebar } from "~/components/layout/sidebar"
 import { TopMenu } from "~/components/layout/top-menu"
+import { Toaster } from "~/components/ui/toaster"
 
 //Fonts
 import { Inter } from "next/font/google"
@@ -41,6 +42,7 @@ export default function RootLayout({
               </div>
             </div>
           </div>
+          <Toaster />
         </TRPCReactProvider>
       </body>
     </html>

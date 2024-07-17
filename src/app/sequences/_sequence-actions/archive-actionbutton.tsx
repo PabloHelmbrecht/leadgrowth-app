@@ -13,6 +13,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog"
+import { ToastAction } from "~/components/ui/toast"
+import { useToast } from "~/components/ui/use-toast"
 
 //Class Merge
 import { cn } from "~/lib/utils"
@@ -27,7 +29,11 @@ import { sequencesMockDataAtom } from "~/lib/mockData"
 
 export function ArchiveActionButton() {
   const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)
-  const [, setSequencesMockData] = useAtom(sequencesMockDataAtom)
+  const [sequencesMockData, setSequencesMockData] = useAtom(
+    sequencesMockDataAtom,
+  )
+
+  const { toast } = useToast()
 
   return (
     <AlertDialog>
@@ -62,18 +68,43 @@ export function ArchiveActionButton() {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              const idRowsSelected = Object.keys(rowSelection).filter(
-                (id) => rowSelection[id],
-              )
-              setSequencesMockData((oldSequencesMockData) =>
-                oldSequencesMockData.map((sequence) => {
-                  if (idRowsSelected.includes(sequence.id)) {
-                    return { ...sequence, status: "archived" }
-                  }
-                  return sequence
-                }),
-              )
-              setRowSelection({})
+              try {
+                const idRowsSelected = Object.keys(rowSelection).filter(
+                  (id) => rowSelection[id],
+                )
+
+                const oldSequenceMockData = sequencesMockData
+                setSequencesMockData((oldSequencesMockData) =>
+                  oldSequencesMockData.map((sequence) => {
+                    if (idRowsSelected.includes(sequence.id)) {
+                      return { ...sequence, status: "archived" }
+                    }
+                    return sequence
+                  }),
+                )
+                setRowSelection({})
+
+                toast({
+                  title: "Sequences deleted",
+                  description: `The selected sequences were successfully deleted from the table`,
+                  action: (
+                    <ToastAction
+                      altText="Undo action"
+                      onClick={() => setSequencesMockData(oldSequenceMockData)}
+                    >
+                      Undo
+                    </ToastAction>
+                  ),
+                  
+                })
+              } catch (e) {
+                console.error(e)
+                toast({
+                  variant: "destructive",
+                  title: "Uh oh! Something went wrong.",
+                  description: "There was a problem with your request.",
+                })
+              }
             }}
             className="bg-red-500 text-neutral-50 hover:bg-red-500/90 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90"
           >

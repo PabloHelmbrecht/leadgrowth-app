@@ -33,7 +33,7 @@ export function ClearFilterActionButton() {
       )}
       onClick={() => eventEmmiter.emit("resetAllFilters")}
     >
-      Reset filters
+      Clean filters
     </button>
   )
 }

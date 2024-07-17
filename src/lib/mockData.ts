@@ -6,17 +6,17 @@ import { z } from "zod"
 //Schemas
 export const sequenceSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: z.string({message: "Sequence must have a name"}),
   tag: z.array(z.string()),
   status: z.enum(["active", "paused", "archived"]),
-  owner: z.string(),
-  activeProspectsCount: z.number(),
-  pausedProspectsCount: z.number(),
-  notSendCount: z.number(),
-  openCount: z.number(),
-  replyCount: z.number(),
-  interestedCount: z.number(),
-  totalCount: z.number(),
+  owner: z.string({message: "Sequence must have an owner"}),
+  activeProspectsCount: z.number().optional(),
+  pausedProspectsCount: z.number().optional(),
+  notSendCount: z.number().optional(),
+  openCount: z.number().optional(),
+  replyCount: z.number().optional(),
+  interestedCount: z.number().optional(),
+  totalCount: z.number().optional(),
 })
 
 export const tagSchema = z.object({
@@ -264,4 +264,4 @@ export const ownersMockData: Owner[] = [
 export const sequencesMockDataAtom = atom<Sequence[]>(sequencesMockData)
 export const tagsMockDataAtom = atom<Tag[]>(tagsMockData)
 export const statusMockDataAtom = atom<Status[]>(statusMockData)
-export const ownersrMockDataAtom = atom<Owner[]>(ownersMockData)
+export const ownersMockDataAtom = atom<Owner[]>(ownersMockData)
