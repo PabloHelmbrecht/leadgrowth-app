@@ -22,6 +22,7 @@ const buttonVariants = cva(
         link: "text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
         terciary:
           "bg-primary-700 text-neutral-50 hover:bg-primary-700/90 dark:bg-primary-900 dark:text-neutral-50 dark:hover:bg-primary-900/90",
+        step: " bg-white border border-neutral-200 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50 dark:hover:text-primary-50",
       },
       size: {
         default: "h-10 px-4 py-2",

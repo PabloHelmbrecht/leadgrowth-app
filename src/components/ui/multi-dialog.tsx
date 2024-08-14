@@ -56,7 +56,7 @@ export function MultiDialogContainer<T>({
   variant: variant
 }) {
   const [opened] = useMultiDialog(variant)
-  return opened === value ? children ?? null : null
+  return opened === value ? (children ?? null) : null
 }
 
 type Builder<T> = {

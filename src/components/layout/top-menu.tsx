@@ -321,7 +321,7 @@ function SearchBar() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className=" w-64 justify-between"
+          className=" w-64 justify-between font-normal"
           size={"sm"}
         >
           {value

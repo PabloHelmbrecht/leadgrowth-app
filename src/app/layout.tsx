@@ -1,5 +1,6 @@
 //Styles
 import "~/styles/globals.css"
+import "~/styles/react-flow-styles.css"
 
 //TRPC
 import { TRPCReactProvider } from "~/trpc/react"

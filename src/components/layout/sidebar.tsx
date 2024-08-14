@@ -88,9 +88,13 @@ function Sidebar({
         <Image
           src={isOpen ? "/logo/logo_short.png" : "/logo/isologo.png"}
           alt={"Lead Growth logo"}
-          className={cn("min-h-8", isOpen ? "min-w-[102.4px]" : "min-w-[32px]")}
+          className={cn(
+            "h-8 min-h-8",
+            isOpen ? "min-w-[102.4px]" : "min-w-[32px]",
+          )}
           width={isOpen ? 102.4 : 32}
           height={32}
+          priority
         />
       </div>
 
@@ -122,7 +126,7 @@ function SidebarBlock({
 
   return (
     <div className="flex w-full flex-1 flex-col gap-2  py-4 first:pt-0 last:pb-0 ">
-      {isOpen && <div className=" px-4 text-sm font-bold ">{title}</div>}
+      {isOpen && <div className=" px-4 text-sm font-semibold ">{title}</div>}
       <div className="flex flex-col gap-2">
         {items.map((item, key) => (
           <Link href={item.path} key={key} className="flex justify-center">

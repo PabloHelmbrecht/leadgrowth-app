@@ -2,7 +2,7 @@
 
 //Next JS
 import Link from "next/link"
-import { useParams,usePathname } from "next/navigation"
+import { useParams, usePathname } from "next/navigation"
 
 //Class Merge
 import { cn } from "~/lib/utils"
@@ -21,7 +21,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 
 //Zod & Schemas
-import {z} from "zod"
+import { z } from "zod"
 import { sequenceSchema } from "~/lib/mockData"
 
 const actionButtons = [
@@ -32,15 +32,13 @@ const actionButtons = [
   { icon: Gear, name: "Settings", subPath: "/settings" },
 ]
 
-
 export function TopMenu({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
+  const paramSchema = z.object({ id: sequenceSchema.shape.id })
 
-  const paramSchema = z.object({id: sequenceSchema.shape.id})
-
-  const {id} = useParams<z.infer<typeof paramSchema >>()
+  const { id } = useParams<z.infer<typeof paramSchema>>()
   const pathname = usePathname()
 
   return (
@@ -68,13 +66,21 @@ export function TopMenu({
           />
           Return to sequences
         </Button>
-        </Link>
+      </Link>
 
-        <div className="flex gap-4">
+      <div className="flex gap-4">
         {actionButtons.map((actionButton, key) => (
-          <Link href={`/sequences/${id}${actionButton.subPath}`} key={key} className="flex justify-center">
+          <Link
+            href={`/sequences/${id}${actionButton.subPath}`}
+            key={key}
+            className="flex justify-center"
+          >
             <Button
-              variant={pathname.startsWith(`/sequences/${id}${actionButton.subPath}`) ? "terciary" : "ghost"}
+              variant={
+                pathname.startsWith(`/sequences/${id}${actionButton.subPath}`)
+                  ? "terciary"
+                  : "ghost"
+              }
               size={"sm"}
               className={cn(
                 " font-regular flex h-fit w-fit items-center gap-2  rounded-full px-3 py-1",
@@ -91,7 +97,7 @@ export function TopMenu({
             </Button>
           </Link>
         ))}
-        </div>
+      </div>
     </div>
   )
 }

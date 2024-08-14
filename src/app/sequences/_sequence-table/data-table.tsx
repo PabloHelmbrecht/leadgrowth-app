@@ -1,8 +1,7 @@
 "use client"
 
 //NextJS
-import { useRouter } from "next/navigation"
-
+import Link from "next/link"
 //React
 import { useEffect } from "react"
 
@@ -55,8 +54,6 @@ export function DataTable<Sequence, TValue>({
   const [, setTableInstance] = useAtom(tableSequenceAtom)
   const [, setIsAllRowsSelected] = useAtom(IsAllRowsSelectedAtom)
   const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom)
-
-  const router = useRouter()
 
   const table = useReactTable<Sequence>({
     data,
@@ -156,27 +153,43 @@ export function DataTable<Sequence, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="flex items-center justify-between"
-                    onClick={() => {
-                      router.push(`/sequences/${row.id}/flow`)
-                    }}
+                    className="flex w-full items-center justify-between"
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        key={cell.id}
-                        className={cn(
-                          String(cell.column.id) === "name"
-                            ? "flex-1"
-                            : "flex-initial",
-                          "flex h-20 max-h-full items-center",
-                        )}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
+                    {row.getVisibleCells().map((cell) => {
+                      if (String(cell.column.id) === "name") {
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            className={cn(
+                              "flex-1",
+                              "flex h-20 max-h-full w-full items-center",
+                            )}
+                          >
+                            <Link href={`/sequences/${row.id}/flow`}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </Link>
+                          </TableCell>
+                        )
+                      }
+
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={cn(
+                            "flex-initial",
+                            "flex h-20 max-h-full items-center",
+                          )}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      )
+                    })}
                   </TableRow>
                 ))
               ) : (
