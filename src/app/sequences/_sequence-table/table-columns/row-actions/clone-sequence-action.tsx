@@ -46,7 +46,8 @@ import { useMultiDialog } from "~/components/ui/multi-dialog"
 import { CaretDown, Star, Check } from "@phosphor-icons/react/dist/ssr"
 
 //Class Merge & id Maker
-import { cn, makeId } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
+import { makeId } from "~/lib/utils/formatters"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
@@ -54,11 +55,11 @@ import {
   ownersMockDataAtom,
   sequencesMockDataAtom,
   tagsMockDataAtom,
-} from "~/lib/mockData"
+} from "~/lib/stores/mockData"
 
 //Zod & Schemas & Types
 import { z } from "zod"
-import { type Sequence, sequenceSchema } from "~/lib/mockData"
+import { type Sequence, sequenceSchema } from "~/lib/stores/mockData"
 
 const cloneSequenceFormSquema = z.object({
   name: sequenceSchema.shape.name.min(2, {

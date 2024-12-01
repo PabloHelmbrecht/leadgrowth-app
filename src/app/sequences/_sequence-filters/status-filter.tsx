@@ -22,15 +22,22 @@ import {
 } from "~/components/ui/popover"
 
 //Class Merge & Event Emmiter
-import { cn, eventEmmiter } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
+import { eventEmmiter } from "~/lib/utils/eventEmmiter"
+import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
 
 //Icons
 import { CaretDown } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { handlerColumnFiltersAtom, rowSelectionAtom } from "~/lib/store"
-import { statusMockDataAtom } from "~/lib/mockData"
+import {
+  columnFiltersAtom,
+  rowSelectionAtom,
+  columnFilterSelectorReducer,
+} from "~/lib/stores"
+
+import { statusMockDataAtom } from "~/lib/stores/mockData"
 
 export function StatusFilter() {
   //Mock data
@@ -38,12 +45,15 @@ export function StatusFilter() {
   const [rowSelection] = useAtom(rowSelectionAtom)
 
   const [open, setOpen] = useState(false)
-  const [columnFilters, setColumnFilters] = useAtom(handlerColumnFiltersAtom)
+  const [columnFilters, setColumnFilters] = useSelectorReducerAtom(
+    columnFiltersAtom,
+    columnFilterSelectorReducer("status"),
+  )
 
   //Reset filter when button "Reset filters" is clicked
   useEffect(() => {
     const handleEvent = () => {
-      setItemSelected([])
+      setColumnFilters([])
     }
 
     eventEmmiter.on("resetAllFilters", handleEvent)
@@ -51,20 +61,7 @@ export function StatusFilter() {
     return () => {
       eventEmmiter.off("resetAllFilters", handleEvent)
     }
-  }, [])
-
-  //BUG: If i use the store directly the values dont update properly
-  const [itemSelected, setItemSelected] = useState<string[]>([
-    "active",
-    "paused",
-  ])
-
-  useEffect(() => {
-    setColumnFilters("status", itemSelected)
-  }, [itemSelected, setColumnFilters])
-  useEffect(() => {
-    setItemSelected(columnFilters("status"))
-  }, [setItemSelected, columnFilters])
+  }, [setColumnFilters])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -85,9 +82,9 @@ export function StatusFilter() {
             alt={"config sequence button"}
           />
           Status
-          {itemSelected.length !== 0 && (
+          {columnFilters.length !== 0 && (
             <div className="-ml-1 text-xs text-neutral-500">
-              {`+${itemSelected.length}`}
+              {`+${columnFilters.length}`}
             </div>
           )}
         </Button>
@@ -95,14 +92,14 @@ export function StatusFilter() {
       <PopoverContent className=" w-52 p-0">
         <Command>
           <CommandInput placeholder="Search status..." />
-          {itemSelected.length !== 0 && (
+          {columnFilters.length !== 0 && (
             <CommandTagsGroup>
-              {itemSelected.map((currentValue) => (
+              {columnFilters.map((currentValue) => (
                 <CommandTag
                   key={currentValue}
                   onClick={() =>
-                    setItemSelected(
-                      itemSelected.filter((item) => item !== currentValue),
+                    setColumnFilters(
+                      columnFilters.filter((item) => item !== currentValue),
                     )
                   }
                   className="flex items-center justify-start gap-2"
@@ -126,19 +123,19 @@ export function StatusFilter() {
 
             <CommandGroup>
               {statusMockData
-                .filter((state) => !itemSelected.includes(state.value))
+                .filter((state) => !columnFilters.includes(state.value))
                 .map((state) => (
                   <CommandItem
                     key={state.value}
                     value={state.value}
                     onSelect={(currentValue) => {
-                      if (!itemSelected.includes(currentValue)) {
-                        setItemSelected([
-                          ...new Set([...itemSelected, currentValue]),
+                      if (!columnFilters.includes(currentValue)) {
+                        setColumnFilters([
+                          ...new Set([...columnFilters, currentValue]),
                         ])
                       } else {
-                        setItemSelected(
-                          itemSelected.filter((item) => item !== currentValue),
+                        setColumnFilters(
+                          columnFilters.filter((item) => item !== currentValue),
                         )
                       }
                     }}

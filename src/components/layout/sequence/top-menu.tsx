@@ -5,7 +5,7 @@ import Link from "next/link"
 import { useParams, usePathname } from "next/navigation"
 
 //Class Merge
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -22,7 +22,7 @@ import {
 
 //Zod & Schemas
 import { z } from "zod"
-import { sequenceSchema } from "~/lib/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData"
 
 const actionButtons = [
   { icon: PaperPlaneRight, name: "Flow", subPath: "/flow" },

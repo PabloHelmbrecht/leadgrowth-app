@@ -44,7 +44,8 @@ import { useToast } from "~/components/ui/use-toast"
 import { CaretDown, Star, Check, Plus } from "@phosphor-icons/react/dist/ssr"
 
 //Class Merge & id Maker
-import { cn, makeId } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
+import { makeId } from "~/lib/utils/formatters"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
@@ -52,11 +53,11 @@ import {
   ownersMockDataAtom,
   sequencesMockDataAtom,
   tagsMockDataAtom,
-} from "~/lib/mockData"
+} from "~/lib/stores/mockData"
 
 //Zod & Schemas & Types
 import { z } from "zod"
-import { sequenceSchema } from "~/lib/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData"
 
 const cloneSequenceFormSquema = z.object({
   name: sequenceSchema.shape.name.min(2, {
@@ -75,6 +76,8 @@ import {
   useForm,
   type UseFormReturn,
 } from "react-hook-form"
+
+//React
 import { useState } from "react"
 
 export function AddSequence() {
@@ -99,6 +102,7 @@ export function AddSequence() {
             id: newSequenceId,
             status: "paused",
             ...values,
+            flow: { edges: [], nodes: [] },
           },
         ]
       })

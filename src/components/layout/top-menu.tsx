@@ -1,143 +1,7 @@
 "use client"
 
 //React
-import { useState, type ReactElement } from "react"
-
-//Activities Data
-type Activity = {
-  type:
-    | "system"
-    | "note"
-    | "click"
-    | "open"
-    | "reply"
-    | "email sent"
-    | "email scheduled"
-    | "unsubscription"
-    | "email bounced"
-    | "call"
-    | "linkedin"
-  timestamp: Date
-  title: ReactElement | string
-  description: ReactElement | string
-  path?: string
-}
-
-const activitiesData: Activity[] = [
-  {
-    type: "system",
-    timestamp: new Date("2024-06-22T03:24:00"),
-    title: <div>System Update</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "note",
-    timestamp: new Date(),
-    title: <div>Notes</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "click",
-    timestamp: new Date("2024-06-21T03:24:00"),
-    title: <div>Email clicked</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "open",
-    timestamp: new Date("2024-06-12T03:24:00"),
-    title: <div>Email opened</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "reply",
-    timestamp: new Date("2024-06-12T03:24:00"),
-    title: <div>Email replied</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "email sent",
-    timestamp: new Date("2024-05-22T03:24:00"),
-    title: <div>Email sent</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "email scheduled",
-    timestamp: new Date("2023-06-22T03:24:00"),
-    title: <div>Email scheduled</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-
-  {
-    type: "unsubscription",
-    timestamp: new Date("2023-06-22T03:24:00"),
-    title: <div>Prospect unsubscribed</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "email bounced",
-    timestamp: new Date("2023-06-22T03:24:00"),
-    title: <div>Email bounced</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "call",
-    timestamp: new Date("2023-06-22T03:24:00"),
-    title: <div>Prospect called</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    type: "linkedin",
-    timestamp: new Date("2023-06-22T03:24:00"),
-    title: <div>Likedin activity</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-]
-
-//Notifications Data
-type Notification = {
-  priority: "low" | "medium" | "high"
-  timestamp: Date
-  title: ReactElement | string
-  description: ReactElement | string
-  unseen?: boolean
-  path?: string
-}
-
-const notificationsData: Notification[] = [
-  {
-    priority: "low",
-    timestamp: new Date("2024-06-22T03:24:00"),
-    title: <div>Priority Low</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-    unseen: true,
-  },
-  {
-    priority: "medium",
-    timestamp: new Date(),
-    title: <div>Priority Medium</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-  {
-    priority: "high",
-    timestamp: new Date("2024-06-21T03:24:00"),
-    title: <div>Priority High</div>,
-    description: <div>Prospected added trough Linkedin extension</div>,
-    path: "/",
-  },
-]
+import { useState } from "react"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -199,10 +63,17 @@ dayjs.extend(relativeTime)
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sideBarAtom } from "~/lib/store"
+import { sideBarAtom } from "~/lib/stores"
+import {
+  activitiesMockDataAtom,
+  notificationsMockDataAtom,
+} from "~/lib/stores/mockData"
+
+//Types
+import type { Activity, Notification } from "~/lib/stores/mockData"
 
 //Class Merge
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //Icons
 import {
@@ -380,6 +251,8 @@ function SettingsButton() {
 }
 
 function NotificationsButton() {
+  const [activitiesMockData] = useAtom(activitiesMockDataAtom)
+  const [notificationsMockData] = useAtom(notificationsMockDataAtom)
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -418,7 +291,7 @@ function NotificationsButton() {
           >
             <ScrollArea className="h-full w-full overflow-x-visible overscroll-x-none">
               <div className="flex flex-col items-start justify-start gap-4 pr-4 ">
-                {activitiesData.map((activity, key) => (
+                {activitiesMockData.map((activity, key) => (
                   <ActivityBlock {...activity} key={key} />
                 ))}
               </div>
@@ -430,7 +303,7 @@ function NotificationsButton() {
           >
             <ScrollArea className="h-full w-full overflow-x-visible overscroll-x-none">
               <div className="flex flex-col items-start justify-start gap-4 pr-4 ">
-                {notificationsData
+                {notificationsMockData
                   .sort((a, b) => {
                     return Number(b.unseen === true) - Number(a.unseen === true)
                   })

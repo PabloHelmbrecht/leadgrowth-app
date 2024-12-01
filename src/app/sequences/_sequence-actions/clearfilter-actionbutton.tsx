@@ -1,14 +1,14 @@
 "use client"
 
 //Class Merge
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //Event Emmiter
-import { eventEmmiter } from "~/lib/utils"
+import { eventEmmiter } from "~/lib/utils/eventEmmiter"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { columnFiltersAtom, rowSelectionAtom } from "~/lib/store"
+import { columnFiltersAtom, rowSelectionAtom } from "~/lib/stores"
 import { useMemo } from "react"
 
 export function ClearFilterActionButton() {

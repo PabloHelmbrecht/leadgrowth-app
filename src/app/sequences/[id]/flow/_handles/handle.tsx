@@ -5,9 +5,9 @@ import {
   type HandleProps,
   Position,
 } from "@xyflow/react"
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
-export function Handle(props: HandleProps) {
+export function Handle(props: HandleProps & { nodeId: string }) {
   const connections = useHandleConnections({
     type: props.type,
     id: props.id,
@@ -27,7 +27,7 @@ export function Handle(props: HandleProps) {
         type={props.type}
         isConnectable={props.type === "source" ? connections.length < 1 : true}
         className={cn(
-          "absolute !left-1/2 !top-1/2  !z-10 !h-1 !w-3 !-translate-x-1/2 !-translate-y-1/2 transform  !rounded-none !border-none  !bg-primary-700 transition-all group-hover/handler:!h-6 group-hover/handler:!w-6  group-hover/handler:!rounded-full ",
+          "absolute !left-1/2 !top-1/2  !z-10 !h-1 !w-3 !-translate-x-1/2 !-translate-y-1/2 transform  !rounded-none !border-none  !bg-primary-700 transition-all group-hover/handler:!h-6 group-hover/handler:!w-6 group-hover/handler:!rounded-full  group-[.danger]:!bg-danger-500 ",
           props?.position === Position.Top ? "!rounded-t-sm" : "!rounded-b-sm",
         )}
       />

@@ -22,15 +22,21 @@ import {
 } from "~/components/ui/popover"
 
 //Class Merge & Event Emmiter
-import { cn, eventEmmiter } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
+import { eventEmmiter } from "~/lib/utils/eventEmmiter"
+import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
 
 //Icons
 import { CaretDown, Star } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { handlerColumnFiltersAtom, rowSelectionAtom } from "~/lib/store"
-import { tagsMockDataAtom } from "~/lib/mockData"
+import {
+  columnFiltersAtom,
+  rowSelectionAtom,
+  columnFilterSelectorReducer,
+} from "~/lib/stores"
+import { tagsMockDataAtom } from "~/lib/stores/mockData"
 
 export function TagFilter() {
   //Mock data
@@ -38,12 +44,15 @@ export function TagFilter() {
   const [rowSelection] = useAtom(rowSelectionAtom)
 
   const [open, setOpen] = useState(false)
-  const [columnFilters, setColumnFilters] = useAtom(handlerColumnFiltersAtom)
+  const [columnFilters, setColumnFilters] = useSelectorReducerAtom(
+    columnFiltersAtom,
+    columnFilterSelectorReducer("tag"),
+  )
 
   //Reset filter when button "Reset filters" is clicked
   useEffect(() => {
     const handleEvent = () => {
-      setItemSelected([])
+      setColumnFilters([])
     }
 
     eventEmmiter.on("resetAllFilters", handleEvent)
@@ -51,16 +60,7 @@ export function TagFilter() {
     return () => {
       eventEmmiter.off("resetAllFilters", handleEvent)
     }
-  }, [])
-
-  //BUG: If i use the store directly the values dont update properly
-  const [itemSelected, setItemSelected] = useState<string[]>([])
-  useEffect(() => {
-    setColumnFilters("tag", itemSelected)
-  }, [itemSelected, setColumnFilters])
-  useEffect(() => {
-    setItemSelected(columnFilters("tag"))
-  }, [setItemSelected, columnFilters])
+  }, [setColumnFilters])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -81,9 +81,9 @@ export function TagFilter() {
             alt={"config sequence button"}
           />
           Tags
-          {itemSelected.length !== 0 && (
+          {columnFilters.length !== 0 && (
             <div className="-ml-1 text-xs text-neutral-500">
-              {`+${itemSelected.length}`}
+              {`+${columnFilters.length}`}
             </div>
           )}
         </Button>
@@ -91,14 +91,14 @@ export function TagFilter() {
       <PopoverContent className=" w-72 p-0">
         <Command>
           <CommandInput placeholder="Search tags..." />
-          {itemSelected.length !== 0 && (
+          {columnFilters.length !== 0 && (
             <CommandTagsGroup>
-              {itemSelected.map((currentValue) => (
+              {columnFilters.map((currentValue) => (
                 <CommandTag
                   key={currentValue}
                   onClick={() =>
-                    setItemSelected(
-                      itemSelected.filter((item) => item !== currentValue),
+                    setColumnFilters(
+                      columnFilters.filter((item) => item !== currentValue),
                     )
                   }
                   className="flex items-center justify-start gap-2"
@@ -139,19 +139,19 @@ export function TagFilter() {
 
             <CommandGroup>
               {tagsMockData
-                .filter((tag) => !itemSelected.includes(tag.value))
+                .filter((tag) => !columnFilters.includes(tag.value))
                 .map((tag) => (
                   <CommandItem
                     key={tag.value}
                     value={tag.value}
                     onSelect={(currentValue) => {
-                      if (!itemSelected.includes(currentValue)) {
-                        setItemSelected([
-                          ...new Set([...itemSelected, currentValue]),
+                      if (!columnFilters.includes(currentValue)) {
+                        setColumnFilters([
+                          ...new Set([...columnFilters, currentValue]),
                         ])
                       } else {
-                        setItemSelected(
-                          itemSelected.filter((item) => item !== currentValue),
+                        setColumnFilters(
+                          columnFilters.filter((item) => item !== currentValue),
                         )
                       }
                     }}

@@ -5,12 +5,12 @@ import { type CellContext } from "@tanstack/react-table"
 import { Badge } from "~/components/ui/badge"
 
 //Utils
-import { Color } from "~/lib/utils"
+import { Color } from "~/lib/utils/color"
 
 //Zod & Schemas & Types
 import { z } from "zod"
 
-import { type Sequence, tagSchema } from "~/lib/mockData"
+import { type Sequence, tagSchema } from "~/lib/stores/mockData"
 
 const arrayStringSchema = z.string().array()
 const tableMetaSchema = z.object({

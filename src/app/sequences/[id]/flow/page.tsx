@@ -1,10 +1,14 @@
 "use client"
 
 //React
-import { useState, useCallback, type DragEventHandler } from "react"
+import { useCallback, type DragEventHandler } from "react"
+
+//Next JS
+import { useParams } from "next/navigation"
 
 //Utils
-import { makeId, getPercentage } from "~/lib/utils"
+import { makeId, getPercentage } from "~/lib/utils/formatters"
+import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
 
 //Icons
 import { Sparkle } from "@phosphor-icons/react/dist/ssr"
@@ -48,42 +52,12 @@ import { edgeTypes } from "./_edges/edge-types"
 //Connection Line
 import { ConnectionLine } from "./_connection-line/connection-line"
 
-//Mock Data
-const initialNodes = [
-  {
-    id: "1",
-    type: "custom",
-    className: "group",
-    data: { label: "Node 1" },
-    position: { x: 0, y: 50 },
-  },
-  {
-    id: "2",
-    type: "custom",
-    className: "group",
-    data: { label: "Node 2" },
-
-    position: { x: -400, y: 400 },
-  },
-  {
-    id: "3",
-    type: "custom",
-    className: "group",
-    data: { label: "Node 3" },
-    position: { x: 400, y: 400 },
-  },
-]
-
-const initialEdges: Edge[] = [
-  {
-    id: "1-2",
-    source: "1",
-    target: "2",
-    type: "custom",
-    className: "group",
-    sourceHandle: "default",
-  },
-]
+//Atoms & Reducers
+import {
+  edgeSelectorReducer,
+  nodeSelectorReducer,
+  sequencesMockDataAtom,
+} from "~/lib/stores/mockData"
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
   animated: false,
@@ -117,9 +91,18 @@ const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
 }
 
 export default function SequenceFlowPage() {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes)
-  const [edges, setEdges] = useState<Edge[]>(initialEdges)
+  const { id: sequenceId } = useParams<{ id: string }>()
+  const [nodes, setNodes] = useSelectorReducerAtom(
+    sequencesMockDataAtom,
+    nodeSelectorReducer(sequenceId),
+  )
+
+  const [edges, setEdges] = useSelectorReducerAtom(
+    sequencesMockDataAtom,
+    edgeSelectorReducer(sequenceId),
+  )
   const store = useStoreApi()
+
   const { getInternalNode, getNodes, getEdges, screenToFlowPosition, fitView } =
     useReactFlow()
 
@@ -242,7 +225,7 @@ export default function SequenceFlowPage() {
     window.requestAnimationFrame(() => {
       void fitView({ padding: 5 })
     })
-  }, [nodes, edges, fitView])
+  }, [nodes, edges, fitView, setNodes, setEdges])
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
@@ -255,7 +238,15 @@ export default function SequenceFlowPage() {
   const onConnect: OnConnect = useCallback(
     (connection) =>
       setEdges((eds) =>
-        addEdge({ ...connection, type: "custom", className: "group" }, eds),
+        addEdge(
+          {
+            ...connection,
+            type: "custom",
+            data: { delay: 1, unit: "days" },
+            className: "group",
+          },
+          eds,
+        ),
       ),
     [setEdges],
   )
@@ -285,15 +276,16 @@ export default function SequenceFlowPage() {
       position.y = position.y - 196 / 2
 
       const newNode = {
-        id: makeId(2),
+        id: makeId(4).toUpperCase(),
         type,
         position,
+        className: "group",
         data: { label: `${type} node` },
       }
 
       setNodes((nds) => nds.concat(newNode))
     },
-    [screenToFlowPosition],
+    [screenToFlowPosition, setNodes],
   )
 
   const onNodeDrag: OnNodeDrag = useCallback(
@@ -311,6 +303,7 @@ export default function SequenceFlowPage() {
           )
         ) {
           closeEdge.type = "custom"
+          closeEdge.data = { delay: 1, unit: "days" }
           closeEdge.className = "temp group"
           closeEdge.animated = true
           if (isValidConnection(closeEdge)) {
@@ -339,6 +332,8 @@ export default function SequenceFlowPage() {
           )
         ) {
           closeEdge.type = "custom"
+          closeEdge.data = { delay: 1, unit: "days" }
+
           closeEdge.className = "group"
           closeEdge.animated = false
 
@@ -350,7 +345,7 @@ export default function SequenceFlowPage() {
         return nextEdges
       })
     },
-    [getClosestEdge, isValidConnection],
+    [getClosestEdge, isValidConnection, setEdges],
   )
 
   return (

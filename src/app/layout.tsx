@@ -9,6 +9,7 @@ import { TRPCReactProvider } from "~/trpc/react"
 import { Sidebar } from "~/components/layout/sidebar"
 import { TopMenu } from "~/components/layout/top-menu"
 import { Toaster } from "~/components/ui/toaster"
+import { TooltipProvider } from "~/components/ui/tooltip"
 
 //Fonts
 import { Inter } from "next/font/google"
@@ -34,16 +35,18 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable}`}>
       <body>
         <TRPCReactProvider>
-          <div className="flex gap-[2px] bg-neutral-200">
-            <Sidebar />
-            <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-              <TopMenu />
-              <div className=" flex w-full flex-1 overflow-hidden">
-                {children}
+          <TooltipProvider delayDuration={400}>
+            <div className="flex gap-[2px] bg-neutral-200">
+              <Sidebar />
+              <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
+                <TopMenu />
+                <div className=" flex w-full flex-1 overflow-hidden">
+                  {children}
+                </div>
               </div>
             </div>
-          </div>
-          <Toaster />
+            <Toaster />
+          </TooltipProvider>
         </TRPCReactProvider>
       </body>
     </html>

@@ -7,10 +7,10 @@ import { type CellContext, type ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "~/components/ui/checkbox"
 
 //Utils
-import { getPercentage } from "~/lib/utils"
+import { getPercentage } from "~/lib/utils/formatters"
 
 //Types and Schemas
-import { type Sequence } from "~/lib/mockData"
+import { type Sequence } from "~/lib/stores/mockData"
 
 //Data Table Column Components
 import { KPIColumn } from "./table-columns/kpi-column"

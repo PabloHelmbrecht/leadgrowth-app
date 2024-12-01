@@ -19,8 +19,8 @@ import { MultiDialogProvider } from "~/components/ui/multi-dialog"
 //Icons
 import { DotsThree } from "@phosphor-icons/react/dist/ssr"
 
-//zzzTypes
-import { type Sequence } from "~/lib/mockData"
+//Types
+import { type Sequence } from "~/lib/stores/mockData"
 
 //Actions
 import { ArchiveSequenceAction } from "./row-actions/archive-sequence-action"

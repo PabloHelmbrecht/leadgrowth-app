@@ -22,15 +22,15 @@ import {
 } from "~/components/ui/popover"
 
 //Class Merge
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //Icons
 import { Tag, Star } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { rowSelectionAtom } from "~/lib/store"
-import { tagsMockDataAtom, sequencesMockDataAtom } from "~/lib/mockData"
+import { rowSelectionAtom } from "~/lib/stores"
+import { tagsMockDataAtom, sequencesMockDataAtom } from "~/lib/stores/mockData"
 
 export function TagActionButton() {
   //Mock data

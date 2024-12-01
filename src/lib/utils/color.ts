@@ -1,14 +1,7 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
 import { neutral } from "tailwindcss/colors"
 
 //Types
 type hsb = { hue: number; saturation: number; brightness: number }
-type EventHandler<T = unknown> = (payload?: T) => void
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
 
 export class Color {
   hex: string
@@ -130,59 +123,4 @@ export class Color {
     this.hex = this.hsbToHex(this.hsb)
     return this
   }
-}
-
-class EventEmitter<Events extends Record<string, unknown>> {
-  private events: { [K in keyof Events]?: EventHandler<Events[K]>[] } = {}
-
-  on<K extends keyof Events>(event: K, handler: EventHandler<Events[K]>) {
-    if (!this.events[event]) {
-      this.events[event] = []
-    }
-    this.events[event]!.push(handler)
-  }
-
-  off<K extends keyof Events>(event: K, handler: EventHandler<Events[K]>) {
-    if (!this.events[event]) return
-
-    this.events[event] = this.events[event]!.filter((h) => h !== handler)
-  }
-
-  emit<K extends keyof Events>(event: K, payload?: Events[K]) {
-    if (!this.events[event]) return
-
-    this.events[event]!.forEach((handler) => handler(payload))
-  }
-}
-
-export const eventEmmiter = new EventEmitter()
-
-export function getPercentage(
-  numerator: string | number,
-  denominator: string | number,
-  decimals = 1,
-) {
-  numerator = Number(numerator)
-  denominator = Number(denominator)
-
-  if (isNaN(numerator) || isNaN(denominator) || denominator === 0) {
-    return "-"
-  }
-
-  return String(
-    `${Math.round((numerator / denominator) * 100 * 10 ** decimals) / 10 ** decimals}%`,
-  )
-}
-
-export function makeId(length: number): string {
-  let result = ""
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  const charactersLength = characters.length
-  let counter = 0
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    counter += 1
-  }
-  return result
 }

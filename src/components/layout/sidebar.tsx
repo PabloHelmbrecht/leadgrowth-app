@@ -9,7 +9,7 @@ import Link from "next/link"
 import { Button } from "~/components/ui/button"
 
 //Class Merge
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //Icons
 import { type Icon } from "@phosphor-icons/react"
@@ -28,7 +28,7 @@ import {
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sideBarAtom } from "~/lib/store"
+import { sideBarAtom } from "~/lib/stores"
 
 //Structure of sidebar
 const homeBlock = {

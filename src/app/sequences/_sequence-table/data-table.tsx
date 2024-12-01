@@ -18,7 +18,7 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "~/components/ui/table"
 
 //Utils
-import { cn } from "~/lib/utils"
+import { cn } from "~/lib/utils/classesMerge"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
@@ -27,13 +27,13 @@ import {
   IsAllRowsSelectedAtom,
   columnFiltersAtom,
   rowSelectionAtom,
-} from "~/lib/store"
-import { tagsMockDataAtom, sequencesMockDataAtom } from "~/lib/mockData"
+} from "~/lib/stores"
+import { tagsMockDataAtom, sequencesMockDataAtom } from "~/lib/stores/mockData"
 
 //Zod and Schemas
 import { z } from "zod"
 const arrayStringSchema = z.string().array()
-import { sequenceSchema } from "~/lib/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData"
 
 //Types
 interface DataTableProps<TData, TValue> {

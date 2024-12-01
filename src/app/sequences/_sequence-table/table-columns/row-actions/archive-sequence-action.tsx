@@ -16,10 +16,10 @@ import { useToast } from "~/components/ui/use-toast"
 //Zod & Schemas & Types
 import { z } from "zod"
 
-import { type Sequence, tagSchema } from "~/lib/mockData"
+import { type Sequence, tagSchema } from "~/lib/stores/mockData"
 
 //Atom and Jotai
-import { sequencesMockDataAtom } from "~/lib/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData"
 import { useAtom } from "jotai"
 
 const tableMetaSchema = z.object({

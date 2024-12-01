@@ -23,7 +23,7 @@ import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sequencesMockDataAtom } from "~/lib/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData"
 
 export default function SearchPage() {
   const [sequenceMockData] = useAtom(sequencesMockDataAtom)
@@ -63,7 +63,12 @@ export default function SearchPage() {
         <ArchiveActionButton />
       </div>
 
-      <DataTable columns={columns} data={sequenceMockData} />
+      <DataTable
+        columns={columns}
+        data={sequenceMockData.sort(
+          (a, b) => a.name.localeCompare(b.name) || a.id.localeCompare(b.id),
+        )}
+      />
     </main>
   )
 }
