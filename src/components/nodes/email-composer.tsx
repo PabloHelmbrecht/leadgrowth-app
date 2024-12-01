@@ -19,11 +19,6 @@ import { useMultiDialog } from "~/components/ui/multi-dialog"
 //NextJS
 import { useParams } from "next/navigation"
 
-//Zod & Schemas
-import {type z } from "zod"
-import { nodeTypesDataSchemas } from "~/app/sequences/[id]/flow/_nodes/node-types"
-import { emailComposerSchema } from "~/lib/stores/mockData"
-
 //React Hook Form & Form Resolver
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -35,6 +30,25 @@ import {
   sequencesMockDataAtom,
   uniqueNodeSelectorReducer,
 } from "~/lib/stores/mockData"
+
+//Zod & Schemas
+import {  z } from "zod"
+import { nodeTypesDataSchemas } from "~/app/sequences/[id]/flow/_nodes/node-types"
+
+export const emailComposerSchema = z.discriminatedUnion("isReply", [
+  z.object({
+    subject: z.string(),
+    body: z.string().min(5),
+    isReply: z.literal(true),
+    includeSignature: z.boolean().default(false).optional(),
+  }),
+  z.object({
+    subject: z.string().min(5),
+    body: z.string().min(5),
+    isReply: z.literal(false),
+    includeSignature: z.boolean().default(false).optional(),
+  }),
+])
 
 //Utils
 import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"

@@ -3,21 +3,6 @@ import { z } from "zod"
 
 //Schemas
 
-export const emailComposerSchema = z.discriminatedUnion("isReply", [
-  z.object({
-    subject: z.string(),
-    body: z.string().min(5),
-    isReply: z.literal(true),
-    includeSignature: z.boolean().default(false).optional(),
-  }),
-  z.object({
-    subject: z.string().min(5),
-    body: z.string().min(5),
-    isReply: z.literal(false),
-    includeSignature: z.boolean().default(false).optional(),
-  }),
-])
-
 export const nodeSchema = z.object({
   id: z.string(),
   type: z.string().optional(),

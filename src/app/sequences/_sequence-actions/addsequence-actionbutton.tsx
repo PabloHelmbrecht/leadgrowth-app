@@ -153,6 +153,7 @@ export function AddSequence() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <div>
       <DialogTrigger asChild>
         <Button className="flex items-center justify-between gap-3 ">
           <Plus
@@ -242,6 +243,7 @@ export function AddSequence() {
           </DialogContent>
         </form>
       </Form>
+      </div>
     </Dialog>
   )
 }

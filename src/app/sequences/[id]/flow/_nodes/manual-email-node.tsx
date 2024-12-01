@@ -31,12 +31,10 @@ import { reduceText } from "~/lib/utils/formatters"
 
 //Zod
 import { z } from "zod"
-import { useNodeValidator } from "~/components/nodes/nodeValidator"
 import { cn } from "~/lib/utils/classesMerge"
 
 //Schemas
-import { emailComposerSchema } from "~/lib/stores/mockData"
-
+import { emailComposerSchema } from "~/components/nodes/email-composer"
 const type = "manualEmail"
 export const manualEmailDataSchema = z.object({
   subject: z.string(),
@@ -45,9 +43,7 @@ export const manualEmailDataSchema = z.object({
   includeSignature: z.boolean().default(false).optional(),
   pending: z.number().optional(),
   finished: z.number().optional(),
-  errors: z.number().optional(),
-  isComplete: z.boolean().optional(),
-})
+  errors: z.number().optional()})
 export type ManualEmailNode = Node<
   z.infer<typeof manualEmailDataSchema>,
   typeof type
@@ -60,24 +56,15 @@ enum dialogs {
 }
 
 export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
-  try {
-    const schemass = emailComposerSchema.safeParse(data)
 
-    const isComplete = schemass.success
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useNodeValidator(id, isComplete)
+    const {success: isComplete } = emailComposerSchema.safeParse(data)
 
-    console.log({ schemass })
-    console.log({ data })
-  } catch (e) {
-    console.error(`Error validating node ${id}`)
-  }
 
   return (
     <div
       className={cn(
         "group flex w-96 flex-col overflow-hidden rounded border-2 bg-white  text-sm transition-colors group-[.selected]:border-primary-700   ",
-        !data.isComplete &&
+        !isComplete &&
           "danger border-danger-400 group-[.selected]:border-danger-400",
       )}
     >
@@ -92,7 +79,7 @@ export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
             />
           </div>
           <div className="flex-1 font-semibold">Manual Email</div>
-          {data.isComplete ? (
+          {isComplete ? (
             <div className="flex-initial text-xs font-semibold text-neutral-500">
               {`#${id}`}
             </div>
