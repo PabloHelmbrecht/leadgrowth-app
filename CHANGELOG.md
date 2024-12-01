@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.15](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.14...v0.1.15) (2024-12-01)
+
+
+### Features
+
+* **sequence flow:** added new nodes ([fae1f76](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/fae1f76b9aea1e79e6d4bfe88d9fecf4458ff916))
+
 ### [0.1.14](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.13...v0.1.14) (2024-08-14)
 
 
