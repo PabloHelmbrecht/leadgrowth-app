@@ -2,29 +2,29 @@
 import { type EdgeTypes } from "@xyflow/react"
 
 import {
-  customDataSchema,
-  CustomEdge,
+    customDataSchema,
+    CustomEdge,
 } from "~/app/sequences/[id]/flow/_edges/custom-edge"
 
 export const edgeStructures = [
-  {
-    type: "custom" as const,
-    component: CustomEdge,
-    dataSchema: customDataSchema,
-  },
-  {
-    type: "placeholder" as const,
-    component: CustomEdge,
-    dataSchema: customDataSchema,
-  },
+    {
+        type: "custom" as const,
+        component: CustomEdge,
+        dataSchema: customDataSchema,
+    },
+    {
+        type: "placeholder" as const,
+        component: CustomEdge,
+        dataSchema: customDataSchema,
+    },
 ]
 
 export const edgeTypes: EdgeTypes = Object.fromEntries(
-  edgeStructures.map((edge) => [edge.type, edge.component]),
+    edgeStructures.map((edge) => [edge.type, edge.component]),
 )
 
 export const edgeTypesDataSchemas = Object.fromEntries(
-  edgeStructures.map((edge) => [edge.type, edge.dataSchema]),
+    edgeStructures.map((edge) => [edge.type, edge.dataSchema]),
 )
 
 export type EdgeType = (typeof edgeStructures)[number]["type"]
