@@ -6,6 +6,7 @@ import {
     useEffect,
     useState,
     type SetStateAction,
+    useMemo,
 } from "react"
 
 //React Hook Forms
@@ -29,7 +30,7 @@ const flattenedFieldValueSchema = z.object({
 })
 
 //Types
-type FlattenedFieldValue = z.infer<typeof flattenedFieldValueSchema>
+export type FlattenedFieldValue = z.infer<typeof flattenedFieldValueSchema>
 
 export const useNestedFieldArray = <T extends FieldValues>(
     name: Path<T>,
@@ -38,53 +39,51 @@ export const useNestedFieldArray = <T extends FieldValues>(
     fields: FlattenedFieldValue[],
     setFields: Dispatch<SetStateAction<FlattenedFieldValue[]>>,
 ] => {
-    const { watch, setValue } = useFormContext<T>()
-    const fieldValue = watch(name)
-
     type FieldValueElement<T> = {
         [K in typeof key]: PathValue<T, Path<T>>[]
     }
-
     type FieldValue<T> = FieldValueElement<T>[]
 
-    const [flattenedFieldValue, setFlattenedFieldValue] = useState<
-        FlattenedFieldValue[]
-    >(flattenFieldValue(fieldValue))
+    const { watch, setValue } = useFormContext<T>()
+    const fieldValue = watch(name)
 
-    function flattenFieldValue(
-        fieldValue: FieldValue<T>,
-        parentId?: string,
-    ): FlattenedFieldValue[] {
-        return fieldValue.reduce(
-            (accumulatedValue: FlattenedFieldValue[], value) => {
-                if (!Array.isArray(value[key])) {
-                    accumulatedValue.push({
-                        id: generateId(),
-                        parentId,
-                        isParent: false,
-                        ...value,
-                    })
-                }
+    const flattenFieldValue = useCallback(
+        (
+            fieldValue: FieldValue<T>,
+            parentId?: string,
+        ): FlattenedFieldValue[] => {
+            return fieldValue.reduce(
+                (accumulatedValue: FlattenedFieldValue[], value, index) => {
+                    if (!Array.isArray(value[key])) {
+                        accumulatedValue.push({
+                            id: generateId(),
+                            parentId,
+                            isParent: false,
+                            ...value,
+                        })
+                    }
 
-                if (Array.isArray(value[key]) && value[key].length > 0) {
-                    const id = generateId()
-                    const nestedValues = flattenFieldValue(value[key], id)
+                    if (Array.isArray(value[key]) && value[key].length > 0) {
+                        const id = generateId()
+                        const nestedValues = flattenFieldValue(value[key], id)
 
-                    accumulatedValue.push({
-                        id,
-                        parentId: undefined,
-                        isParent: true,
-                        ...value,
-                    })
+                        accumulatedValue.push({
+                            id,
+                            parentId: undefined,
+                            isParent: true,
+                            ...value,
+                        })
 
-                    accumulatedValue.push(...nestedValues)
-                }
+                        accumulatedValue.push(...nestedValues)
+                    }
 
-                return accumulatedValue
-            },
-            [],
-        )
-    }
+                    return accumulatedValue
+                },
+                [],
+            )
+        },
+        [key],
+    )
 
     const unflattenFieldValue = useCallback(
         (flattenedArray: FlattenedFieldValue[], key: string): FieldValue<T> => {
@@ -92,7 +91,6 @@ export const useNestedFieldArray = <T extends FieldValues>(
                 children: FlattenedFieldValue[]
             }
 
-         
             const flattenedArrayMap = new Map<string, FlattenedFieldValueMap>(
                 flattenedArray.map((value) => [
                     value.id,
@@ -128,9 +126,9 @@ export const useNestedFieldArray = <T extends FieldValues>(
                     )
 
                     fieldValue.push({ ...value, [key]: valueChildren })
-                } 
+                }
 
-                if(!mapValue.isParent && mapValue.parentId === undefined){
+                if (!mapValue.isParent && mapValue.parentId === undefined) {
                     fieldValue.push(value)
                 }
             })
@@ -139,6 +137,10 @@ export const useNestedFieldArray = <T extends FieldValues>(
         },
         [],
     )
+
+    const [flattenedFieldValue, setFlattenedFieldValue] = useState<
+        FlattenedFieldValue[]
+    >(flattenFieldValue(fieldValue))
 
     useEffect(() => {
         const value = unflattenFieldValue(
@@ -150,4 +152,39 @@ export const useNestedFieldArray = <T extends FieldValues>(
     }, [flattenedFieldValue, key, name, setValue, unflattenFieldValue])
 
     return [flattenedFieldValue, setFlattenedFieldValue]
+}
+
+export const useNestedFieldArrayItem = (
+    items: FlattenedFieldValue[],
+    setItems: Dispatch<SetStateAction<FlattenedFieldValue[]>>,
+    id: string,
+): [
+    item: FlattenedFieldValue | undefined,
+    setItem: Dispatch<SetStateAction<FlattenedFieldValue>>,
+] => {
+    const item: FlattenedFieldValue | undefined = useMemo(
+        () => items.find((item) => item.id === id),
+        [items, id],
+    )
+
+    const setItem: Dispatch<SetStateAction<FlattenedFieldValue>> = useCallback(
+        (
+            newItem:
+                | FlattenedFieldValue
+                | ((item: FlattenedFieldValue) => FlattenedFieldValue),
+        ) => {
+            const newItems = items.map((item) => {
+                if (item.id === id) {
+                    return newItem instanceof Function ? newItem(item) : newItem
+                }
+
+                return item
+            })
+
+            setItems(newItems)
+        },
+        [id, items, setItems],
+    )
+
+    return [item, setItem]
 }

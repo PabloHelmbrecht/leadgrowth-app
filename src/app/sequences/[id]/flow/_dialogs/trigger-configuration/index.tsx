@@ -1,13 +1,12 @@
-import { Fragment } from "react"
+/**
+ * TODO:
+ * - [ ] Add trigger configuration for each type
+ * - [ ] El plan es que el trigger configuration se vuelva gris al seleccionar uno y se expanda con las config adentro (como el GroupFilter)
+ */
 
 //UI
 import { Button } from "~/components/ui/button"
-import {
-    FormControl,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "~/components/ui/form"
+import { FormControl, FormItem, FormMessage } from "~/components/ui/form"
 
 import {
     Accordion,
@@ -52,7 +51,6 @@ export function TriggerConfiguration() {
 
     const { accordionStates, useAccordionItemRef } = useAccordion()
 
-
     return (
         <Accordion type="single" className="space-y-4" collapsible>
             <AccordionItem
@@ -71,56 +69,41 @@ export function TriggerConfiguration() {
                         ? `...`
                         : triggers.fields.length === 1
                           ? " a contact is manually added."
-                          : ` 1 of ${triggers.fields.length} events occurrs.`}
+                          : ` 1 of ${triggers.fields.length+1} events occurrs.`}
                 </AccordionTrigger>
 
                 <AccordionContent className="flex flex-col gap-4 ">
                     <div className="scroll flex max-h-[40vh] flex-col gap-4 overflow-x-clip  overflow-y-scroll py-2  pr-1 ">
+                        <div className="w-full rounded border border-neutral-300 bg-neutral-50 px-2 py-1 font-medium">
+                            Manual Activation
+                        </div>
+
                         {triggers.fields.map((trigger, index) => {
                             const { data: triggerData } =
                                 triggerDataSchema.safeParse(trigger)
                             const triggerError = errors.triggers?.[index]
 
                             return (
-                                <Fragment key={trigger.id}>
-                                    {index !== 0 && (
-                                        <div className="flex w-full items-center justify-center">
-                                            OR
-                                        </div>
-                                    )}
-                                    <div
-                                        className={cn(
-                                            "w-full rounded-lg bg-white p-4",
-                                            triggerError &&
-                                                "border-2 border-danger-400",
-                                        )}
-                                    >
-                                        <FormItem>
-                                            <FormLabel>Event</FormLabel>
-                                            <FormControl>
-                                                <div>
-                                                    {triggerData?.type ===
-                                                    "manualActivation" ? (
-                                                        <div className="flex h-10 w-full items-center justify-between rounded-md border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm font-medium ring-offset-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300 [&>span]:line-clamp-1">
-                                                            Manual Activation
-                                                        </div>
-                                                    ) : (
-                                                        <TriggerSelector
-                                                            index={index}
-                                                        />
-                                                    )}
+                                <FormItem key={trigger.id}>
+                                    <FormControl>
+                                        <div>
+                                            <div className="flex w-full flex-row items-center gap-3">
+                                                <div className="w-fit">or</div>
+                                                <TriggerSelector
+                                                    index={index}
+                                                    triggers={triggers}
+                                                />
+                                            </div>
 
-                                                    {triggerError && (
-                                                        <p className="pt-2 text-sm font-medium text-red-500 dark:text-red-900">
-                                                            Invalid trigger
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    </div>
-                                </Fragment>
+                                            {triggerError && (
+                                                <p className="pt-2 text-sm font-medium text-red-500 dark:text-red-900">
+                                                    Invalid trigger
+                                                </p>
+                                            )}
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
                             )
                         })}
                     </div>
@@ -158,35 +141,6 @@ export function TriggerConfiguration() {
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 ">
                     <CriteriaSelector />
-
-                    <div className="flex flex-row gap-4">
-                        <Button
-                            className="flex h-fit w-fit flex-row   items-center gap-2 text-xs"
-                            variant={"quaternary"}
-                            onClick={() => {
-                                filters.append({
-                                    type: "",
-                                    parameters: {},
-                                })
-                            }}
-                        >
-                            <Plus weight="bold" />
-                            Add condition
-                        </Button>
-                        <Button
-                            className="flex h-fit w-fit flex-row   items-center gap-2 bg-neutral-500 text-xs"
-                            variant={"quaternary"}
-                            onClick={() => {
-                                filters.append({
-                                    type: "",
-                                    parameters: {},
-                                })
-                            }}
-                        >
-                            <Plus weight="bold" />
-                            Add condition group
-                        </Button>
-                    </div>
                 </AccordionContent>
             </AccordionItem>
         </Accordion>

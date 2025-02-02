@@ -33,7 +33,7 @@ const actionButtons = [
 ]
 
 export function TopMenu({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
     const paramSchema = z.object({ id: sequenceSchema.shape.id })

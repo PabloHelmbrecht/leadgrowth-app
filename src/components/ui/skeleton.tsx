@@ -1,7 +1,7 @@
 import { cn } from "~/lib/utils/classesMerge"
 
 function Skeleton({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
     return (

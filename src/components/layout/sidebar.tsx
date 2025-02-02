@@ -69,7 +69,7 @@ const analyzeBlock = {
 const sidebarStructure = [homeBlock, prospectBlock, engageBlock, analyzeBlock]
 
 function Sidebar({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
     const [isOpen] = useAtom(sideBarAtom)

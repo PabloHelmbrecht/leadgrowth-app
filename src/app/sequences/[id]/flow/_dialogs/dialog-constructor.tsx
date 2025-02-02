@@ -72,7 +72,6 @@ export function DialogConstructor<
         setOpen(false)
     }
 
-
     return (
         <DialogContent aria-describedby="header" className="sm:max-w-[800px]">
             <DialogHeader>

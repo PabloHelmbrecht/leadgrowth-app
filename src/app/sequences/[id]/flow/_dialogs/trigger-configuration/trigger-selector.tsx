@@ -22,7 +22,7 @@ import { CaretUpDown, Check, Trash } from "@phosphor-icons/react/dist/ssr"
 import { cn } from "~/lib/utils/classesMerge"
 
 //React Hook Form
-import { useFieldArray } from "react-hook-form"
+import { type UseFieldArrayReturn } from "react-hook-form"
 
 //Zod & Schemas
 import type { z } from "zod"
@@ -31,16 +31,17 @@ import {
     triggerDataSchema,
 } from "../../_nodes/trigger-node"
 
-
 //TAREA: Hacer que al seleccionar un trigger me permita seleccionar los parametros específicos
 
-export function TriggerSelector({ index }: { index: number }) {
-    const triggers = useFieldArray<z.infer<typeof triggerNodeDataSchema>>({
-        name: "triggers",
-        rules: { minLength: 1 },
-    })
-
+export function TriggerSelector({
+    index,
+    triggers,
+}: {
+    index: number
+    triggers: UseFieldArrayReturn<z.infer<typeof triggerNodeDataSchema>>
+}) {
     const trigger = triggers.fields[index]
+
     const { data: triggerData } = triggerDataSchema.safeParse(trigger)
 
     const triggerEvents: (Partial<z.infer<typeof triggerDataSchema>> & {
@@ -159,17 +160,17 @@ export function TriggerSelector({ index }: { index: number }) {
     ]
 
     return (
-        <div className="flex flex-row gap-2">
+        <div className="flex h-fit  flex-1 flex-row items-center divide-x divide-neutral-300 overflow-clip rounded  border  border-neutral-300 bg-white ">
             <Popover>
                 <PopoverTrigger
                     asChild
-                    className="flex h-10 w-full items-center justify-between rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-950 dark:ring-offset-neutral-950 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-300 [&>span]:line-clamp-1"
+                    className="h-full w-16  rounded-none border-none px-2  "
                 >
                     <Button
                         variant="outline"
                         role="combobox"
                         className={cn(
-                            "w-full justify-between",
+                            "w-full justify-between py-1",
                             !triggerData?.type && "text-muted-foreground",
                         )}
                     >
@@ -218,14 +219,14 @@ export function TriggerSelector({ index }: { index: number }) {
                     </Command>
                 </PopoverContent>
             </Popover>
-            <Button
+            <div
                 onClick={() => {
                     triggers.remove(index)
                 }}
-                className="aspect-square bg-neutral-200 p-1 text-neutral-900 hover:bg-red-500 hover:text-neutral-50"
+                className=" flex aspect-square items-center justify-center rounded-none bg-transparent px-2 text-neutral-800 hover:bg-danger-100 hover:text-danger-500"
             >
-                <Trash weight="bold" className=" aspect-square w-7" />
-            </Button>
+                <Trash weight="bold" />
+            </div>
         </div>
     )
 }

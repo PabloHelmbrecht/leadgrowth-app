@@ -12,7 +12,7 @@ import { Button, buttonVariants } from "~/components/ui/button"
 const Command = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CommandPrimitive
         ref={ref}
         className={cn(
@@ -41,7 +41,7 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 const CommandInput = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.Input>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
         <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
         <CommandPrimitive.Input
@@ -60,7 +60,7 @@ CommandInput.displayName = CommandPrimitive.Input.displayName
 const CommandList = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.List>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CommandPrimitive.List
         ref={ref}
         className={cn(
@@ -89,7 +89,7 @@ CommandEmpty.displayName = CommandPrimitive.Empty.displayName
 const CommandGroup = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.Group>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CommandPrimitive.Group
         ref={ref}
         className={cn(
@@ -105,7 +105,7 @@ CommandGroup.displayName = CommandPrimitive.Group.displayName
 const CommandSeparator = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.Separator>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CommandPrimitive.Separator
         ref={ref}
         className={cn(
@@ -120,7 +120,7 @@ CommandSeparator.displayName = CommandPrimitive.Separator.displayName
 const CommandItem = React.forwardRef<
     React.ElementRef<typeof CommandPrimitive.Item>,
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CommandPrimitive.Item
         ref={ref}
         className={cn(
@@ -134,7 +134,7 @@ const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName
 
 const CommandShortcut = ({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLSpanElement>) => {
     return (
@@ -150,7 +150,7 @@ const CommandShortcut = ({
 CommandShortcut.displayName = "CommandShortcut"
 
 const CommandTagsGroup = ({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
     return (
@@ -168,7 +168,7 @@ CommandTagsGroup.displayName = "CommandTagsGroup"
 const CommandTag = React.forwardRef<
     React.ElementRef<typeof Button>,
     React.ComponentPropsWithoutRef<typeof Button>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <Button
         ref={ref}
         variant={"secondary"}
@@ -186,7 +186,7 @@ CommandTag.displayName = Button.displayName
 const CommandTagSimple = React.forwardRef<
     HTMLDivElement,
     React.HTMLProps<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <div
         ref={ref}
         className={cn(

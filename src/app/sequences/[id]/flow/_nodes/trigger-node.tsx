@@ -93,7 +93,7 @@ export const triggerDataSchema = z.discriminatedUnion("type", [
     }),
 ])
 const triggersDataSchema = triggerDataSchema.array().min(1)
-const conjunctionSchema = z.enum(["AND", "OR"])
+export const conjunctionSchema = z.enum(["AND", "OR"])
 
 export const simpleFilterCriteriaDataSchema = z.object({
     type: z.literal("simple"),
@@ -370,6 +370,12 @@ function TriggersList({
             <div>
                 Run the sequence when any of the following events occur...
             </div>
+            <div
+                     
+                        className="flex w-full flex-col items-start gap-4 rounded-md bg-neutral-100 p-2"
+                    >
+                        {getTriggerDescription({type: "manualActivation", parameters: {}})}
+                    </div>
             {triggers && triggers.length > 0 ? (
                 triggers.map((trigger, key) => (
                     <div
@@ -549,7 +555,6 @@ function FiltersCriteriaList({
         </div>
     )
 }
-
 
 export function TriggerNode({ data, id }: NodeProps<TriggerNode>) {
     const { success: isComplete, error } = triggerNodeDataSchema.safeParse(data)

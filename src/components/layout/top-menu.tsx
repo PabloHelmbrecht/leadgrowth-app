@@ -112,7 +112,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 
 export function TopMenu({
-    className,
+    className: className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
     return (

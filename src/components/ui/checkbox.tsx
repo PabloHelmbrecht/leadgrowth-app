@@ -6,14 +6,16 @@ import { Check } from "lucide-react"
 
 import { cn } from "~/lib/utils/classesMerge"
 
+//Cambié ring-2 por ring-0 y el ringoffset también
+
 const Checkbox = React.forwardRef<
     React.ElementRef<typeof CheckboxPrimitive.Root>,
     React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className: className, ...props }, ref) => (
     <CheckboxPrimitive.Root
         ref={ref}
         className={cn(
-            "peer h-4 w-4 shrink-0 rounded border-[1.5px] border-neutral-900 bg-white  ring-offset-white hover:border-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border data-[state=checked]:border-primary-700 data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-50 dark:border-neutral-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 dark:data-[state=checked]:bg-neutral-50 dark:data-[state=checked]:text-neutral-900",
+            "peer h-4 w-4 shrink-0 rounded border-[1.5px] border-neutral-900 bg-white  ring-offset-white hover:border-primary-700 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-neutral-950 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border data-[state=checked]:border-primary-700 data-[state=checked]:bg-primary-700 data-[state=checked]:text-neutral-50 dark:border-neutral-50 dark:ring-offset-neutral-950 dark:focus-visible:ring-neutral-300 dark:data-[state=checked]:bg-neutral-50 dark:data-[state=checked]:text-neutral-900",
             className,
         )}
         {...props}
