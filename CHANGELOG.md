@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.19](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.18...v0.1.19) (2025-02-02)
+
+
+### Features
+
+* **trigger node:** trigger node finished ([663eedf](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/663eedf8c6424d1bd31e38826f507bd7d75cb60c))
+
 ### [0.1.18](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.17...v0.1.18) (2025-01-05)
 
 ### [0.1.17](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.16...v0.1.17) (2025-01-05)
