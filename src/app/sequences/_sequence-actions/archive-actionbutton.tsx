@@ -24,8 +24,8 @@ import { Archive } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { rowSelectionAtom } from "~/lib/stores"
-import { sequencesMockDataAtom } from "~/lib/stores/mockData"
+import { rowSelectionAtom } from "~/lib/stores/sequence-table"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 export function ArchiveActionButton() {
     const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)

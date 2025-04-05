@@ -27,11 +27,11 @@ import { User, Check } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { rowSelectionAtom } from "~/lib/stores"
+import { rowSelectionAtom } from "~/lib/stores/sequence-table"
 import {
     ownersMockDataAtom,
     sequencesMockDataAtom,
-} from "~/lib/stores/mockData"
+} from "~/lib/stores/mockData/sequence"
 
 export function OwnerActionButton() {
     //Mock data

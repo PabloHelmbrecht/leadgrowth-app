@@ -11,14 +11,14 @@ import { CopySimple } from "@phosphor-icons/react/dist/ssr"
 import { useParams } from "next/navigation"
 
 //Utils
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    nodeSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 import { generateId } from "~/lib/utils/formatters"
 
 //Atoms and Reducers
-import {
-    sequencesMockDataAtom,
-    nodeSelectorReducer,
-} from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 import { useState } from "react"
 
 export function CloneNode({ nodeId }: { nodeId: string }) {

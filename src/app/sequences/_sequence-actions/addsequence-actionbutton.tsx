@@ -53,11 +53,11 @@ import {
     ownersMockDataAtom,
     sequencesMockDataAtom,
     tagsMockDataAtom,
-} from "~/lib/stores/mockData"
+} from "~/lib/stores/mockData/sequence"
 
 //Zod & Schemas & Types
 import { z } from "zod"
-import { sequenceSchema } from "~/lib/stores/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData/sequence"
 
 const cloneSequenceFormSquema = z.object({
     name: sequenceSchema.shape.name.min(2, {

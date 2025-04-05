@@ -8,7 +8,10 @@ import { eventEmmiter } from "~/lib/utils/eventEmmiter"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { columnFiltersAtom, rowSelectionAtom } from "~/lib/stores"
+import {
+    columnFiltersAtom,
+    rowSelectionAtom,
+} from "~/lib/stores/sequence-table"
 import { useMemo } from "react"
 
 export function ClearFilterActionButton() {

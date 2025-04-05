@@ -23,7 +23,7 @@ import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sequencesMockDataAtom } from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 export default function SearchPage() {
     const [sequenceMockData] = useAtom(sequencesMockDataAtom)

@@ -14,6 +14,10 @@ import { TooltipProvider } from "~/components/ui/tooltip"
 //Fonts
 import { Inter } from "next/font/google"
 
+//Translation i18n
+import { NextIntlClientProvider } from "next-intl"
+import { getLocale } from "next-intl/server"
+
 const inter = Inter({
     subsets: ["latin"],
     variable: "--font-inter",
@@ -26,27 +30,30 @@ export const metadata = {
     icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const locale = await getLocale()
     return (
-        <html lang="en" className={`${inter.variable}`}>
+        <html lang={locale} className={`${inter.variable}`}>
             <body>
                 <TRPCReactProvider>
-                    <TooltipProvider delayDuration={400}>
-                        <div className="flex gap-[2px] bg-neutral-200">
-                            <Sidebar />
-                            <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-                                <TopMenu />
-                                <div className=" flex w-full flex-1 overflow-hidden">
-                                    {children}
+                    <NextIntlClientProvider>
+                        <TooltipProvider delayDuration={400}>
+                            <div className="flex gap-[2px] bg-neutral-200">
+                                <Sidebar />
+                                <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
+                                    <TopMenu />
+                                    <div className=" flex w-full flex-1 overflow-hidden">
+                                        {children}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <Toaster />
-                    </TooltipProvider>
+                            <Toaster />
+                        </TooltipProvider>
+                    </NextIntlClientProvider>
                 </TRPCReactProvider>
             </body>
         </html>

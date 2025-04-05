@@ -170,7 +170,7 @@ export function TriggerSelector({
                         variant="outline"
                         role="combobox"
                         className={cn(
-                            "w-full justify-between py-1",
+                            "h-full w-full justify-between py-1.5",
                             !triggerData?.type && "text-muted-foreground",
                         )}
                     >
@@ -223,7 +223,7 @@ export function TriggerSelector({
                 onClick={() => {
                     triggers.remove(index)
                 }}
-                className=" flex aspect-square items-center justify-center rounded-none bg-transparent px-2 text-neutral-800 hover:bg-danger-100 hover:text-danger-500"
+                className=" flex aspect-square items-center justify-center rounded-none bg-transparent px-2 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900"
             >
                 <Trash weight="bold" />
             </div>

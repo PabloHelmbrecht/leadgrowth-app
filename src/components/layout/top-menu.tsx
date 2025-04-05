@@ -63,14 +63,14 @@ dayjs.extend(relativeTime)
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sideBarAtom } from "~/lib/stores"
+import { sideBarAtom } from "~/lib/stores/sidebar"
 import {
     activitiesMockDataAtom,
     notificationsMockDataAtom,
-} from "~/lib/stores/mockData"
+} from "~/lib/stores/mockData/system"
 
 //Types
-import type { Activity, Notification } from "~/lib/stores/mockData"
+import type { Activity, Notification } from "~/lib/stores/mockData/system"
 
 //Class Merge
 import { cn } from "~/lib/utils/classesMerge"

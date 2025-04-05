@@ -10,7 +10,7 @@ import { Color } from "~/lib/utils/color"
 //Zod & Schemas & Types
 import { z } from "zod"
 
-import { type Sequence, tagSchema } from "~/lib/stores/mockData"
+import { type Sequence, tagSchema } from "~/lib/stores/mockData/sequence"
 
 const arrayStringSchema = z.string().array()
 const tableMetaSchema = z.object({

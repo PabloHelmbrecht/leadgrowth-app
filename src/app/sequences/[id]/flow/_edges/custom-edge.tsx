@@ -39,7 +39,10 @@ import { Label } from "~/components/ui/label"
 //Utils
 import { getBezierEdgePosition } from "~/lib/utils/bezier"
 import { numberToLetters } from "~/lib/utils/formatters"
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    uniqueEdgeSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
 //React Flow
 import {
@@ -61,10 +64,7 @@ import { ClockCountdown, PencilSimple } from "@phosphor-icons/react/dist/ssr"
 import { z } from "zod"
 
 //Atoms and Reducers
-import {
-    sequencesMockDataAtom,
-    uniqueEdgeSelectorReducer,
-} from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 //Schemas & Types
 const timeUnitsLabels = ["hours", "days", "weeks"] as const

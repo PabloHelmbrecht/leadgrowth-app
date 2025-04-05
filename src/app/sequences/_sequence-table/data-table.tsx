@@ -16,6 +16,7 @@ import {
 
 //UI
 import { Table, TableBody, TableCell, TableRow } from "~/components/ui/table"
+import { generateId } from "~/lib/utils/formatters"
 
 //Utils
 import { cn } from "~/lib/utils/classesMerge"
@@ -23,17 +24,20 @@ import { cn } from "~/lib/utils/classesMerge"
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import {
-    tableSequenceAtom,
+    tableAtom,
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
     rowSelectionAtom,
-} from "~/lib/stores"
-import { tagsMockDataAtom, sequencesMockDataAtom } from "~/lib/stores/mockData"
+} from "~/lib/stores/sequence-table"
+import {
+    tagsMockDataAtom,
+    sequencesMockDataAtom,
+} from "~/lib/stores/mockData/sequence"
 
 //Zod and Schemas
 import { z } from "zod"
 const arrayStringSchema = z.string().array()
-import { sequenceSchema } from "~/lib/stores/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData/sequence"
 
 //Types
 interface DataTableProps<TData, TValue> {
@@ -51,7 +55,7 @@ export function DataTable<Sequence, TValue>({
 
     const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)
 
-    const [, setTableInstance] = useAtom(tableSequenceAtom)
+    const [, setTableInstance] = useAtom(tableAtom)
     const [, setIsAllRowsSelected] = useAtom(IsAllRowsSelectedAtom)
     const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom)
 
@@ -78,7 +82,7 @@ export function DataTable<Sequence, TValue>({
                             .includes(tag),
                     )
             },
-            includesStringInArrAndShowWithEmptyFilter: (
+            includesStringInArrayWithEmptyFilter: (
                 row,
                 columnId,
                 filterValue,
@@ -127,7 +131,7 @@ export function DataTable<Sequence, TValue>({
                         (sequence) => sequence.id === rowId,
                     )
                     if (foundSequence) {
-                        foundSequence.id = `${foundSequence.id}_copy`
+                        foundSequence.id = generateId()
                         return [...oldSequencesMockData, foundSequence]
                     }
 

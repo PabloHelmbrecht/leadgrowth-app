@@ -17,13 +17,13 @@ import { useToast } from "~/components/ui/use-toast"
 import { useParams } from "next/navigation"
 
 //Utils
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    nodeSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
 //Atoms and Reducers
-import {
-    sequencesMockDataAtom,
-    nodeSelectorReducer,
-} from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 export function DeleteNode({ nodeId }: { nodeId: string }) {
     const { id: sequenceId } = useParams<{ id: string }>()

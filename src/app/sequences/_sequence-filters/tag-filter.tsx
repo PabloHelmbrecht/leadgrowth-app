@@ -24,7 +24,10 @@ import {
 //Class Merge & Event Emmiter
 import { cn } from "~/lib/utils/classesMerge"
 import { eventEmmiter } from "~/lib/utils/eventEmmiter"
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    columnFilterSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
 //Icons
 import { CaretDown, Star } from "@phosphor-icons/react/dist/ssr"
@@ -34,9 +37,8 @@ import { useAtom } from "jotai"
 import {
     columnFiltersAtom,
     rowSelectionAtom,
-    columnFilterSelectorReducer,
-} from "~/lib/stores"
-import { tagsMockDataAtom } from "~/lib/stores/mockData"
+} from "~/lib/stores/sequence-table"
+import { tagsMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 export function TagFilter() {
     //Mock data

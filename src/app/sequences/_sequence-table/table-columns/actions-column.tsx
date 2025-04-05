@@ -20,7 +20,7 @@ import { MultiDialogProvider } from "~/components/ui/multi-dialog"
 import { DotsThree } from "@phosphor-icons/react/dist/ssr"
 
 //Types
-import { type Sequence } from "~/lib/stores/mockData"
+import { type Sequence } from "~/lib/stores/mockData/sequence"
 
 //Actions
 import { ArchiveSequenceAction } from "./row-actions/archive-sequence-action"
@@ -43,7 +43,7 @@ export function ActionsColumn(cellContext: CellContext<Sequence, unknown>) {
                                 className="h-fit w-fit px-3 py-1"
                             >
                                 <span className="sr-only">Open menu</span>
-                                <DotsThree size={20} weight="bold" />
+                                <DotsThree size={16} weight="bold" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">

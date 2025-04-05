@@ -31,6 +31,16 @@ import { cn } from "~/lib/utils/classesMerge"
 import { makeList } from "~/lib/utils/formatters"
 
 //Schemas
+import {
+    conjunctionSchema,
+    simpleFilterCriteriaDataSchema,
+    filterSchema,
+} from "~/lib/stores/mockData/flow"
+import type {
+    Conjuntion,
+    SimpleFilter as SimpleFilterT,
+    GroupFilter as GroupFilterT,
+} from "~/lib/stores/mockData/flow"
 const type = "trigger"
 
 export const triggerDataSchema = z.discriminatedUnion("type", [
@@ -93,24 +103,6 @@ export const triggerDataSchema = z.discriminatedUnion("type", [
     }),
 ])
 const triggersDataSchema = triggerDataSchema.array().min(1)
-export const conjunctionSchema = z.enum(["AND", "OR"])
-
-export const simpleFilterCriteriaDataSchema = z.object({
-    type: z.literal("simple"),
-    field: z.string(),
-    values: z.unknown(),
-})
-
-export const groupFilterCriteriaDataSchema = z.object({
-    type: z.literal("group"),
-    conjunction: conjunctionSchema,
-    filters: simpleFilterCriteriaDataSchema.array(),
-})
-
-export const filterSchema = z.discriminatedUnion("type", [
-    simpleFilterCriteriaDataSchema,
-    groupFilterCriteriaDataSchema,
-])
 
 export const triggerNodeDataSchema = z.object({
     triggers: triggersDataSchema,
@@ -370,12 +362,12 @@ function TriggersList({
             <div>
                 Run the sequence when any of the following events occur...
             </div>
-            <div
-                     
-                        className="flex w-full flex-col items-start gap-4 rounded-md bg-neutral-100 p-2"
-                    >
-                        {getTriggerDescription({type: "manualActivation", parameters: {}})}
-                    </div>
+            <div className="flex w-full flex-col items-start gap-4 rounded-md bg-neutral-100 p-2">
+                {getTriggerDescription({
+                    type: "manualActivation",
+                    parameters: {},
+                })}
+            </div>
             {triggers && triggers.length > 0 ? (
                 triggers.map((trigger, key) => (
                     <div
@@ -402,19 +394,13 @@ interface IFilter {
 }
 
 class SimpleFilter implements IFilter {
-    private field: z.infer<typeof simpleFilterCriteriaDataSchema.shape.field>
-    private values: z.infer<typeof simpleFilterCriteriaDataSchema.shape.values>
+    private field: SimpleFilterT["field"]
+    private value: SimpleFilterT["value"]
     private isChild: boolean
 
-    constructor({
-        field,
-        values,
-    }: {
-        field: z.infer<typeof simpleFilterCriteriaDataSchema.shape.field>
-        values: z.infer<typeof simpleFilterCriteriaDataSchema.shape.values>
-    }) {
+    constructor({ field, value: value }: SimpleFilterT) {
         this.field = field
-        this.values = values
+        this.value = value
         this.isChild = false
     }
 
@@ -439,7 +425,7 @@ class SimpleFilter implements IFilter {
                 </div>
                 <div className="flex flex-1 flex-wrap items-start justify-start gap-2">
                     <span className="rounded bg-neutral-700 p-1 px-2 text-xs text-white">
-                        {String(this.values)}
+                        {String(this.value)}
                     </span>
                 </div>
             </div>
@@ -448,28 +434,18 @@ class SimpleFilter implements IFilter {
 }
 
 class GroupFilter implements IFilter {
-    private conjunction: z.infer<
-        typeof groupFilterCriteriaDataSchema.shape.conjunction
-    >
+    private conjunction: Conjuntion
     private children: IFilter[] = []
 
     constructor({
         conjunction,
         filters,
     }: {
-        conjunction: z.infer<
-            typeof groupFilterCriteriaDataSchema.shape.conjunction
-        >
-        filters: z.infer<typeof groupFilterCriteriaDataSchema.shape.filters>
+        conjunction: Conjuntion
+        filters: SimpleFilterT[]
     }) {
         this.conjunction = conjunction
-        this.children = filters.map(
-            (f) =>
-                new SimpleFilter({
-                    field: f.field,
-                    values: f.values,
-                }),
-        )
+        this.children = filters.map((filter) => new SimpleFilter(filter))
     }
 
     setAsChild(): this {
@@ -498,9 +474,7 @@ class GroupFilter implements IFilter {
 }
 
 function createFilterFromData(
-    filter:
-        | z.infer<typeof simpleFilterCriteriaDataSchema>
-        | z.infer<typeof groupFilterCriteriaDataSchema>,
+    filter: SimpleFilterT | GroupFilterT,
 ): IFilter | undefined {
     const { data: filterData } = filterSchema.safeParse(filter)
     if (filterData?.type === "group") {
@@ -512,10 +486,7 @@ function createFilterFromData(
 
     if (filterData?.type === "simple") {
         const simple = simpleFilterCriteriaDataSchema.parse(filter)
-        return new SimpleFilter({
-            field: simple.field,
-            values: simple.values,
-        })
+        return new SimpleFilter(simple)
     }
 }
 

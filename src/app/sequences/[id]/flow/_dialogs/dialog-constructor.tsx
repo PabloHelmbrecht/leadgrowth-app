@@ -24,17 +24,17 @@ import {
 } from "react-hook-form"
 
 //Atoms and Reducers
-import {
-    sequencesMockDataAtom,
-    uniqueNodeSelectorReducer,
-    type Node,
-} from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
+import type { Node } from "~/lib/stores/mockData/flow"
 
 //Zod & Schemas
 import { type infer as ZodInfer, type ZodSchema } from "zod"
 
 //Utils
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    uniqueNodeSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
 export function DialogConstructor<
     SchemaType extends ZodSchema<Node["data"]>,
@@ -73,7 +73,7 @@ export function DialogConstructor<
     }
 
     return (
-        <DialogContent aria-describedby="header" className="sm:max-w-[800px]">
+        <DialogContent aria-describedby="header" className="sm:max-w-[900px]">
             <DialogHeader>
                 {title && <DialogTitle>{title}</DialogTitle>}
                 {description && (

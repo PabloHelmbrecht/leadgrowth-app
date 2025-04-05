@@ -7,7 +7,7 @@ import { Star } from "@phosphor-icons/react/dist/ssr"
 //Zod & Schemas & Types
 import { z } from "zod"
 
-import { type Sequence, tagSchema } from "~/lib/stores/mockData"
+import { type Sequence, tagSchema } from "~/lib/stores/mockData/sequence"
 
 const arrayStringSchema = z.string().array()
 const tableMetaSchema = z.object({

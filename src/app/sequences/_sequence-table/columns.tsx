@@ -10,7 +10,7 @@ import { Checkbox } from "~/components/ui/checkbox"
 import { getPercentage } from "~/lib/utils/formatters"
 
 //Types and Schemas
-import { type Sequence } from "~/lib/stores/mockData"
+import { type Sequence } from "~/lib/stores/mockData/sequence"
 
 //Data Table Column Components
 import { KPIColumn } from "./table-columns/kpi-column"

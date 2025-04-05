@@ -28,7 +28,7 @@ import {
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { sideBarAtom } from "~/lib/stores"
+import { sideBarAtom } from "~/lib/stores/sidebar"
 
 //Structure of sidebar
 const homeBlock = {

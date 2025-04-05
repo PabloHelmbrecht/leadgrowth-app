@@ -5,10 +5,10 @@ import { Checkbox as CheckboxPrimitive } from "~/components/ui/checkbox"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { tableSequenceAtom, IsAllRowsSelectedAtom } from "~/lib/stores"
+import { tableAtom, IsAllRowsSelectedAtom } from "~/lib/stores/sequence-table"
 
 export function SelectAllCheckbox() {
-    const [tableInstance] = useAtom(tableSequenceAtom)
+    const [tableInstance] = useAtom(tableAtom)
     const [isAllRowsSelected, setIsAllRowsSelected] = useAtom(
         IsAllRowsSelectedAtom,
     )

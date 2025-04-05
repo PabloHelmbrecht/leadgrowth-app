@@ -11,7 +11,11 @@ import { useParams } from "next/navigation"
 
 //Utils
 import { getPercentage, generateId } from "~/lib/utils/formatters"
-import { useSelectorReducerAtom } from "~/lib/utils/reducerAtom"
+import {
+    useSelectorReducerAtom,
+    nodeSelectorReducer,
+    edgeSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
 //Icons
 import { Sparkle } from "@phosphor-icons/react/dist/ssr"
@@ -56,11 +60,7 @@ import { edgeTypes } from "./_edges/edge-types"
 import { ConnectionLine } from "./_connection-line/connection-line"
 
 //Atoms & Reducers
-import {
-    edgeSelectorReducer,
-    nodeSelectorReducer,
-    sequencesMockDataAtom,
-} from "~/lib/stores/mockData"
+import { sequencesMockDataAtom } from "~/lib/stores/mockData/sequence"
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
     animated: false,

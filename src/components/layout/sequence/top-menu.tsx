@@ -22,7 +22,7 @@ import {
 
 //Zod & Schemas
 import { z } from "zod"
-import { sequenceSchema } from "~/lib/stores/mockData"
+import { sequenceSchema } from "~/lib/stores/mockData/sequence"
 
 const actionButtons = [
     { icon: PaperPlaneRight, name: "Flow", subPath: "/flow" },

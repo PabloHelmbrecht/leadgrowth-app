@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/accordion"
 import { useAccordion } from "~/components/ui/use-accordion"
 import { TriggerSelector } from "./trigger-selector"
-import { CriteriaSelector } from "./criteria-selector"
+import { AdvancedFilter } from "~/components/ui/advanced-filter"
 
 //Icons
 import { Plus } from "@phosphor-icons/react/dist/ssr"
@@ -29,16 +29,15 @@ import { useFieldArray, useFormContext } from "react-hook-form"
 
 //Zod & Schemas
 import type { z } from "zod"
-import {
-    type triggerNodeDataSchema,
-    triggerDataSchema,
-} from "../../_nodes/trigger-node"
+import { type triggerNodeDataSchema } from "../../_nodes/trigger-node"
 
 export function TriggerConfiguration() {
     const triggers = useFieldArray<z.infer<typeof triggerNodeDataSchema>>({
         name: "triggers",
         rules: { minLength: 1 },
     })
+
+    // const triggerFields: Record
 
     const filters = useFieldArray<z.infer<typeof triggerNodeDataSchema>>({
         name: "filterCriteria.filters",
@@ -69,18 +68,16 @@ export function TriggerConfiguration() {
                         ? `...`
                         : triggers.fields.length === 1
                           ? " a contact is manually added."
-                          : ` 1 of ${triggers.fields.length+1} events occurrs.`}
+                          : ` 1 of ${triggers.fields.length + 1} events occurrs.`}
                 </AccordionTrigger>
 
                 <AccordionContent className="flex flex-col gap-4 ">
                     <div className="scroll flex max-h-[40vh] flex-col gap-4 overflow-x-clip  overflow-y-scroll py-2  pr-1 ">
-                        <div className="w-full rounded border border-neutral-300 bg-neutral-50 px-2 py-1 font-medium">
+                        <div className="w-full rounded border border-neutral-300 bg-neutral-50 px-2 py-[0.33rem] font-medium">
                             Manual Activation
                         </div>
 
                         {triggers.fields.map((trigger, index) => {
-                            const { data: triggerData } =
-                                triggerDataSchema.safeParse(trigger)
                             const triggerError = errors.triggers?.[index]
 
                             return (
@@ -140,7 +137,11 @@ export function TriggerConfiguration() {
                         : "If the following criteria are met"}
                 </AccordionTrigger>
                 <AccordionContent className="flex flex-col gap-4 ">
-                    <CriteriaSelector />
+                    <AdvancedFilter
+                        name={"filterCriteria.filters"}
+                        criteriaKey={"filters"}
+                        entityType="contact"
+                    />
                 </AccordionContent>
             </AccordionItem>
         </Accordion>

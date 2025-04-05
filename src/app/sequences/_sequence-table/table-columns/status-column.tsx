@@ -7,7 +7,7 @@ import { Switch } from "~/components/ui/switch"
 //Zod & Schemas & Types
 import { z } from "zod"
 
-import { type Sequence, tagSchema } from "~/lib/stores/mockData"
+import { type Sequence, tagSchema } from "~/lib/stores/mockData/sequence"
 
 const tableMetaSchema = z.object({
     getTags: z.function().returns(z.array(tagSchema)),
