@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.21...v0.1.22) (2025-04-05)
+
+
+### Features
+
+* **advance filter:** new advanced filter ([4d80b59](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/4d80b599806754f96e531fb8d087d7bc38d81eaf))
+
 ### [0.1.21](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.19...v0.1.21) (2025-02-02)
 
 ### [0.1.20](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.19...v0.1.20) (2025-02-02)
