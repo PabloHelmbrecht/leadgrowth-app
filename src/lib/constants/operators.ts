@@ -61,9 +61,11 @@ export const supportedOperators: supportedOperatorsType = {
     date: [
         { label: "is within", value: "is within" },
         { label: "is", value: "=" },
+        { label: "is before", value: "<" },
+        { label: "is after", value: ">" },
+        { label: "is on or before", value: "<=" },
+        { label: "is on or after", value: ">=" },
         { label: "is not", value: "!=" },
-        { label: "<", value: "<" },
-        { label: ">", value: ">" },
         { label: "is empty", value: "is empty" },
         { label: "is not empty", value: "is not empty" },
     ],

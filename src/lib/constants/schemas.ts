@@ -13,7 +13,7 @@ export type supportedInputTypes = z.infer<typeof supportedInputTypesSchema>
 export const supportedEntityTypesSchema = z.union([
     z.literal("contact"),
     z.literal("company"),
-    z.literal("sequence"),
+    z.literal("workflow"),
 ])
 export type supportedEntityTypes = z.infer<typeof supportedEntityTypesSchema>
 

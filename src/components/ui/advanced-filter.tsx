@@ -19,7 +19,6 @@ import {
     type SetStateAction,
     useCallback,
     useMemo,
-    useEffect,
 } from "react"
 
 // import { createPortal } from "react-dom"
@@ -811,7 +810,7 @@ const NumberField = ({
     return (
         <Input
             role="input"
-            className=" flex h-full w-36 flex-row items-center justify-center rounded-none border border-y-0 border-neutral-200 bg-white p-0 px-4 text-xs hover:bg-neutral-100 hover:text-neutral-900  dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50"
+            className=" flex h-full w-28 flex-row items-center justify-center rounded-none border border-y-0 border-neutral-200 bg-white p-0 px-4 text-xs hover:bg-neutral-100 hover:text-neutral-900  dark:border-neutral-800 dark:bg-neutral-950 dark:hover:bg-neutral-800 dark:hover:text-neutral-50"
             value={value ?? ""}
             onChange={(e) => {
                 const parsedValue = parseNumber(e.target.value)
@@ -837,64 +836,71 @@ const DateField = ({
         .or(z.literal("days ago"))
 
     type DurationOption = z.infer<typeof durationOptionSchema>
-    const durationOptions: {
-        label: string
-        value: DurationOption
-        isRange: boolean
-    }[] = [
-        { label: "today", value: { days: 0 }, isRange: false },
-        { label: "tomorrow", value: { days: 1 }, isRange: false },
-        { label: "yesterday", value: { days: -1 }, isRange: false },
-        { label: "one week ago", value: { weeks: -1 }, isRange: false },
-        { label: "one week from now", value: { weeks: 1 }, isRange: false },
-        { label: "one month ago", value: { months: -1 }, isRange: false },
-        { label: "one month from now", value: { months: 1 }, isRange: false },
-        { label: "number of days ago", value: "days from now", isRange: false },
-        { label: "number of days from now", value: "days ago", isRange: false },
-        { label: "exact date", value: "date", isRange: false },
-        { label: "the past week", value: { weeks: -1 }, isRange: true },
-        { label: "the past month", value: { months: -1 }, isRange: true },
-        { label: "the past year", value: { years: -1 }, isRange: true },
-        { label: "the next week", value: { weeks: 1 }, isRange: true },
-        { label: "the next month", value: { months: 1 }, isRange: true },
-        { label: "the next year", value: { years: 1 }, isRange: true },
-        { label: "this calendar week", value: { weeks: 0 }, isRange: true },
-        { label: "this calendar month", value: { months: 0 }, isRange: true },
-        { label: "this calendar year", value: { years: 0 }, isRange: true },
-        {
-            label: "the next number of days",
-            value: "days from now",
-            isRange: true,
-        },
-        {
-            label: "the past number of days",
-            value: "days ago",
-            isRange: true,
-        },
-    ]
 
-    const filteredDurationOptions = useMemo(
-        () =>
-            durationOptions.filter(
-                ({ isRange }) => isRange === Boolean(operator === "is within"),
-            ),
-        [operator],
-    )
+    const filteredDurationOptions = useMemo(() => {
+        const durationOptions: {
+            label: string
+            value: DurationOption
+            isRange: boolean
+        }[] = [
+            { label: "exact date", value: "date", isRange: false },
+            { label: "today", value: { days: 0 }, isRange: false },
+            { label: "tomorrow", value: { days: 1 }, isRange: false },
+            { label: "yesterday", value: { days: -1 }, isRange: false },
+            { label: "one week ago", value: { weeks: -1 }, isRange: false },
+            { label: "one week from now", value: { weeks: 1 }, isRange: false },
+            { label: "one month ago", value: { months: -1 }, isRange: false },
+            {
+                label: "one month from now",
+                value: { months: 1 },
+                isRange: false,
+            },
+            { label: "one year ago", value: { years: -1 }, isRange: false },
+            { label: "one year from now", value: { years: 1 }, isRange: false },
+            {
+                label: "number of days ago",
+                value: "days from now",
+                isRange: false,
+            },
+            {
+                label: "number of days from now",
+                value: "days ago",
+                isRange: false,
+            },
+            { label: "the past week", value: { weeks: -1 }, isRange: true },
+            { label: "the past month", value: { months: -1 }, isRange: true },
+            { label: "the past year", value: { years: -1 }, isRange: true },
+            { label: "the next week", value: { weeks: 1 }, isRange: true },
+            { label: "the next month", value: { months: 1 }, isRange: true },
+            { label: "the next year", value: { years: 1 }, isRange: true },
+            { label: "this calendar week", value: { weeks: 0 }, isRange: true },
+            {
+                label: "this calendar month",
+                value: { months: 0 },
+                isRange: true,
+            },
+            { label: "this calendar year", value: { years: 0 }, isRange: true },
+            {
+                label: "the next number of days",
+                value: "days from now",
+                isRange: true,
+            },
+            {
+                label: "the past number of days",
+                value: "days ago",
+                isRange: true,
+            },
+        ]
+
+        return durationOptions.filter(
+            ({ isRange }) => isRange === Boolean(operator === "is within"),
+        )
+    }, [operator])
 
     const [open, setOpen] = useState(false)
     const [timeFrame, setTimeFrame] = useState<DurationOption>(
         filteredDurationOptions[0]!.value,
     )
-
-    const [days, setDays] = useState<number | null>(null)
-
-    useEffect(() => {
-        if (days === null) return
-        if (timeFrame === "days from now") return setValue({ days: days })
-        if (timeFrame === "days ago") return setValue({ days: -1 * days })
-
-        return setDays(null)
-    }, [days, setValue, timeFrame])
 
     return (
         <>
@@ -970,7 +976,28 @@ const DateField = ({
             )}
 
             {timeFrame === "days from now" && (
-                <NumberField value={days} setValue={setDays} placeholder="Enter amount of days" />
+                <NumberField
+                    value={
+                        durationSchema.safeParse(value).success
+                            ? Math.abs(Number(durationSchema.parse(value).days))
+                            : null
+                    }
+                    setValue={(days) => setValue({ days: days ?? undefined })}
+                    placeholder="days"
+                />
+            )}
+            {timeFrame === "days ago" && (
+                <NumberField
+                    value={
+                        durationSchema.safeParse(value).success
+                            ? Math.abs(Number(durationSchema.parse(value).days))
+                            : null
+                    }
+                    setValue={(days) =>
+                        setValue({ days: days ? -1 * days : undefined })
+                    }
+                    placeholder="days"
+                />
             )}
         </>
     )
@@ -985,8 +1012,10 @@ const CalendarField = ({
 }) => {
     const format = useFormatter()
 
+    const [open, setOpen] = useState(false)
+
     return (
-        <Popover>
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -1011,6 +1040,7 @@ const CalendarField = ({
                         if (date) {
                             setValue(date)
                         }
+                        setOpen(false)
                     }}
                     disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")

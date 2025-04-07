@@ -48,8 +48,8 @@ const engageBlock = {
     items: [
         {
             icon: PaperPlaneRight,
-            name: "Sequences",
-            path: "/sequences",
+            name: "Workflows",
+            path: "/workflows",
         },
         { icon: EnvelopeSimple, name: "Emails", path: "/emails" },
         { icon: LinkedinLogo, name: "Linkedin", path: "/linkedin" },

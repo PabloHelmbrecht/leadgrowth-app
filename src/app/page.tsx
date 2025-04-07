@@ -1,73 +1,93 @@
-import Link from "next/link"
+"use client"
 
-import { CreatePost } from "~/components/create-post"
-import { getServerAuthSession } from "~/server/auth"
-import { api } from "~/trpc/server"
+//UI
+import { Button } from "~/components/ui/button"
 
-export default async function Home() {
-    //const hello = await api.post.hello({ text: "from tRPC" })
-    //const session = await getServerAuthSession()
+//Filters
+
+import { SelectAllCheckbox } from "./_workflow_actions/selectall-checkbox"
+import { TagActionButton } from "./_workflow_actions/tag-actionbutton"
+import { OwnerActionButton } from "./_workflow_actions/owner-actionbutton"
+import { ArchiveActionButton } from "./_workflow_actions/archive-actionbutton"
+import { ClearFilterActionButton } from "./_workflow_actions/clearfilter-actionbutton"
+import { AddWorkflow } from "./_workflow_actions/addworkflow-actionbutton"
+import { TableFilter } from "~/components/layout/tables/table-filter"
+
+//Data Table
+import { DataTable } from "./_workflow-table/data-table"
+import { columns } from "./_workflow-table/columns"
+
+//Icons
+import { Gear } from "@phosphor-icons/react/dist/ssr"
+
+//Atoms & Jotai
+import { useAtom } from "jotai"
+import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+import {
+    tagsMockDataAtom,
+    statusMockDataAtom,
+    ownersMockDataAtom,
+} from "~/lib/stores/mockData/workflow"
+
+export default function HomePage() {
+    const [workflowMockData] = useAtom(workflowsMockDataAtom)
 
     return (
-        <main className="flex w-full flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-            <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-                <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-                    Create <span className="text-[hsl(280,100%,70%)]">T3</span>{" "}
-                    App
-                </h1>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-                    <Link
-                        className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-                        href="https://create.t3.gg/en/usage/first-steps"
-                        target="_blank"
-                    >
-                        <h3 className="text-2xl font-bold">First Steps →</h3>
-                        <div className="text-lg">
-                            Just the basics - Everything you need to know to set
-                            up your database and authentication.
-                        </div>
-                    </Link>
-                    <Link
-                        className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-                        href="https://create.t3.gg/en/introduction"
-                        target="_blank"
-                    >
-                        <h3 className="text-2xl font-bold">Documentation →</h3>
-                        <div className="text-lg">
-                            Learn more about Create T3 App, the libraries it
-                            uses, and how to deploy it.
-                        </div>
-                    </Link>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                    <div className="flex flex-col items-center justify-center gap-4">
-                        <p className="text-center text-2xl text-white"></p>
-                    </div>
-                </div>
+        <main className="flex h-full w-full flex-col gap-8 p-12">
+            <div className="flex flex-initial items-center justify-between">
+                <h1 className=" text-4xl font-bold">Workflows</h1>
 
-                <CrudShowcase />
+                <div className="flex items-center justify-end gap-6">
+                    <Button
+                        className="flex items-center justify-between gap-3"
+                        variant={"secondary"}
+                    >
+                        <Gear
+                            width={20}
+                            height={20}
+                            weight="bold"
+                            className="aspect-square min-w-5"
+                            alt={"config workflow button"}
+                        />
+                        Configure worflows
+                    </Button>
+                    <AddWorkflow />
+                </div>
             </div>
+
+            <div className="flex flex-initial items-center gap-6 pl-3 ">
+                <SelectAllCheckbox />
+
+                <TableFilter
+                    options={useAtom(ownersMockDataAtom)[0]}
+                    filterName="owner"
+                    columnName="Owners"
+                />
+                <TableFilter
+                    options={useAtom(statusMockDataAtom)[0]}
+                    filterName="status"
+                    columnName="Status"
+                />
+                <TableFilter
+                    options={useAtom(tagsMockDataAtom)[0]}
+                    filterName="tag"
+                    columnName="Tags"
+                />
+
+                <ClearFilterActionButton />
+                <TagActionButton />
+                <OwnerActionButton />
+                <ArchiveActionButton />
+            </div>
+
+            <DataTable
+                columns={columns}
+                data={workflowMockData.sort(
+                    (a, b) =>
+                        a.name.localeCompare(b.name) ||
+                        a.id.localeCompare(b.id),
+                )}
+            />
         </main>
-    )
-}
-
-async function CrudShowcase() {
-    const session = await getServerAuthSession()
-    if (!session?.user) return null
-
-    const latestPost = await api.post.getLatest()
-
-    return (
-        <div className="w-full max-w-xs">
-            {latestPost ? (
-                <p className="truncate">
-                    Your most recent post: {latestPost.name}
-                </p>
-            ) : (
-                <p>You have no posts yet.</p>
-            )}
-
-            <CreatePost />
-        </div>
     )
 }

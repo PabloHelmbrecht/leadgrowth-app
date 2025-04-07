@@ -38,23 +38,23 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* **sequence flow:** added new nodes ([fae1f76](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/fae1f76b9aea1e79e6d4bfe88d9fecf4458ff916))
+* **workflow flow:** added new nodes ([fae1f76](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/fae1f76b9aea1e79e6d4bfe88d9fecf4458ff916))
 
 ### [0.1.14](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.13...v0.1.14) (2024-08-14)
 
 
 ### Features
 
-* **sequence-flow:** add flow with core functionalities ([42fb737](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/42fb73728c16d8a4b9a43cb187253898d72bc769))
+* **workflow-flow:** add flow with core functionalities ([42fb737](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/42fb73728c16d8a4b9a43cb187253898d72bc769))
 
 ### [0.1.13](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.12...v0.1.13) (2024-07-17)
 
 
 ### Features
 
-* **sequence data table:** added link functionalities to each row ([66c8841](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/66c884137cbea149b4658aafb68ecdeb2f2f3963))
-* **sequence data table:** finished sequence data table functionalities ([7aa0e13](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/7aa0e13eddf75eb8e0edf4a04e84f10d8b1255a0))
-* **sequence view:** add top menu ([a3573b0](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/a3573b0f77cb95856d0bcafe87bb538375b8b60c))
+* **workflow data table:** added link functionalities to each row ([66c8841](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/66c884137cbea149b4658aafb68ecdeb2f2f3963))
+* **workflow data table:** finished workflow data table functionalities ([7aa0e13](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/7aa0e13eddf75eb8e0edf4a04e84f10d8b1255a0))
+* **workflow view:** add top menu ([a3573b0](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/a3573b0f77cb95856d0bcafe87bb538375b8b60c))
 
 
 ### Bug Fixes
@@ -66,7 +66,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* **sequence data table:** added new data table for sequences with filters and actions ([b39c910](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/b39c910256d1275a905a7ec2a6d7b38d4abc85bc))
+* **workflow data table:** added new data table for workflows with filters and actions ([b39c910](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/b39c910256d1275a905a7ec2a6d7b38d4abc85bc))
 
 ### [0.1.11](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.10...v0.1.11) (2024-06-23)
 

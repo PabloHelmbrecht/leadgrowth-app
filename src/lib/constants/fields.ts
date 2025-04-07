@@ -1,5 +1,5 @@
 import type { Contact } from "../stores/mockData/contact"
-import type { Sequence } from "../stores/mockData/sequence"
+import type { Workflow } from "../stores/mockData/workflow"
 
 export type supportedContactFieldsType = {
     label: string
@@ -11,9 +11,9 @@ export type supportedCompanyFieldsType = {
     value: string //Cuando tenga la definición de la empresa, cambiar a keyof Company
 }[]
 
-export type supportedSequenceFieldsType = {
+export type supportedWorkflowFieldsType = {
     label: string
-    value: keyof Sequence
+    value: keyof Workflow
 }[]
 
 export const supportedContactFields: supportedContactFieldsType = [
@@ -28,7 +28,7 @@ export const supportedContactFields: supportedContactFieldsType = [
     { label: "Created At", value: "createdAt" },
 ]
 
-export const supportedSequenceFields: supportedSequenceFieldsType = [
+export const supportedWorkflowFields: supportedWorkflowFieldsType = [
     { label: "Name", value: "name" },
     { label: "Status", value: "status" },
 ]

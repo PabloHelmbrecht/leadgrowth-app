@@ -11,7 +11,7 @@ import { z } from "zod"
 import type { ColumnFiltersState } from "@tanstack/react-table"
 
 //Types
-import { type Sequence } from "~/lib/stores/mockData/sequence"
+import { type Workflow } from "~/lib/stores/mockData/workflow"
 import { type Node, type Edge } from "~/lib/stores/mockData/flow"
 
 //Selector and Reducer Atom Helper Functions
@@ -69,82 +69,82 @@ export function columnFilterSelectorReducer(columnId: string) {
 
 /**
  * Crea un selector y un reducer para nodos en una secuencia.
- * @param {string} sequenceId - El ID de la secuencia.
+ * @param {string} workflowId - El ID de la secuencia.
  * @returns {Object} - Objeto que contiene el selector y el reducer.
  */
-export function nodeSelectorReducer(sequenceId: string) {
-    const selector = (sequences: Sequence[]): Node[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) return []
-        const nodes = foundSequence.flow.nodes
+export function nodeSelectorReducer(workflowId: string) {
+    const selector = (workflows: Workflow[]): Node[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) return []
+        const nodes = foundWorkflow.flow.nodes
         return nodes
     }
 
     const reducer = (
-        sequences: Sequence[],
+        workflows: Workflow[],
         newNodes: Node[] | ((nodes: Node[]) => Node[]),
-    ): Sequence[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) return sequences
-        foundSequence.flow.nodes =
+    ): Workflow[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) return workflows
+        foundWorkflow.flow.nodes =
             typeof newNodes === "function"
-                ? newNodes(foundSequence.flow.nodes)
+                ? newNodes(foundWorkflow.flow.nodes)
                 : newNodes
-        const newSequences = sequences.map((sequence) =>
-            sequence.id === foundSequence.id ? foundSequence : sequence,
+        const newWorkflows = workflows.map((workflow) =>
+            workflow.id === foundWorkflow.id ? foundWorkflow : workflow,
         )
 
-        return newSequences
+        return newWorkflows
     }
     return { selector, reducer }
 }
 
 /**
  * Crea un selector y un reducer para aristas en una secuencia.
- * @param {string} sequenceId - El ID de la secuencia.
+ * @param {string} workflowId - El ID de la secuencia.
  * @returns {Object} - Objeto que contiene el selector y el reducer.
  */
-export function edgeSelectorReducer(sequenceId: string) {
-    const selector = (sequences: Sequence[]): Edge[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) return []
-        const edges = foundSequence.flow.edges
+export function edgeSelectorReducer(workflowId: string) {
+    const selector = (workflows: Workflow[]): Edge[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) return []
+        const edges = foundWorkflow.flow.edges
         return edges
     }
 
     const reducer = (
-        sequences: Sequence[],
+        workflows: Workflow[],
         newEdges: Edge[] | ((edges: Edge[]) => Edge[]),
-    ): Sequence[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) return sequences
+    ): Workflow[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) return workflows
 
-        foundSequence.flow.edges =
+        foundWorkflow.flow.edges =
             typeof newEdges === "function"
-                ? newEdges(foundSequence.flow.edges)
+                ? newEdges(foundWorkflow.flow.edges)
                 : newEdges
-        const newSequences = sequences.map((sequence) =>
-            sequence.id === foundSequence.id ? foundSequence : sequence,
+        const newWorkflows = workflows.map((workflow) =>
+            workflow.id === foundWorkflow.id ? foundWorkflow : workflow,
         )
-        return newSequences
+        return newWorkflows
     }
     return { selector, reducer }
 }
 
 /**
  * Crea un selector y un reducer para un nodo único en una secuencia.
- * @param {string} sequenceId - El ID de la secuencia.
+ * @param {string} workflowId - El ID de la secuencia.
  * @param {string} nodeId - El ID del nodo.
  * @returns {Object} - Objeto que contiene el selector y el reducer.
  */
-export function uniqueNodeSelectorReducer(sequenceId: string, nodeId: string) {
-    const selector = (sequences: Sequence[]): Node | null => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) {
+export function uniqueNodeSelectorReducer(workflowId: string, nodeId: string) {
+    const selector = (workflows: Workflow[]): Node | null => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) {
             return null
-            // throw new Error(`Sequence Id ${sequenceId} is not valid.`)
+            // throw new Error(`Workflow Id ${workflowId} is not valid.`)
         }
-        const foundNode = foundSequence.flow.nodes.find(
+        const foundNode = foundWorkflow.flow.nodes.find(
             ({ id }) => nodeId === id,
         )
         if (!foundNode) {
@@ -155,27 +155,27 @@ export function uniqueNodeSelectorReducer(sequenceId: string, nodeId: string) {
     }
 
     const reducer = (
-        sequences: Sequence[],
+        workflows: Workflow[],
         newNode: Node | ((nodes: Node) => Node),
-    ): Sequence[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence) {
-            return sequences
-            // throw new Error(`Sequence Id ${sequenceId} is not valid.`)
+    ): Workflow[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow) {
+            return workflows
+            // throw new Error(`Workflow Id ${workflowId} is not valid.`)
         }
 
-        const foundNode = foundSequence.flow.nodes.find(
+        const foundNode = foundWorkflow.flow.nodes.find(
             ({ id }) => nodeId === id,
         )
         if (!foundNode) {
-            return sequences
+            return workflows
             // throw new Error(`Node Id ${nodeId} is not valid.`)
         }
 
-        const newSequences = sequences.map((sequence) => {
-            if (sequence.id !== foundSequence.id) return sequence
+        const newWorkflows = workflows.map((workflow) => {
+            if (workflow.id !== foundWorkflow.id) return workflow
 
-            sequence.flow.nodes = sequence.flow.nodes.map((node) => {
+            workflow.flow.nodes = workflow.flow.nodes.map((node) => {
                 if (node.id !== foundNode.id) return node
 
                 return typeof newNode === "function"
@@ -183,26 +183,26 @@ export function uniqueNodeSelectorReducer(sequenceId: string, nodeId: string) {
                     : newNode
             })
 
-            return sequence
+            return workflow
         })
 
-        return newSequences
+        return newWorkflows
     }
     return { selector, reducer }
 }
 
 /**
  * Crea un selector y un reducer para una arista única en una secuencia.
- * @param {string} sequenceId - El ID de la secuencia.
+ * @param {string} workflowId - El ID de la secuencia.
  * @param {string} edgeId - El ID de la arista.
  * @returns {Object} - Objeto que contiene el selector y el reducer.
  */
-export function uniqueEdgeSelectorReducer(sequenceId: string, edgeId: string) {
-    const selector = (sequences: Sequence[]): Edge | null => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence)
-            throw new Error(`Sequence Id ${sequenceId} is not valid.`)
-        const foundEdge = foundSequence.flow.edges.find(
+export function uniqueEdgeSelectorReducer(workflowId: string, edgeId: string) {
+    const selector = (workflows: Workflow[]): Edge | null => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow)
+            throw new Error(`Workflow Id ${workflowId} is not valid.`)
+        const foundEdge = foundWorkflow.flow.edges.find(
             ({ id }) => edgeId === id,
         )
         if (!foundEdge) {
@@ -213,24 +213,24 @@ export function uniqueEdgeSelectorReducer(sequenceId: string, edgeId: string) {
     }
 
     const reducer = (
-        sequences: Sequence[],
+        workflows: Workflow[],
         newEdge: Edge | ((edge: Edge) => Edge),
-    ): Sequence[] => {
-        const foundSequence = sequences.find(({ id }) => sequenceId === id)
-        if (!foundSequence)
-            throw new Error(`Sequence Id ${sequenceId} is not valid.`)
+    ): Workflow[] => {
+        const foundWorkflow = workflows.find(({ id }) => workflowId === id)
+        if (!foundWorkflow)
+            throw new Error(`Workflow Id ${workflowId} is not valid.`)
 
-        const foundEdge = foundSequence.flow.edges.find(
+        const foundEdge = foundWorkflow.flow.edges.find(
             ({ id }) => edgeId === id,
         )
         if (!foundEdge) {
-            return sequences
+            return workflows
             // throw new Error(`Edge Id ${edgeId} is not valid.`)
         }
-        const newSequences = sequences.map((sequence) => {
-            if (sequence.id !== foundSequence.id) return sequence
+        const newWorkflows = workflows.map((workflow) => {
+            if (workflow.id !== foundWorkflow.id) return workflow
 
-            sequence.flow.edges = sequence.flow.edges.map((edge) => {
+            workflow.flow.edges = workflow.flow.edges.map((edge) => {
                 if (edge.id !== foundEdge.id) return edge
 
                 return typeof newEdge === "function"
@@ -238,10 +238,10 @@ export function uniqueEdgeSelectorReducer(sequenceId: string, edgeId: string) {
                     : newEdge
             })
 
-            return sequence
+            return workflow
         })
 
-        return newSequences
+        return newWorkflows
     }
     return { selector, reducer }
 }

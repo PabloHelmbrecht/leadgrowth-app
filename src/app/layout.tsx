@@ -6,8 +6,8 @@ import "~/styles/react-flow-styles.css"
 import { TRPCReactProvider } from "~/trpc/react"
 
 //UI Components
-import { Sidebar } from "~/components/layout/sidebar"
-import { TopMenu } from "~/components/layout/top-menu"
+// import { Sidebar } from "~/components/layout/sidebar"
+// import { TopMenu } from "~/components/layout/top-menu"
 import { Toaster } from "~/components/ui/toaster"
 import { TooltipProvider } from "~/components/ui/tooltip"
 
@@ -43,15 +43,16 @@ export default async function RootLayout({
                     <NextIntlClientProvider>
                         <TooltipProvider delayDuration={400}>
                             <div className="flex gap-[2px] bg-neutral-200">
-                                <Sidebar />
+                                {/* <Sidebar /> */}
                                 <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-                                    <TopMenu />
+                                    {/* <TopMenu /> */}
                                     <div className=" flex w-full flex-1 overflow-hidden">
                                         {children}
                                     </div>
                                 </div>
                             </div>
                             <Toaster />
+                            <div id="portal-root"></div>
                         </TooltipProvider>
                     </NextIntlClientProvider>
                 </TRPCReactProvider>

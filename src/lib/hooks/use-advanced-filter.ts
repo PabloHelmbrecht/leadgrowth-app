@@ -3,13 +3,13 @@ import { z } from "zod"
 
 //Entities Schemas
 import { contactSchema } from "../stores/mockData/contact"
-import { sequenceSchema } from "../stores/mockData/sequence"
+import { workflowSchema } from "../stores/mockData/workflow"
 
 //Constants
 import {
     supportedContactFields,
     supportedCompanyFields,
-    supportedSequenceFields,
+    supportedWorkflowFields,
 } from "../constants/fields"
 import { supportedOperators } from "../constants/operators"
 import type { supportedEntityTypes } from "../constants/schemas"
@@ -29,9 +29,9 @@ export function useAdvancedFilter(entityType: supportedEntityTypes) {
                 schema: z.object({}),
                 fields: supportedCompanyFields,
             },
-            sequence: {
-                schema: sequenceSchema,
-                fields: supportedSequenceFields,
+            workflow: {
+                schema: workflowSchema,
+                fields: supportedWorkflowFields,
             },
         }),
         [],
