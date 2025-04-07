@@ -1,5 +1,8 @@
 "use client"
 
+//React
+import { useContext } from "react"
+
 //Class Merge
 import { cn } from "~/lib/utils/classesMerge"
 
@@ -8,10 +11,13 @@ import { eventEmmiter } from "~/lib/utils/eventEmmiter"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { columnFiltersAtom, rowSelectionAtom } from "~/lib/stores/contact-table"
 import { useMemo } from "react"
+import { type TableContext, tableContext } from "../table-context"
 
 export function ClearFilterActionButton() {
+    const { rowSelectionAtom, columnFiltersAtom } =
+        useContext(tableContext) ?? ({} as TableContext)
+
     const [columnFilters] = useAtom(columnFiltersAtom)
     const [rowSelection] = useAtom(rowSelectionAtom)
 

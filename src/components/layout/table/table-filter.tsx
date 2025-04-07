@@ -1,7 +1,7 @@
 "use client"
 
 //React
-import { useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -34,10 +34,7 @@ import { CaretDown, Star } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import {
-    columnFiltersAtom,
-    rowSelectionAtom,
-} from "~/lib/stores/workflow-table"
+import { type TableContext, tableContext } from "./table-context"
 
 type options = {
     label: string
@@ -55,6 +52,8 @@ export function TableFilter({
     columnName: string
 }) {
     //Mock data
+    const { rowSelectionAtom, columnFiltersAtom } =
+        useContext(tableContext) ?? ({} as TableContext)
 
     const [rowSelection] = useAtom(rowSelectionAtom)
 

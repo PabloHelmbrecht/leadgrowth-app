@@ -49,7 +49,7 @@ export function TopMenu({
             )}
             {...props}
         >
-            <Link href={"/workflows"}>
+            <Link href={"/"}>
                 <Button
                     variant={"secondary"}
                     size={"sm"}
@@ -71,14 +71,14 @@ export function TopMenu({
             <div className="flex gap-4">
                 {actionButtons.map((actionButton, key) => (
                     <Link
-                        href={`/workflows/${id}${actionButton.subPath}`}
+                        href={`/${id}${actionButton.subPath}`}
                         key={key}
                         className="flex justify-center"
                     >
                         <Button
                             variant={
                                 pathname.startsWith(
-                                    `/workflows/${id}${actionButton.subPath}`,
+                                    `/${id}${actionButton.subPath}`,
                                 )
                                     ? "terciary"
                                     : "ghost"

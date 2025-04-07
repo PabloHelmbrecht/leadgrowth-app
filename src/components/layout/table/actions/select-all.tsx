@@ -1,13 +1,19 @@
 "use client"
 
+//React
+import { useContext } from "react"
+
 //UI
 import { Checkbox as CheckboxPrimitive } from "~/components/ui/checkbox"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { tableAtom, IsAllRowsSelectedAtom } from "~/lib/stores/workflow-table"
+import { type TableContext, tableContext } from "../table-context"
 
 export function SelectAllCheckbox() {
+    const { tableAtom, IsAllRowsSelectedAtom } =
+        useContext(tableContext) ?? ({} as TableContext)
+
     const [tableInstance] = useAtom(tableAtom)
     const [isAllRowsSelected, setIsAllRowsSelected] = useAtom(
         IsAllRowsSelectedAtom,

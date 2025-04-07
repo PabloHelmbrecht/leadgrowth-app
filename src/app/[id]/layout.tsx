@@ -9,14 +9,14 @@ export default function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <section className="flex flex-1  gap-[2px]">
-            <div className="flex flex-1 flex-col">
+            <section className="flex flex-1 flex-col gap-[3px] h-full">
                 <TopMenu />
+        <div className="flex flex-1  h-0 ">
 
                 <ReactFlowProvider>{children}</ReactFlowProvider>
-            </div>
 
             <FlowSideBar />
+            </div>
         </section>
     )
 }

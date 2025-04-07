@@ -219,7 +219,7 @@ export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
                     <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 transform opacity-50 " />
                 </div>
             </div>
-            <div className="scroll flex h-fit w-full flex-col overflow-auto pr-1  ">
+            <div className="scroll flex  w-full flex-col overflow-auto pr-1  ">
                 {stepsStructure.map((block, key) => (
                     <StepBlock key={key} {...block} />
                 ))}

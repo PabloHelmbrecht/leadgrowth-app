@@ -11,40 +11,82 @@ import { columns } from "./_contacts-table/columns"
 // import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Filters
-import { SelectAllCheckbox } from "./_contacts-actions/selectall-checkbox"
-import { CompanyFilter } from "./_contacts-filters/company-filter"
-import { StageFilter } from "./_contacts-filters/stage-filter"
-import { StepFilter } from "./_contacts-filters/step-filter"
-import { StatusFilter } from "./_contacts-filters/status-filter"
+import { TableFilter } from "~/components/layout/table/table-filter"
+import {
+    type TableContext,
+    tableContext,
+} from "~/components/layout/table/table-context"
 
 //Actions
-import { ClearFilterActionButton } from "./_contacts-actions/clearfilter-actionbutton"
+import { ClearFilterActionButton } from "~/components/layout/table/actions/clean-filters"
+import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { contactsMockDataAtom } from "~/lib/stores/mockData/contact"
+import {
+    companiesMockDataAtom,
+    stagesMockDataAtom,
+    stepsMockDataAtom,
+    statusMockDataAtom,
+    contactsMockDataAtom,
+} from "~/lib/stores/mockData/contact"
+import {
+    IsAllRowsSelectedAtom,
+    columnFiltersAtom,
+    rowSelectionAtom,
+    resetAllFiltersAtom,
+    tableAtom,
+} from "~/lib/stores/contact-table"
 
 export default function SearchPage() {
     const [contactMockData] = useAtom(contactsMockDataAtom)
 
     return (
-        <main className="flex h-full w-full flex-col gap-8 p-12">
-            <div className="flex flex-initial items-center  justify-between pl-3 ">
-                <div className="flex gap-6">
-                    <SelectAllCheckbox />
-                    <CompanyFilter />
-                    <StageFilter />
-                    <StepFilter />
-                    <StatusFilter />
-                    <ClearFilterActionButton />
+        <tableContext.Provider
+            value={
+                {
+                    IsAllRowsSelectedAtom,
+                    columnFiltersAtom,
+                    rowSelectionAtom,
+                    resetAllFiltersAtom,
+                    tableAtom,
+                } as TableContext
+            }
+        >
+            <main className="flex h-full w-full flex-col gap-8 p-12">
+                <div className="flex flex-initial items-center  justify-between pl-3 ">
+                    <div className="flex gap-6">
+                        <SelectAllCheckbox />
+                        <TableFilter
+                            options={useAtom(companiesMockDataAtom)[0]}
+                            filterName="company"
+                            columnName="Companies"
+                        />
+                        <TableFilter
+                            options={useAtom(stagesMockDataAtom)[0]}
+                            filterName="stage"
+                            columnName="Stages"
+                        />
+                        <TableFilter
+                            options={useAtom(stepsMockDataAtom)[0]}
+                            filterName="step"
+                            columnName="Steps"
+                        />
+                        <TableFilter
+                            options={useAtom(statusMockDataAtom)[0]}
+                            filterName="status"
+                            columnName="Status"
+                        />
+                        <ClearFilterActionButton />
+                    </div>
+
+                    <div className="flex gap-6">
+                        <SelectAllCheckbox />
+                    </div>
                 </div>
 
-                <div className="flex gap-6">
-                    <SelectAllCheckbox />
-                </div>
-            </div>
-
-            <DataTable columns={columns} data={contactMockData} />
-        </main>
+                <DataTable columns={columns} data={contactMockData} />
+            </main>
+        </tableContext.Provider>
     )
 }
