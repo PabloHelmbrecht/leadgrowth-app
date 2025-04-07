@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.23...v0.1.24) (2025-04-07)
+
+
+### Features
+
+* add TopMenu component for workflow navigation ([7c039f9](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/7c039f90f34f8730b91e4278238081040a1ab418))
+
 ### [0.1.23](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.22...v0.1.23) (2025-04-05)
 
 ### [0.1.22](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.21...v0.1.22) (2025-04-05)
