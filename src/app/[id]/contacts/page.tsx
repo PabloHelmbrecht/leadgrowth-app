@@ -1,21 +1,15 @@
 "use client"
 
-//UI
-// import { Button } from "~/components/ui/button"
-
 //Data Table
-import { DataTable } from "./_contacts-table/data-table"
-import { columns } from "./_contacts-table/columns"
+import { columns } from "./_table-columns"
 
-//Icons
-// import { Gear } from "@phosphor-icons/react/dist/ssr"
-
-//Filters
+//Table & UI
 import { TableFilter } from "~/components/layout/table/table-filter"
 import {
     type TableContext,
     tableContext,
 } from "~/components/layout/table/table-context"
+import { DataTable } from "~/components/layout/table/data-table"
 
 //Actions
 import { ClearFilterActionButton } from "~/components/layout/table/actions/clean-filters"
@@ -28,7 +22,7 @@ import {
     stagesMockDataAtom,
     stepsMockDataAtom,
     statusMockDataAtom,
-    contactsMockDataAtom,
+    contactsMockDataAtom as dataAtom,
 } from "~/lib/stores/mockData/contact"
 import {
     IsAllRowsSelectedAtom,
@@ -38,13 +32,12 @@ import {
     tableAtom,
 } from "~/lib/stores/contact-table"
 
-export default function SearchPage() {
-    const [contactMockData] = useAtom(contactsMockDataAtom)
-
+export default function ContactsTable() {
     return (
         <tableContext.Provider
             value={
                 {
+                    dataAtom,
                     IsAllRowsSelectedAtom,
                     columnFiltersAtom,
                     rowSelectionAtom,
@@ -85,7 +78,7 @@ export default function SearchPage() {
                     </div>
                 </div>
 
-                <DataTable columns={columns} data={contactMockData} />
+                <DataTable columns={columns} />
             </main>
         </tableContext.Provider>
     )

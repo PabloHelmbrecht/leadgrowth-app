@@ -13,7 +13,8 @@ import { ClearFilterActionButton } from "~/components/layout/table/actions/clean
 import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 
 //Data Table
-import { DataTable } from "./_workflow-table/data-table"
+//import { DataTable } from "./_workflow-table/data-table"
+import { DataTable } from "~/components/layout/table/data-table"
 import { columns } from "./_workflow-table/columns"
 import {
     type TableContext,
@@ -25,7 +26,7 @@ import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+import { workflowsMockDataAtom as dataAtom } from "~/lib/stores/mockData/workflow"
 import {
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
@@ -43,12 +44,11 @@ import {
 import Image from "next/image"
 
 export default function HomePage() {
-    const [workflowMockData] = useAtom(workflowsMockDataAtom)
-
     return (
         <tableContext.Provider
             value={
                 {
+                    dataAtom,
                     IsAllRowsSelectedAtom,
                     columnFiltersAtom,
                     rowSelectionAtom,
@@ -117,12 +117,14 @@ export default function HomePage() {
                 </div>
 
                 <DataTable
+                    hideHeaders={true}
+                    initialState={{
+                        columnVisibility: {
+                            owner: false,
+                            totalCount: false,
+                        },
+                    }}
                     columns={columns}
-                    data={workflowMockData.sort(
-                        (a, b) =>
-                            a.name.localeCompare(b.name) ||
-                            a.id.localeCompare(b.id),
-                    )}
                 />
             </main>
         </tableContext.Provider>

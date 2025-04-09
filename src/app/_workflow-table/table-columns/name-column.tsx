@@ -1,6 +1,9 @@
 //Tanstack Table
 import { type CellContext } from "@tanstack/react-table"
 
+//Nextjs
+import Link from "next/link"
+
 //UI
 import { Badge } from "~/components/ui/badge"
 
@@ -9,32 +12,24 @@ import { Color } from "~/lib/utils/color"
 
 //Zod & Schemas & Types
 import { z } from "zod"
+import { type Workflow } from "~/lib/stores/mockData/workflow"
 
-import { type Workflow, tagSchema } from "~/lib/stores/mockData/workflow"
+//Jotai & Atoms
+import { tagsMockDataAtom } from "~/lib/stores/mockData/workflow"
+import { useAtom } from "jotai"
 
 const arrayStringSchema = z.string().array()
-const tableMetaSchema = z.object({
-    getTags: z.function().returns(z.array(tagSchema)),
-    setWorkflowData: z
-        .function()
-        .args(z.string(), z.string(), z.unknown())
-        .returns(z.void()),
-    cloneWorkflow: z.function().args(z.string()),
-    archiveWorkflow: z.function().args(z.string()),
-})
 
-export function NameColumn({ row, table }: CellContext<Workflow, unknown>) {
+export function NameColumn({ row }: CellContext<Workflow, unknown>) {
+    const [tags] = useAtom(tagsMockDataAtom)
     return (
         <div className="flex h-full flex-1 flex-col items-start justify-start gap-2 overflow-clip whitespace-nowrap pl-2">
-            {row.getValue("name")}
+            <Link href={`/${row.id}/flow`}>{row.getValue("name")}</Link>
             <div className=" flex w-full items-start gap-2 overflow-clip ">
                 {arrayStringSchema
                     .parse(row.getValue("tag"))
                     .filter((tag) => tag !== "starred")
                     .map((tag, k) => {
-                        const tags = tableMetaSchema
-                            .parse(table.options.meta)
-                            .getTags()
                         const color = new Color(
                             tags.find(({ value }) => tag === value)?.color,
                         )

@@ -3,6 +3,7 @@ import { type PrimitiveAtom } from "jotai"
 import { createContext } from "react"
 
 export interface TableContext {
+    dataAtom: PrimitiveAtom<unknown>
     tableAtom: PrimitiveAtom<Table<unknown> | null>
     IsAllRowsSelectedAtom: PrimitiveAtom<boolean>
     rowSelectionAtom: PrimitiveAtom<Record<string, boolean>>

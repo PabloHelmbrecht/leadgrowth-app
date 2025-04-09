@@ -5,21 +5,20 @@ import { type CellContext } from "@tanstack/react-table"
 import { Switch } from "~/components/ui/switch"
 
 //Zod & Schemas & Types
-import { z } from "zod"
+import { type Workflow } from "~/lib/stores/mockData/workflow"
 
-import { type Workflow, tagSchema } from "~/lib/stores/mockData/workflow"
+//Jotai & Atoms
+import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+import {
+    useSelectorReducerAtom,
+    uniqueSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
-const tableMetaSchema = z.object({
-    getTags: z.function().returns(z.array(tagSchema)),
-    setWorkflowData: z
-        .function()
-        .args(z.string(), z.string(), z.unknown())
-        .returns(z.void()),
-    cloneWorkflow: z.function().args(z.string()),
-    archiveWorkflow: z.function().args(z.string()),
-})
-
-export function StatusColumn({ row, table }: CellContext<Workflow, unknown>) {
+export function StatusColumn({ row }: CellContext<Workflow, unknown>) {
+    const [, setWorkflow] = useSelectorReducerAtom(
+        workflowsMockDataAtom,
+        uniqueSelectorReducer<Workflow>(row.id),
+    )
     return (
         <Switch
             className={
@@ -31,15 +30,11 @@ export function StatusColumn({ row, table }: CellContext<Workflow, unknown>) {
             checked={row.getValue("status") === "active"}
             onCheckedChange={(value) => {
                 if (value) {
-                    tableMetaSchema
-                        .parse(table.options.meta)
-                        .setWorkflowData(row.id, "status", "active")
+                    setWorkflow((item) => ({ ...item, status: "active" }))
                     return
                 }
 
-                tableMetaSchema
-                    .parse(table.options.meta)
-                    .setWorkflowData(row.id, "status", "paused")
+                setWorkflow((item) => ({ ...item, status: "paused" }))
             }}
         />
     )

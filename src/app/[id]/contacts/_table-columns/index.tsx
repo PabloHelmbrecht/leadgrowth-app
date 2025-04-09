@@ -13,15 +13,14 @@ import { Checkbox } from "~/components/ui/checkbox"
 import { type Contact } from "~/lib/stores/mockData/contact"
 
 //Data Table Column Components
-import { NameColumn } from "./table-columns/name-column"
-import { BadgesColumn } from "./table-columns/badges-column"
-import { EventsColumn } from "./table-columns/events-column"
-import { ActionsColumn } from "./table-columns/actions-column"
+import { NameColumn } from "./name-column"
+import { BadgesColumn } from "./badges-column"
+import { EventsColumn } from "./events-column"
+import { ActionsColumn } from "~/components/layout/table/columns/actions-column"
 
 export const columns: ColumnDef<Contact>[] = [
     {
         id: "select",
-
         cell: ({ row }) => (
             <Checkbox
                 checked={row.getIsSelected()}
@@ -46,6 +45,7 @@ export const columns: ColumnDef<Contact>[] = [
     },
     {
         accessorKey: "events",
+        header: "Events",
         cell: (cellContext: CellContext<Contact, unknown>) => (
             <EventsColumn {...cellContext} />
         ),
@@ -53,7 +53,27 @@ export const columns: ColumnDef<Contact>[] = [
     {
         id: "actions",
         cell: (cellContext: CellContext<Contact, unknown>) => (
-            <ActionsColumn {...cellContext} />
+            <ActionsColumn cellContext={cellContext} actions={[]} />
         ),
+    },
+    {
+        accessorKey: "stage",
+        enableHiding: false,
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+    },
+    {
+        accessorKey: "step",
+        enableHiding: false,
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+    },
+    {
+        accessorKey: "status",
+        enableHiding: false,
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+    },
+    {
+        accessorKey: "company",
+        enableHiding: false,
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
     },
 ]

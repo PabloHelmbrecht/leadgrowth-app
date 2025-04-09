@@ -68,6 +68,34 @@ export function columnFilterSelectorReducer(columnId: string) {
 }
 
 /**
+ * Crea un selector y un reducer para una unico elemento.
+ * @param {string} id - El ID del elemento.
+ * @returns {Object} - Objeto que contiene el selector y el reducer.
+ */
+export function uniqueSelectorReducer<Entity extends { id: string }>(
+    id: string,
+) {
+    const selector = (prev: Entity[]): Entity | null =>
+        prev.find((item) => item?.id === id) ?? null
+    const reducer = (
+        prev: Entity[],
+        action: Entity | ((entity: Entity) => Entity),
+    ) => {
+        const newEntity =
+            typeof action === "function"
+                ? action(prev.find((item) => item.id === id)!)
+                : action
+
+        if (prev.some((item) => item.id === id)) {
+            return prev.map((item) => (item.id === id ? newEntity : item))
+        }
+
+        return [...prev.filter((item) => item.id !== id), newEntity]
+    }
+    return { selector, reducer }
+}
+
+/**
  * Crea un selector y un reducer para nodos en una secuencia.
  * @param {string} workflowId - El ID de la secuencia.
  * @returns {Object} - Objeto que contiene el selector y el reducer.

@@ -12,12 +12,16 @@ import { getPercentage } from "~/lib/utils/formatters"
 //Types and Schemas
 import { type Workflow } from "~/lib/stores/mockData/workflow"
 
+//Actions
+import { ArchiveWorkflowAction } from "./table-columns/row-actions/archive-workflow-action"
+import { CloneWorkflowAction } from "./table-columns/row-actions/clone-workflow-action"
+
 //Data Table Column Components
-import { KPIColumn } from "./table-columns/kpi-column"
 import { StatusColumn } from "./table-columns/status-column"
 import { NameColumn } from "./table-columns/name-column"
 import { TagColumn } from "./table-columns/tag-column"
-import { ActionsColumn } from "./table-columns/actions-column"
+import { ActionsColumn } from "~/components/layout/table/columns/actions-column"
+import { KPIColumn } from "~/components/layout/table/columns/kpi-column"
 
 export const columns: ColumnDef<Workflow>[] = [
     {
@@ -38,6 +42,7 @@ export const columns: ColumnDef<Workflow>[] = [
         cell: (cellContext: CellContext<Workflow, unknown>) => (
             <NameColumn {...cellContext} />
         ),
+        size: 300,
     },
     {
         accessorKey: "activeProspectsCount",
@@ -126,7 +131,26 @@ export const columns: ColumnDef<Workflow>[] = [
     {
         id: "actions",
         cell: (cellContext: CellContext<Workflow, unknown>) => (
-            <ActionsColumn {...cellContext} />
+            <ActionsColumn
+                actions={[
+                    {
+                        name: "Edit",
+                        type: "link",
+                        href: `/${cellContext.row.id}/settings`,
+                    },
+                    {
+                        name: "Clone",
+                        type: "dialog",
+                        component: CloneWorkflowAction,
+                    },
+                    {
+                        name: "Archive",
+                        type: "alert",
+                        component: ArchiveWorkflowAction,
+                    },
+                ]}
+                cellContext={cellContext}
+            />
         ),
     },
     {

@@ -14,31 +14,21 @@ import { ToastAction } from "~/components/ui/toast"
 import { useToast } from "~/components/ui/use-toast"
 
 //Zod & Schemas & Types
-import { z } from "zod"
+import { type Workflow } from "~/lib/stores/mockData/workflow"
 
-import { type Workflow, tagSchema } from "~/lib/stores/mockData/workflow"
-
-//Atom and Jotai
+//Jotai & Atoms
 import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import { useAtom } from "jotai"
+import {
+    useSelectorReducerAtom,
+    uniqueSelectorReducer,
+} from "~/lib/hooks/use-selector-reducer-atom"
 
-const tableMetaSchema = z.object({
-    getTags: z.function().returns(z.array(tagSchema)),
-    setWorkflowData: z
-        .function()
-        .args(z.string(), z.string(), z.unknown())
-        .returns(z.void()),
-    cloneWorkflow: z.function().args(z.string()),
-    archiveWorkflow: z.function().args(z.string()),
-})
-
-export function ArchiveWorkflowAction({
-    row,
-    table,
-}: CellContext<Workflow, unknown>) {
+export function ArchiveWorkflowAction({ row }: CellContext<Workflow, unknown>) {
     const { toast } = useToast()
-    const [workflowsMockData, setWorkflowsMockData] = useAtom(
+
+    const [workflow, setWorkflow] = useSelectorReducerAtom(
         workflowsMockDataAtom,
+        uniqueSelectorReducer<Workflow>(row.id),
     )
 
     return (
@@ -55,10 +45,7 @@ export function ArchiveWorkflowAction({
                 <AlertDialogAction
                     onClick={() => {
                         try {
-                            const oldWorkflowMockData = workflowsMockData
-                            tableMetaSchema
-                                .parse(table.options.meta)
-                                .archiveWorkflow(row.id)
+                            const oldStatus = workflow?.status
 
                             toast({
                                 title: "Workflow deleted",
@@ -67,9 +54,10 @@ export function ArchiveWorkflowAction({
                                     <ToastAction
                                         altText="Undo action"
                                         onClick={() =>
-                                            setWorkflowsMockData(
-                                                oldWorkflowMockData,
-                                            )
+                                            setWorkflow((item) => ({
+                                                ...item,
+                                                status: oldStatus ?? "paused",
+                                            }))
                                         }
                                     >
                                         Undo
