@@ -1,27 +1,10 @@
 import { atom } from "jotai"
 import { z } from "zod"
 import { generateId } from "~/lib/utils/formatters"
+import { eventsSchema, stepSchema } from "./system"
+
 
 //Schemas
-export const eventsSchema = z.object({
-    id: z.string(),
-    type: z.enum([
-        "emailOpened",
-        "emailClicked",
-        "emailReplied",
-        "linkedinConnectionAccepted",
-        "linkedinMessageReplied",
-        "callConnected",
-        "callUnanswered",
-        "callPositive",
-        "meetingScheduled",
-        "websiteVisited",
-        "meetingCompleted",
-        "meetingCancelled",
-    ]),
-    date: z.date(),
-})
-
 export const statusSchema = z.object({
     value: z.enum([
         "active",
@@ -35,15 +18,9 @@ export const statusSchema = z.object({
     color: z.string(),
 })
 
-export const companySchema = z.object({
-    value: z.string(),
-    label: z.string(),
-})
+export const companySchema = z.string()
 
-export const stepSchema = z.object({
-    value: z.string(),
-    label: z.string(),
-})
+
 
 export const stageSchema = z.object({
     value: z.string(),
@@ -57,7 +34,7 @@ export const contactSchema = z.object({
     lastName: z.string(),
     email: z.string().optional(),
     phone: z.string().optional(),
-    company: companySchema.shape.value,
+    company: companySchema,
     title: z.string(),
     address: z.string(),
     city: z.string(),
@@ -69,15 +46,15 @@ export const contactSchema = z.object({
     createdAt: z.date(),
     status: statusSchema.shape.value,
     stage: stageSchema.shape.value,
-    step: stepSchema.shape.value,
+    step: stepSchema,
 })
 
 //Types
 export type Contact = z.infer<typeof contactSchema>
 export type Company = z.infer<typeof companySchema>
 export type Status = z.infer<typeof statusSchema>
-export type Step = z.infer<typeof stepSchema>
 export type Stage = z.infer<typeof stageSchema>
+
 
 //Data
 
@@ -197,20 +174,7 @@ export const contactsMockData: Contact[] = [
     },
 ]
 
-export const companiesMockData: Company[] = [
-    {
-        value: "Company Inc.",
-        label: "Company Inc.",
-    },
-    {
-        value: "Company LLC",
-        label: "Company LLC",
-    },
-    {
-        value: "Company Corp.",
-        label: "Company Corp.",
-    },
-]
+export const companiesMockData: Company[] = [ "Company Inc.", "Company LLC", "Company Corp."]
 
 export const statusMockData: Status[] = [
     {
@@ -245,20 +209,6 @@ export const statusMockData: Status[] = [
     },
 ]
 
-export const stepsMockData: Step[] = [
-    {
-        value: "1",
-        label: "1",
-    },
-    {
-        value: "2",
-        label: "2",
-    },
-    {
-        value: "3",
-        label: "3",
-    },
-]
 
 export const stagesMockData: Stage[] = [
     {
@@ -297,5 +247,4 @@ export const stagesMockData: Stage[] = [
 export const contactsMockDataAtom = atom<Contact[]>(contactsMockData)
 export const companiesMockDataAtom = atom<Company[]>(companiesMockData)
 export const statusMockDataAtom = atom<Status[]>(statusMockData)
-export const stepsMockDataAtom = atom<Step[]>(stepsMockData)
 export const stagesMockDataAtom = atom<Stage[]>(stagesMockData)

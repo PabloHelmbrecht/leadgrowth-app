@@ -149,7 +149,7 @@ export const columns: ColumnDef<Workflow>[] = [
                         component: ArchiveWorkflowAction,
                     },
                 ]}
-                cellContext={cellContext}
+                {...cellContext}
             />
         ),
     },

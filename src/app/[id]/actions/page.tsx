@@ -18,9 +18,9 @@ import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import {
+    companiesMockDataAtom,
     stagesMockDataAtom,
     statusMockDataAtom,
-    companiesMockDataAtom,
     contactsMockDataAtom as dataAtom,
 } from "~/lib/stores/mockData/contact"
 import { stepsMockDataAtom } from "~/lib/stores/mockData/system"
@@ -74,7 +74,7 @@ export default function ContactsTable() {
                     </div>
 
                     <div className="flex gap-6">
-                      
+                        
                     </div>
                 </div>
 

@@ -21,7 +21,7 @@ import { DotsThree } from "@phosphor-icons/react/dist/ssr"
 
 export function ActionsColumn<Entity>({
     actions,
-    cellContext,
+    ...cellContext
 }: {
     actions: {
         name: string
@@ -29,8 +29,7 @@ export function ActionsColumn<Entity>({
         component?: React.JSXElementConstructor<CellContext<Entity, unknown>>
         href?: string
     }[]
-    cellContext: CellContext<Entity, unknown>
-}) {
+} & CellContext<Entity, unknown>) {
     return (
         <MultiDialogProvider>
             {({ Trigger, Container }) => (

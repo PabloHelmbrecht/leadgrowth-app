@@ -6,7 +6,7 @@ import { useEffect, useContext } from "react"
 //Tanstack Table
 import {
     type ColumnDef,
-    type InitialTableState,
+    type TableOptions,
     flexRender,
     getCoreRowModel,
     useReactTable,
@@ -39,10 +39,10 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<Entity extends { id: string }, TValue>({
     columns,
     hideHeaders = false,
-    initialState,
+    tableOptions
 }: DataTableProps<Entity, TValue> & {
     hideHeaders?: boolean
-    initialState?: InitialTableState
+    tableOptions?: Partial<TableOptions<Entity>>
 }) {
     //Mock Data
     const {
@@ -96,11 +96,11 @@ export function DataTable<Entity extends { id: string }, TValue>({
             },
         },
         getRowId: (row: Entity) => row.id,
-        initialState,
         state: {
             rowSelection,
             columnFilters,
         },
+        ...tableOptions
     })
 
     useEffect(() => {

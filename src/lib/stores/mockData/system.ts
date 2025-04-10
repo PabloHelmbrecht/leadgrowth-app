@@ -31,9 +31,51 @@ export const notificationSchema = z.object({
     path: z.string().optional(),
 })
 
+
+export const eventsSchema = z.object({
+    id: z.string(),
+    type: z.enum([
+        "emailOpened",
+        "emailClicked",
+        "emailReplied",
+        "linkedinConnectionAccepted",
+        "linkedinMessageReplied",
+        "callConnected",
+        "callUnanswered",
+        "callPositive",
+        "meetingScheduled",
+        "websiteVisited",
+        "meetingCompleted",
+        "meetingCancelled",
+    ]),
+    date: z.date(),
+})
+
+export const stepSchema = z.string()
+
+export const prioritySchema = z.object({
+    label: z.string(),
+    value: z.string(),
+    color: z.string(),
+})
+
+export const statusSchema = z.object({
+    label: z.string(),
+    value: z.string(),
+    color: z.string()
+})
+
+
+
 //Types
 export type Activity = z.infer<typeof activitySchema>
 export type Notification = z.infer<typeof notificationSchema>
+export type Event = z.infer<typeof eventsSchema>
+export type Step = z.infer<typeof stepSchema>
+export type Priority = z.infer<typeof prioritySchema>
+export type Status = z.infer<typeof statusSchema>
+
+
 
 //Data
 export const activitiesMockData: Activity[] = [
@@ -142,8 +184,54 @@ export const notificationsMockData: Notification[] = [
     },
 ]
 
+export const stepsMockData: Step[] = ["1","2","3"]
+
+export const priorityMockData: Priority[] = [{
+    label: "High",
+    value: "high",
+    color: "bg-danger-500"
+},
+{
+    label: "Medium",
+    value: "medium",
+    color: "bg-warning-500"
+},
+{
+    label: "Low",
+    value: "low",
+    color: "bg-neutral-500"
+}]
+
+export const statusMockData: Status[] = [
+    {
+        label: "scheduled",
+        value: "scheduled",
+        color: "bg-primary-500"
+    },
+    {
+        label: "Completed",
+        value: "completed",
+        color: "bg-success-500"
+    },
+    {
+        label: "Skipped",
+        value: "skipped",
+        color: "bg-neutral-500"
+    }
+   
+]
+
+
+
 //Atoms
 export const activitiesMockDataAtom = atom<Activity[]>(activitiesMockData)
-export const notificationsMockDataAtom = atom<Notification[]>(
-    notificationsMockData,
-)
+export const notificationsMockDataAtom = atom<Notification[]>(notificationsMockData)
+export const stepsMockDataAtom = atom<Step[]>(stepsMockData)
+export const priorityMockDataAtom = atom<Priority[]>(priorityMockData)
+export const statusMockDataAtom = atom<Status[]>(statusMockData)
+
+
+
+
+
+

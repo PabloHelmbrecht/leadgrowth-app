@@ -36,6 +36,10 @@ import { CaretDown, Star } from "@phosphor-icons/react/dist/ssr"
 import { useAtom } from "jotai"
 import { type TableContext, tableContext } from "./table-context"
 
+//Zod & Schemas
+import { z } from "zod"
+
+//Types
 type options = {
     label: string
     value: string
@@ -47,7 +51,7 @@ export function TableFilter({
     filterName = "tag",
     columnName = "Tags",
 }: {
-    options: options
+    options: options | string[]
     filterName: string
     columnName: string
 }) {
@@ -56,6 +60,7 @@ export function TableFilter({
         useContext(tableContext) ?? ({} as TableContext)
 
     const [rowSelection] = useAtom(rowSelectionAtom)
+
 
     const [open, setOpen] = useState(false)
     const [columnFilters, setColumnFilters] = useSelectorReducerAtom(
@@ -76,7 +81,21 @@ export function TableFilter({
         }
     }, [setColumnFilters])
 
-    const hasColor = useMemo(() => options.some((d) => d.color), [options])
+    
+
+const validatedOptions: options = useMemo(()=> {
+
+    const sanitizedOptions = z.string().array().safeParse(options)
+    if (sanitizedOptions.success) {
+        return sanitizedOptions.data.map(option => ({label: option, value:option}))
+    }
+        return options 
+
+},[options]) as options
+
+    
+
+    const hasColor = useMemo(() => validatedOptions.some((d) => d.color), [validatedOptions])
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -131,7 +150,7 @@ export function TableFilter({
                                                 className=" -mx-[3px]"
                                                 style={{
                                                     color:
-                                                        options.find(
+                                                        validatedOptions.find(
                                                             (item) =>
                                                                 item.value ===
                                                                 currentValue,
@@ -143,7 +162,7 @@ export function TableFilter({
                                                 className=" aspect-square w-2 rounded-full bg-neutral-500"
                                                 style={{
                                                     backgroundColor:
-                                                        options.find(
+                                                        validatedOptions.find(
                                                             (item) =>
                                                                 item.value ===
                                                                 currentValue,
@@ -152,7 +171,7 @@ export function TableFilter({
                                             />
                                         ))}
                                     {
-                                        options.find(
+                                        validatedOptions.find(
                                             (item) =>
                                                 item.value === currentValue,
                                         )?.label
@@ -167,7 +186,7 @@ export function TableFilter({
                         </CommandEmpty>
 
                         <CommandGroup>
-                            {options
+                            {validatedOptions
                                 .filter(
                                     (filterOption) =>
                                         !columnFilters.includes(
@@ -211,7 +230,7 @@ export function TableFilter({
                                                     className=" -mx-[3px]"
                                                     style={{
                                                         color:
-                                                            options.find(
+                                                            validatedOptions.find(
                                                                 (item) =>
                                                                     item.value ===
                                                                     filterOption.value,
@@ -223,7 +242,7 @@ export function TableFilter({
                                                     className=" aspect-square w-2 rounded-full bg-neutral-500"
                                                     style={{
                                                         backgroundColor:
-                                                            options.find(
+                                                            validatedOptions.find(
                                                                 (item) =>
                                                                     item.value ===
                                                                     filterOption.value,

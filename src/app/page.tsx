@@ -118,12 +118,12 @@ export default function HomePage() {
 
                 <DataTable
                     hideHeaders={true}
-                    initialState={{
+                    tableOptions={{initialState: {
                         columnVisibility: {
                             owner: false,
                             totalCount: false,
                         },
-                    }}
+                    }}}
                     columns={columns}
                 />
             </main>

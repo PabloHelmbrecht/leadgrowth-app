@@ -9,12 +9,14 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 
 //Types
-import { type Contact } from "~/lib/stores/mockData/contact"
+import { type Event } from "~/lib/stores/mockData/system"
 
 //Utils
 import { cn } from "~/lib/utils/classesMerge"
 
-export function EventsColumn({ row }: CellContext<Contact, unknown>) {
+export function EventsColumn<Entity extends { events: Event[] }>({
+    row,
+}: CellContext<Entity, unknown>) {
     const isEmailOpenedByContact = row.original.events.some(
         (e) => e.type === "emailOpened",
     )
