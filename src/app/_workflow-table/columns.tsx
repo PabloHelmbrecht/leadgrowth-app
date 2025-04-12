@@ -18,9 +18,9 @@ import { CloneWorkflowAction } from "./table-columns/row-actions/clone-workflow-
 
 //Data Table Column Components
 import { StatusColumn } from "./table-columns/status-column"
-import { NameColumn } from "./table-columns/name-column"
+import { WorkflowNameColumn } from "./table-columns/name-column"
 import { TagColumn } from "./table-columns/tag-column"
-import { ActionsColumn } from "~/components/layout/table/columns/actions-column"
+import { SettingsColumn } from "~/components/layout/table/columns/settings-column"
 import { KPIColumn } from "~/components/layout/table/columns/kpi-column"
 
 export const columns: ColumnDef<Workflow>[] = [
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Workflow>[] = [
     {
         accessorKey: "name",
         cell: (cellContext: CellContext<Workflow, unknown>) => (
-            <NameColumn {...cellContext} />
+            <WorkflowNameColumn {...cellContext} />
         ),
         size: 300,
     },
@@ -131,7 +131,7 @@ export const columns: ColumnDef<Workflow>[] = [
     {
         id: "actions",
         cell: (cellContext: CellContext<Workflow, unknown>) => (
-            <ActionsColumn
+            <SettingsColumn
                 actions={[
                     {
                         name: "Edit",

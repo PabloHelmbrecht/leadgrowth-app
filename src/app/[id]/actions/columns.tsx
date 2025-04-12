@@ -6,18 +6,19 @@ import { type CellContext, type ColumnDef } from "@tanstack/react-table"
 //UI
 import { Checkbox } from "~/components/ui/checkbox"
 
-//Utils
-// import { getPercentage } from "~/lib/utils/formatters"
-
 //Types and Schemas
-import { type Contact } from "~/lib/stores/mockData/contact"
+import { type Action } from "~/lib/stores/mockData/actions"
 
 //Data Table Column Components
-import { EventsColumn } from "~/components/layout/table/columns/events-column"
 import { BadgeColumn } from "~/components/layout/table/columns/badge-column"
-import { ActionsColumn } from "~/components/layout/table/columns/actions-column"
+import { SettingsColumn } from "~/components/layout/table/columns/settings-column"
+import { NameColumn } from "~/components/layout/table/columns/name-column"
+import { TaskColumn } from "~/components/layout/table/columns/task-column"
+import { UserColumn } from "~/components/layout/table/columns/user-column"
+import { EventsColumn } from "~/components/layout/table/columns/events-column"
+import { DateColumn } from "~/components/layout/table/columns/date-column"
 
-export const columns: ColumnDef<Contact>[] = [
+export const columns: ColumnDef<Action>[] = [
     {
         id: "select",
         cell: ({ row }) => (
@@ -31,88 +32,59 @@ export const columns: ColumnDef<Contact>[] = [
         enableHiding: false,
     },
     {
-        accessorKey: "name",
-        header: "Name",
-        cell: (cellContext: CellContext<Contact, unknown>) => (
-            <span>{`${String(cellContext.row.original.firstName)} ${String(cellContext.row.original.lastName)}`}</span>
+        accessorKey: "contact",
+        header: "Contact",
+        cell: (cellContext: CellContext<Action, unknown>) => (
+            <NameColumn {...cellContext} />
         ),
     },
     {
-        accessorKey: "title",
-        header: "Title",
-    },
-    {
-        accessorKey: "company",
-        header: "Company",
+        accessorKey: "type",
+        header: "Task",
         filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
-
+        cell: (cellContext: CellContext<Action, unknown>) => (
+            <TaskColumn {...cellContext} />
+        ),
     },
+
     {
         accessorKey: "events",
         header: "Events",
-        cell: (cellContext: CellContext<Contact, unknown>) => (
+        cell: (cellContext: CellContext<Action, unknown>) => (
             <EventsColumn {...cellContext} />
-        ),
-    },
-
-    {
-        accessorKey: "stage",
-        header: "Stage",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
-        cell: (cellContext: CellContext<Contact, unknown>) => (
-            <BadgeColumn
-                {...cellContext}
-                className="bg-neutral-100 text-neutral-800"
-            />
-        ),
-    },
-    {
-        accessorKey: "step",
-        header: "Step",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
-        cell: (cellContext: CellContext<Contact, unknown>) => (
-            <BadgeColumn
-                {...cellContext}
-                className="bg-neutral-500 text-white"
-                label={`Step ${String(cellContext.cell.getValue())}`}
-            />
         ),
     },
     {
         accessorKey: "status",
         header: "Status",
         filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
-        cell: (cellContext: CellContext<Contact, unknown>) => {
-            const statusDictionary = {
-                active: {
-                    label: "Active",
-                    color: "bg-primary-100 text-primary-800",
-                },
-                paused: {
-                    label: "Paused",
+        cell: (cellContext: CellContext<Action, unknown>) => {
+            const stateDictionary = {
+                scheduled: {
+                    label: "Scheduled",
                     color: "bg-neutral-100 text-neutral-800",
                 },
-                unsubscribed: {
-                    label: "Unsubscribed",
-                    color: "bg-danger-100 text-danger-800",
-                },
-                bounced: {
-                    label: "Bounced",
-                    color: "bg-danger-100 text-danger-800",
-                },
-                spam: {
-                    label: "Spam",
-                    color: "bg-danger-100 text-danger-800",
-                },
-                finished: {
-                    label: "Finished",
+                completed: {
+                    label: "Completed",
                     color: "bg-success-100 text-success-800",
+                },
+                skipped: {
+                    label: "Skipped",
+                    color: "bg-neutral-100 text-neutral-800",
+                },
+                error: {
+                    label: "Error",
+                    color: "bg-danger-100 text-danger-800",
+                },
+                delay: {
+                    label: "Error",
+                    color: "bg-warning-100 text-warning-800",
                 },
             }
 
             const cellValue =
-                cellContext.cell.getValue() as keyof typeof statusDictionary
-            const statusValue = statusDictionary[cellValue]
+                cellContext.cell.getValue() as keyof typeof stateDictionary
+            const statusValue = stateDictionary[cellValue]
 
             return (
                 <BadgeColumn
@@ -125,9 +97,32 @@ export const columns: ColumnDef<Contact>[] = [
     },
 
     {
+        accessorKey: "executed_at",
+        header: "Time",
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        cell: (cellContext: CellContext<Action, unknown>) => (
+            <DateColumn
+                {...cellContext}
+                date={
+                    cellContext.row.original.executed_at ??
+                    cellContext.row.original.scheduled_at
+                }
+            />
+        ),
+    },
+    {
+        accessorKey: "user",
+        header: "User",
+        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        cell: (cellContext: CellContext<Action, unknown>) => (
+            <UserColumn {...cellContext} />
+        ),
+    },
+
+    {
         id: "actions",
-        cell: (cellContext: CellContext<Contact, unknown>) => (
-            <ActionsColumn actions={[]} {...cellContext} />
+        cell: (cellContext: CellContext<Action, unknown>) => (
+            <SettingsColumn actions={[]} {...cellContext} />
         ),
     },
 ]

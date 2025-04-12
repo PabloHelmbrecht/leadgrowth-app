@@ -17,22 +17,23 @@ import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import {
-    companiesMockDataAtom,
-    stagesMockDataAtom,
-    statusMockDataAtom,
-    contactsMockDataAtom as dataAtom,
-} from "~/lib/stores/mockData/contact"
-import { stepsMockDataAtom } from "~/lib/stores/mockData/system"
+import { actionsMockDataAtom as dataAtom } from "~/lib/stores/mockData/actions"
 import {
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
     rowSelectionAtom,
     resetAllFiltersAtom,
     tableAtom,
-} from "~/lib/stores/contact-table"
+} from "~/lib/stores/tasks-table"
+import {
+    statusMockDataAtom,
+    priorityMockDataAtom,
+} from "~/lib/stores/mockData/system"
 
-export default function ContactsTable() {
+//Constants
+import { flowActions } from "~/lib/constants/flow-actions"
+
+export default function TasksTable() {
     return (
         <tableContext.Provider
             value={
@@ -43,7 +44,7 @@ export default function ContactsTable() {
                     rowSelectionAtom,
                     resetAllFiltersAtom,
                     tableAtom,
-                } as TableContext
+                } as TableContext<unknown>
             }
         >
             <main className="flex h-full w-full flex-col gap-8 p-12">
@@ -51,34 +52,35 @@ export default function ContactsTable() {
                     <div className="flex gap-6">
                         <SelectAllCheckbox />
                         <TableFilter
-                            options={useAtom(companiesMockDataAtom)[0]}
-                            filterName="company"
-                            columnName="Companies"
-                        />
-                        <TableFilter
-                            options={useAtom(stagesMockDataAtom)[0]}
-                            filterName="stage"
-                            columnName="Stages"
-                        />
-                        <TableFilter
-                            options={useAtom(stepsMockDataAtom)[0]}
-                            filterName="step"
-                            columnName="Steps"
-                        />
-                        <TableFilter
                             options={useAtom(statusMockDataAtom)[0]}
                             filterName="status"
                             columnName="Status"
                         />
+                        <TableFilter
+                            options={flowActions.map((a) => ({
+                                label: a.name,
+                                value: a.type,
+                                color: a.textColor,
+                            }))}
+                            filterName="type"
+                            columnName="Type"
+                        />
+                        <TableFilter
+                            options={useAtom(priorityMockDataAtom)[0]}
+                            filterName="priority"
+                            columnName="Priority"
+                        />
+
                         <ClearFilterActionButton />
                     </div>
 
-                    <div className="flex gap-6">
-                        
-                    </div>
+                    <div className="flex gap-6"></div>
                 </div>
 
-                <DataTable columns={columns} />
+                <DataTable
+                    columns={columns}
+                    filterData={(action) => action.due_at !== undefined}
+                />
             </main>
         </tableContext.Provider>
     )

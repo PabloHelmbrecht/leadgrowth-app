@@ -3,7 +3,6 @@ import { z } from "zod"
 import { generateId } from "~/lib/utils/formatters"
 import { eventsSchema, stepSchema } from "./system"
 
-
 //Schemas
 export const statusSchema = z.object({
     value: z.enum([
@@ -19,8 +18,6 @@ export const statusSchema = z.object({
 })
 
 export const companySchema = z.string()
-
-
 
 export const stageSchema = z.object({
     value: z.string(),
@@ -54,7 +51,6 @@ export type Contact = z.infer<typeof contactSchema>
 export type Company = z.infer<typeof companySchema>
 export type Status = z.infer<typeof statusSchema>
 export type Stage = z.infer<typeof stageSchema>
-
 
 //Data
 
@@ -174,7 +170,11 @@ export const contactsMockData: Contact[] = [
     },
 ]
 
-export const companiesMockData: Company[] = [ "Company Inc.", "Company LLC", "Company Corp."]
+export const companiesMockData: Company[] = [
+    "Company Inc.",
+    "Company LLC",
+    "Company Corp.",
+]
 
 export const statusMockData: Status[] = [
     {
@@ -208,7 +208,6 @@ export const statusMockData: Status[] = [
         color: "bg-success-500",
     },
 ]
-
 
 export const stagesMockData: Stage[] = [
     {

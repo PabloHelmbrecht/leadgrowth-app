@@ -43,7 +43,7 @@ export default function ContactsTable() {
                     rowSelectionAtom,
                     resetAllFiltersAtom,
                     tableAtom,
-                } as TableContext
+                } as TableContext<unknown>
             }
         >
             <main className="flex h-full w-full flex-col gap-8 p-12">
@@ -73,9 +73,7 @@ export default function ContactsTable() {
                         <ClearFilterActionButton />
                     </div>
 
-                    <div className="flex gap-6">
-                      
-                    </div>
+                    <div className="flex gap-6"></div>
                 </div>
 
                 <DataTable columns={columns} />

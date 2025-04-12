@@ -54,7 +54,7 @@ export default function HomePage() {
                     rowSelectionAtom,
                     resetAllFiltersAtom,
                     tableAtom,
-                } as TableContext
+                } as TableContext<unknown>
             }
         >
             <main className="flex h-full w-full flex-col gap-8 p-12">
@@ -118,12 +118,14 @@ export default function HomePage() {
 
                 <DataTable
                     hideHeaders={true}
-                    tableOptions={{initialState: {
-                        columnVisibility: {
-                            owner: false,
-                            totalCount: false,
+                    tableOptions={{
+                        initialState: {
+                            columnVisibility: {
+                                owner: false,
+                                totalCount: false,
+                            },
                         },
-                    }}}
+                    }}
                     columns={columns}
                 />
             </main>

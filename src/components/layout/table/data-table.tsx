@@ -1,7 +1,7 @@
 "use client"
 
 //React
-import { useEffect, useContext } from "react"
+import { useEffect, useContext, useMemo } from "react"
 
 //Tanstack Table
 import {
@@ -24,7 +24,7 @@ import {
 } from "~/components/ui/table"
 
 //Atoms & Jotai
-import { useAtom } from "jotai"
+import { type PrimitiveAtom, useAtom } from "jotai"
 import { type TableContext, tableContext } from "./table-context"
 
 //Zod and Schemas
@@ -39,10 +39,12 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<Entity extends { id: string }, TValue>({
     columns,
     hideHeaders = false,
-    tableOptions
+    tableOptions,
+    filterData,
 }: DataTableProps<Entity, TValue> & {
     hideHeaders?: boolean
     tableOptions?: Partial<TableOptions<Entity>>
+    filterData?: (rowData: Entity) => boolean
 }) {
     //Mock Data
     const {
@@ -51,8 +53,8 @@ export function DataTable<Entity extends { id: string }, TValue>({
         IsAllRowsSelectedAtom,
         columnFiltersAtom,
         rowSelectionAtom,
-    } = useContext(tableContext) ?? ({} as TableContext)
-    const [data] = useAtom(dataAtom)
+    } = useContext(tableContext) ?? ({} as TableContext<Entity>)
+    const [data] = useAtom(dataAtom as PrimitiveAtom<Entity>)
 
     const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)
 
@@ -60,8 +62,16 @@ export function DataTable<Entity extends { id: string }, TValue>({
     const [, setIsAllRowsSelected] = useAtom(IsAllRowsSelectedAtom)
     const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom)
 
+    const filteredData = useMemo(
+        () =>
+            filterData
+                ? (data as Entity[]).filter(filterData)
+                : (data as Entity[]),
+        [data, filterData],
+    )
+
     const table = useReactTable<Entity>({
-        data: data as Entity[],
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onRowSelectionChange: setRowSelection,
@@ -100,7 +110,7 @@ export function DataTable<Entity extends { id: string }, TValue>({
             rowSelection,
             columnFilters,
         },
-        ...tableOptions
+        ...tableOptions,
     })
 
     useEffect(() => {

@@ -48,8 +48,8 @@ type options = {
 
 export function TableFilter({
     options,
-    filterName = "tag",
-    columnName = "Tags",
+    filterName,
+    columnName,
 }: {
     options: options | string[]
     filterName: string
@@ -57,10 +57,9 @@ export function TableFilter({
 }) {
     //Mock data
     const { rowSelectionAtom, columnFiltersAtom } =
-        useContext(tableContext) ?? ({} as TableContext)
+        useContext(tableContext) ?? ({} as TableContext<unknown>)
 
     const [rowSelection] = useAtom(rowSelectionAtom)
-
 
     const [open, setOpen] = useState(false)
     const [columnFilters, setColumnFilters] = useSelectorReducerAtom(
@@ -81,21 +80,21 @@ export function TableFilter({
         }
     }, [setColumnFilters])
 
-    
+    const validatedOptions: options = useMemo(() => {
+        const sanitizedOptions = z.string().array().safeParse(options)
+        if (sanitizedOptions.success) {
+            return sanitizedOptions.data.map((option) => ({
+                label: option,
+                value: option,
+            }))
+        }
+        return options
+    }, [options]) as options
 
-const validatedOptions: options = useMemo(()=> {
-
-    const sanitizedOptions = z.string().array().safeParse(options)
-    if (sanitizedOptions.success) {
-        return sanitizedOptions.data.map(option => ({label: option, value:option}))
-    }
-        return options 
-
-},[options]) as options
-
-    
-
-    const hasColor = useMemo(() => validatedOptions.some((d) => d.color), [validatedOptions])
+    const hasColor = useMemo(
+        () => validatedOptions.some((d) => d.color),
+        [validatedOptions],
+    )
 
     return (
         <Popover open={open} onOpenChange={setOpen}>

@@ -28,6 +28,9 @@ import { Handle } from "../_handles/handle"
 //Utils
 import { reduceText } from "~/lib/utils/formatters"
 
+//Hooks
+import { useNodePosition } from "~/lib/hooks/use-node-position"
+
 //Zod
 import { z } from "zod"
 import { cn } from "~/lib/utils/classesMerge"
@@ -56,6 +59,8 @@ enum dialogs {
 export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
     const { success: isComplete } = emailComposerSchema.safeParse(data)
 
+    const nodePosition = useNodePosition(id)
+
     return (
         <div
             className={cn(
@@ -77,7 +82,7 @@ export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
                     <div className="flex-1 font-semibold">Manual Email</div>
                     {isComplete ? (
                         <div className="flex-initial text-xs font-semibold text-neutral-500">
-                            {`#${id}`}
+                            {`#${nodePosition}`}
                         </div>
                     ) : (
                         <div className="h-full flex-col items-start justify-start">

@@ -1,3 +1,10 @@
+/**
+ * Calculates the percentage of a numerator over a denominator with a specified number of decimals.
+ * @param {string | number} numerator - The numerator of the percentage calculation.
+ * @param {string | number} denominator - The denominator of the percentage calculation.
+ * @param {number} [decimals=1] - The number of decimal places to include in the result.
+ * @returns {string} The percentage as a string, or "-" if the calculation is invalid.
+ */
 export function getPercentage(
     numerator: string | number,
     denominator: string | number,
@@ -15,6 +22,10 @@ export function getPercentage(
     )
 }
 
+/**
+ * Generates a unique identifier (UUID v4).
+ * @returns {string} A randomly generated UUID.
+ */
 export function generateId(): string {
     const d =
         typeof performance === "undefined"
@@ -28,6 +39,11 @@ export function generateId(): string {
     })
 }
 
+/**
+ * Converts a number to its corresponding alphabetical representation (e.g., 1 -> A, 27 -> AA).
+ * @param {number} number - The number to convert.
+ * @returns {string | undefined} The alphabetical representation of the number, or undefined if the number is less than 1.
+ */
 export function numberToLetters(number: number) {
     number = Math.round(number)
 
@@ -42,6 +58,12 @@ export function numberToLetters(number: number) {
     return letters
 }
 
+/**
+ * Truncates a string to a specified maximum length and appends "..." if truncated.
+ * @param {string} text - The text to truncate.
+ * @param {number} maxLength - The maximum allowed length of the text.
+ * @returns {string} The truncated text.
+ */
 export function reduceText(text: string, maxLength: number) {
     if (text.length <= maxLength) {
         return text
@@ -49,6 +71,11 @@ export function reduceText(text: string, maxLength: number) {
     return text.substring(0, maxLength) + "..."
 }
 
+/**
+ * Converts an array of items into a human-readable list.
+ * @param {unknown[]} items - The array of items to format.
+ * @returns {string} A string representing the list, with items separated by commas and "and" before the last item.
+ */
 export function makeList(items: unknown[]): string {
     return items?.reduce((str: string, mailboxId, index, list) => {
         if (index === list.length - 1) {
@@ -60,4 +87,18 @@ export function makeList(items: unknown[]): string {
 
         return `${String(str)}, ${String(mailboxId)}`
     }, "")
+}
+
+/**
+ * Capitalizes the first letter of each word in a string.
+ * @param {string} input - The input string.
+ * @returns {string} The string with each word capitalized.
+ */
+export function capitalizeWords(input: string): string {
+    return input
+        .split(" ")
+        .map((word) =>
+            word.length > 0 ? word.charAt(0).toUpperCase() + word.slice(1) : "",
+        )
+        .join(" ")
 }

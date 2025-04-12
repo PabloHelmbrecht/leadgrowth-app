@@ -19,7 +19,7 @@ import { MultiDialogProvider } from "~/components/ui/multi-dialog"
 //Icons
 import { DotsThree } from "@phosphor-icons/react/dist/ssr"
 
-export function ActionsColumn<Entity>({
+export function SettingsColumn<Entity>({
     actions,
     ...cellContext
 }: {
@@ -34,7 +34,7 @@ export function ActionsColumn<Entity>({
         <MultiDialogProvider>
             {({ Trigger, Container }) => (
                 <>
-                    <DropdownMenu>
+                    <DropdownMenu key={"dropdown-menu"}>
                         <DropdownMenuTrigger asChild>
                             <Button
                                 variant="secondary"

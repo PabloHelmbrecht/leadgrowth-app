@@ -9,195 +9,14 @@ import { usePathname } from "next/navigation"
 import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 
-//Icon
+//Constants
 import {
-    MagnifyingGlass,
-    Envelope,
-    UserPlus,
-    Eye,
-    ThumbsUp,
-    ChatCircle,
-    Phone,
-    CheckSquare,
-    ArrowsSplit,
-    DiceFive,
-    QuestionMark,
-    ArrowsClockwise,
-    Bell,
-    PaperPlaneRight,
-    Robot,
-} from "@phosphor-icons/react/dist/ssr"
-import { type Icon } from "@phosphor-icons/react"
+    flowActionsBlocks,
+    type flowActionBlock,
+} from "~/lib/constants/flow-actions"
 
-//Utils
-import { cn } from "~/lib/utils/classesMerge"
-
-//Types
-type block = {
-    title: string
-    items: {
-        icon: Icon
-        name: string
-        type: string
-        queryValue?: string
-        bgColor: string
-        textColor: string
-    }[]
-}
-
-//Steps
-const emailBlock = {
-    title: "Emails",
-    items: [
-        {
-            icon: Robot,
-            name: "Automatic Email",
-            type: "automaticEmail",
-            bgColor: "bg-success-100",
-            textColor: "text-success-600",
-        },
-        {
-            icon: Envelope,
-            name: "Manual Email",
-            type: "manualEmail",
-            bgColor: "bg-success-100",
-            textColor: "text-success-600",
-        },
-    ],
-}
-
-const linkedinBlock: block = {
-    title: "Linkedin",
-    items: [
-        {
-            icon: UserPlus,
-            name: "Connection Request",
-            queryValue: "Linkedin Connection Request",
-            type: "linkedinConnection",
-            bgColor: "bg-primary-100",
-            textColor: "text-primary-600",
-        },
-        {
-            icon: ChatCircle,
-            name: "Linkedin Message",
-            type: "linkedinMessage",
-            bgColor: "bg-primary-100",
-            textColor: "text-primary-600",
-        },
-        {
-            icon: Eye,
-            name: "View Profile",
-            queryValue: "View Linkedin Profile",
-            type: "linkedinViewProfile",
-            bgColor: "bg-primary-100",
-            textColor: "text-primary-600",
-        },
-        {
-            icon: ThumbsUp,
-            name: "Interact With Post",
-            queryValue: "Interact With Linkedin Post",
-            type: "linkedinPostInteraction",
-            bgColor: "bg-primary-100",
-            textColor: "text-primary-600",
-        },
-    ],
-}
-
-const callBlock: block = {
-    title: "Calls",
-    items: [
-        {
-            icon: Phone,
-            name: "Phone Call",
-            type: "phoneCall",
-            bgColor: "bg-purple-100",
-            textColor: "text-purple-600",
-        },
-    ],
-}
-
-const taskBlock: block = {
-    title: "Tasks",
-    items: [
-        {
-            icon: CheckSquare,
-            name: "Manual Task",
-            type: "manualTask",
-            bgColor: "bg-amber-100",
-            textColor: "text-amber-600",
-        },
-    ],
-}
-
-const flowBlock: block = {
-    title: "Flow Control",
-    items: [
-        {
-            icon: DiceFive,
-            name: "Testing A/B",
-            type: "testingAB",
-            bgColor: "bg-neutral-100",
-            textColor: "text-neutral-600",
-        },
-        {
-            icon: QuestionMark,
-            name: "Conditional",
-            type: "conditional",
-            bgColor: "bg-neutral-100",
-            textColor: "text-neutral-600",
-        },
-        {
-            icon: ArrowsSplit,
-            name: "Splitter",
-            type: "splitter",
-            bgColor: "bg-neutral-100",
-            textColor: "text-neutral-600",
-        },
-    ],
-}
-
-const internalActionsBlock: block = {
-    title: "Internal Actions",
-    items: [
-        {
-            icon: Envelope,
-            name: "Internal Email",
-            type: "internalEmail",
-            bgColor: "bg-rose-100",
-            textColor: "text-rose-600",
-        },
-        {
-            icon: ArrowsClockwise,
-            name: "Update Field",
-            type: "updateField",
-            bgColor: "bg-rose-100",
-            textColor: "text-rose-600",
-        },
-        {
-            icon: Bell,
-            name: "App Notification",
-            type: "appNotification",
-            bgColor: "bg-rose-100",
-            textColor: "text-rose-600",
-        },
-        {
-            icon: PaperPlaneRight,
-            name: "Manage Workflows",
-            type: "manageWorkflows",
-            bgColor: "bg-rose-100",
-            textColor: "text-rose-600",
-        },
-    ],
-}
-
-const stepsStructure: block[] = [
-    emailBlock,
-    callBlock,
-    taskBlock,
-    linkedinBlock,
-    internalActionsBlock,
-    flowBlock,
-]
+//Icon
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr"
 
 export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
     const pathname = usePathname()
@@ -220,14 +39,14 @@ export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
                 </div>
             </div>
             <div className="scroll flex  w-full flex-col overflow-auto pr-1  ">
-                {stepsStructure.map((block, key) => (
+                {flowActionsBlocks.map((block, key) => (
                     <StepBlock key={key} {...block} />
                 ))}
             </div>
         </div>
     )
 
-    function StepBlock({ title, items }: block) {
+    function StepBlock({ title, items }: flowActionBlock) {
         const filteredItems = useMemo(
             () =>
                 items.filter((item) => {
@@ -261,11 +80,13 @@ export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
                         >
                             <div>
                                 <div
-                                    className={cn(
-                                        "aspect-square h-fit w-fit flex-initial rounded-md bg-success-100  p-1  text-success-600",
-                                        item.textColor,
-                                        item.bgColor,
-                                    )}
+                                    className={
+                                        "aspect-square h-fit w-fit flex-initial rounded-md bg-neutral-100  p-1  text-neutral-600"
+                                    }
+                                    style={{
+                                        color: item.textColor,
+                                        backgroundColor: item.bgColor,
+                                    }}
                                 >
                                     <item.icon
                                         weight="bold"

@@ -15,7 +15,7 @@ import { type Contact } from "~/lib/stores/mockData/contact"
 //Data Table Column Components
 import { EventsColumn } from "~/components/layout/table/columns/events-column"
 import { BadgeColumn } from "~/components/layout/table/columns/badge-column"
-import { ActionsColumn } from "~/components/layout/table/columns/actions-column"
+import { SettingsColumn } from "~/components/layout/table/columns/settings-column"
 
 export const columns: ColumnDef<Contact>[] = [
     {
@@ -45,7 +45,6 @@ export const columns: ColumnDef<Contact>[] = [
         accessorKey: "company",
         header: "Company",
         filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
-
     },
     {
         accessorKey: "events",
@@ -127,7 +126,7 @@ export const columns: ColumnDef<Contact>[] = [
     {
         id: "actions",
         cell: (cellContext: CellContext<Contact, unknown>) => (
-            <ActionsColumn actions={[]} {...cellContext} />
+            <SettingsColumn actions={[]} {...cellContext} />
         ),
     },
 ]

@@ -1,5 +1,11 @@
 import { Position } from "@xyflow/react"
 
+/**
+ * Calculates the control offset for a cubic bezier curve based on the distance and curvature.
+ * @param {number} distance - The distance between two points.
+ * @param {number} curvature - The curvature factor.
+ * @returns {number} The calculated control offset.
+ */
 function calculateControlOffset(distance: number, curvature: number): number {
     if (distance >= 0) {
         return 0.5 * distance
@@ -8,6 +14,17 @@ function calculateControlOffset(distance: number, curvature: number): number {
     return curvature * 25 * Math.sqrt(-distance)
 }
 
+/**
+ * Calculates the control point for a cubic bezier curve based on the position and curvature.
+ * @param {Object} params - The parameters for the calculation.
+ * @param {Position} params.pos - The position of the control point (e.g., Left, Right, Top, Bottom).
+ * @param {number} params.x1 - The x-coordinate of the starting point.
+ * @param {number} params.y1 - The y-coordinate of the starting point.
+ * @param {number} params.x2 - The x-coordinate of the target point.
+ * @param {number} params.y2 - The y-coordinate of the target point.
+ * @param {number} params.c - The curvature factor.
+ * @returns {[number, number]} The x and y coordinates of the control point.
+ */
 function getControlWithCurvature({
     pos,
     x1,
@@ -35,6 +52,19 @@ function getControlWithCurvature({
     }
 }
 
+/**
+ * Calculates the bezier edge position and control points for a cubic bezier curve.
+ * @param {Object} params - The parameters for the calculation.
+ * @param {number} params.sourceX - The x-coordinate of the source point.
+ * @param {number} params.sourceY - The y-coordinate of the source point.
+ * @param {number} params.targetX - The x-coordinate of the target point.
+ * @param {number} params.targetY - The y-coordinate of the target point.
+ * @param {Position} [params.targetPosition=Position.Top] - The position of the target control point.
+ * @param {Position} [params.sourcePosition=Position.Bottom] - The position of the source control point.
+ * @param {number} [params.curvature=0.25] - The curvature factor.
+ * @param {number} [params.t=0.5] - The t value for the bezier curve (default is 0.5 for midpoint).
+ * @returns {[number, number, number, number]} The center x, center y, offset x, and offset y of the bezier curve.
+ */
 export function getBezierEdgePosition({
     sourceX,
     sourceY,
@@ -43,7 +73,6 @@ export function getBezierEdgePosition({
     targetPosition = Position.Top,
     sourcePosition = Position.Bottom,
     curvature = 0.25,
-
     t = 0.5,
 }: {
     sourceX: number

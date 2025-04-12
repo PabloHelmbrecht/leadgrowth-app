@@ -16,7 +16,7 @@ import { type TableContext, tableContext } from "../table-context"
 
 export function ClearFilterActionButton() {
     const { rowSelectionAtom, columnFiltersAtom } =
-        useContext(tableContext) ?? ({} as TableContext)
+        useContext(tableContext) ?? ({} as TableContext<unknown>)
 
     const [columnFilters] = useAtom(columnFiltersAtom)
     const [rowSelection] = useAtom(rowSelectionAtom)

@@ -13,6 +13,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
+    "clean": "next lint && tsc && bun prettier --write \"./src/**/*.{js,jsx,ts,tsx}\"",
     "type:check": "tsc --noEmit",
     "analyze": "env ANALYZE=true pnpm build",
     "types": "tsc",

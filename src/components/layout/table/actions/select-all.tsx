@@ -12,7 +12,7 @@ import { type TableContext, tableContext } from "../table-context"
 
 export function SelectAllCheckbox() {
     const { tableAtom, IsAllRowsSelectedAtom } =
-        useContext(tableContext) ?? ({} as TableContext)
+        useContext(tableContext) ?? ({} as TableContext<unknown>)
 
     const [tableInstance] = useAtom(tableAtom)
     const [isAllRowsSelected, setIsAllRowsSelected] = useAtom(

@@ -20,7 +20,7 @@ import { useAtom } from "jotai"
 
 const arrayStringSchema = z.string().array()
 
-export function NameColumn({ row }: CellContext<Workflow, unknown>) {
+export function WorkflowNameColumn({ row }: CellContext<Workflow, unknown>) {
     const [tags] = useAtom(tagsMockDataAtom)
     return (
         <div className="flex h-full flex-1 flex-col items-start justify-start gap-2 overflow-clip whitespace-nowrap pl-2">

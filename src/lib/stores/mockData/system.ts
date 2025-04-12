@@ -1,6 +1,10 @@
 import { atom } from "jotai"
 import { z } from "zod"
 
+//Colors
+import config from "tailwind.config"
+const colors = config.theme.extend.colors
+
 //Schemas
 export const activitySchema = z.object({
     type: z.enum([
@@ -31,7 +35,6 @@ export const notificationSchema = z.object({
     path: z.string().optional(),
 })
 
-
 export const eventsSchema = z.object({
     id: z.string(),
     type: z.enum([
@@ -55,17 +58,22 @@ export const stepSchema = z.string()
 
 export const prioritySchema = z.object({
     label: z.string(),
-    value: z.string(),
+    value: z.enum(["high", "medium", "low"]),
     color: z.string(),
 })
 
 export const statusSchema = z.object({
     label: z.string(),
-    value: z.string(),
-    color: z.string()
+    value: z.enum([
+        "scheduled",
+        "completed",
+        "skipped",
+        "error",
+        "delayed",
+        "pending",
+    ]),
+    color: z.string().optional(),
 })
-
-
 
 //Types
 export type Activity = z.infer<typeof activitySchema>
@@ -74,8 +82,6 @@ export type Event = z.infer<typeof eventsSchema>
 export type Step = z.infer<typeof stepSchema>
 export type Priority = z.infer<typeof prioritySchema>
 export type Status = z.infer<typeof statusSchema>
-
-
 
 //Data
 export const activitiesMockData: Activity[] = [
@@ -184,54 +190,64 @@ export const notificationsMockData: Notification[] = [
     },
 ]
 
-export const stepsMockData: Step[] = ["1","2","3"]
+export const stepsMockData: Step[] = ["1", "2", "3"]
 
-export const priorityMockData: Priority[] = [{
-    label: "High",
-    value: "high",
-    color: "bg-danger-500"
-},
-{
-    label: "Medium",
-    value: "medium",
-    color: "bg-warning-500"
-},
-{
-    label: "Low",
-    value: "low",
-    color: "bg-neutral-500"
-}]
+export const priorityMockData: Priority[] = [
+    {
+        label: "High",
+        value: "high",
+        color: colors.danger[500],
+    },
+    {
+        label: "Medium",
+        value: "medium",
+        color: colors.warning[500],
+    },
+    {
+        label: "Low",
+        value: "low",
+        color: colors.neutral[500],
+    },
+]
 
 export const statusMockData: Status[] = [
     {
-        label: "scheduled",
+        label: "Scheduled",
         value: "scheduled",
-        color: "bg-primary-500"
+        color: colors.primary[500],
     },
     {
         label: "Completed",
         value: "completed",
-        color: "bg-success-500"
+        color: colors.success[500],
     },
     {
         label: "Skipped",
         value: "skipped",
-        color: "bg-neutral-500"
-    }
-   
+        color: colors.neutral[500],
+    },
+    {
+        label: "Pending",
+        value: "pending",
+        color: colors.neutral[500],
+    },
+    {
+        label: "Delayed",
+        value: "delayed",
+        color: colors.warning[500],
+    },
+    {
+        label: "Error",
+        value: "error",
+        color: colors.danger[500],
+    },
 ]
-
-
 
 //Atoms
 export const activitiesMockDataAtom = atom<Activity[]>(activitiesMockData)
-export const notificationsMockDataAtom = atom<Notification[]>(notificationsMockData)
+export const notificationsMockDataAtom = atom<Notification[]>(
+    notificationsMockData,
+)
 export const stepsMockDataAtom = atom<Step[]>(stepsMockData)
 export const priorityMockDataAtom = atom<Priority[]>(priorityMockData)
 export const statusMockDataAtom = atom<Status[]>(statusMockData)
-
-
-
-
-
-

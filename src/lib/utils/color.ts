@@ -12,7 +12,15 @@ export class Color {
         this.hsb = this.hexToHSB(hex ?? neutral["500"])
     }
 
+    isValidHex(hex: string): boolean {
+        const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+        return hexRegex.test(hex)
+    }
+
     setHex(hex: string) {
+        if (!this.isValidHex(hex)) {
+            throw new Error("Invalid hex color format")
+        }
         this.hex = hex
         this.hsb = this.hexToHSB(hex)
     }
@@ -127,4 +135,9 @@ export class Color {
         this.hex = this.hsbToHex(this.hsb)
         return this
     }
+}
+
+export function isValidHex(hex: string): boolean {
+    const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/
+    return hexRegex.test(hex)
 }
