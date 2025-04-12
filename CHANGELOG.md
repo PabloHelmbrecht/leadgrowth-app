@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.30](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.29...v0.1.30) (2025-04-12)
+
+
+### Features
+
+* **action task table:** refactor table context and filter components for type safety and clarity ([f0fcaaa](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/f0fcaaac075c2959b64f685b60e098509eae201f))
+* Refactor contacts and tasks table components ([7baf949](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/7baf949a73a46456696ddee7be575dea04f0e45b))
+
 ### [0.1.29](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.28...v0.1.29) (2025-04-09)
 
 
