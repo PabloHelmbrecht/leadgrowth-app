@@ -2,9 +2,6 @@
 import "~/styles/globals.css"
 import "~/styles/react-flow-styles.css"
 
-//TRPC
-import { TRPCReactProvider } from "~/trpc/react"
-
 //UI Components
 // import { Sidebar } from "~/components/layout/sidebar"
 // import { TopMenu } from "~/components/layout/top-menu"
@@ -39,23 +36,21 @@ export default async function RootLayout({
     return (
         <html lang={locale} className={`${inter.variable}`}>
             <body>
-                <TRPCReactProvider>
-                    <NextIntlClientProvider>
-                        <TooltipProvider delayDuration={400}>
-                            <div className="flex gap-[2px] bg-neutral-200">
-                                {/* <Sidebar /> */}
-                                <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-                                    {/* <TopMenu /> */}
-                                    <div className=" flex w-full flex-1 overflow-hidden">
-                                        {children}
-                                    </div>
+                <NextIntlClientProvider>
+                    <TooltipProvider delayDuration={400}>
+                        <div className="flex gap-[2px] bg-neutral-200">
+                            {/* <Sidebar /> */}
+                            <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
+                                {/* <TopMenu /> */}
+                                <div className=" flex w-full flex-1 overflow-hidden">
+                                    {children}
                                 </div>
                             </div>
-                            <Toaster />
-                            <div id="portal-root"></div>
-                        </TooltipProvider>
-                    </NextIntlClientProvider>
-                </TRPCReactProvider>
+                        </div>
+                        <Toaster />
+                        <div id="portal-root"></div>
+                    </TooltipProvider>
+                </NextIntlClientProvider>
             </body>
         </html>
     )
