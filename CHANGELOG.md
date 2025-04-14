@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.31](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.30...v0.1.31) (2025-04-14)
+
+
+### Features
+
+* **auth:** add authentication pages and forms ([09d1990](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/09d19902a80149f8bb8093401ce597ecb52c0afd))
+
 ### [0.1.30](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.29...v0.1.30) (2025-04-12)
 
 
