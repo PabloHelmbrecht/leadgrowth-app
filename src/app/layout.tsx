@@ -7,6 +7,7 @@ import "~/styles/react-flow-styles.css"
 // import { TopMenu } from "~/components/layout/top-menu"
 import { Toaster } from "~/components/ui/toaster"
 import { TooltipProvider } from "~/components/ui/tooltip"
+import { QueryProvider } from "~/components/providers/query-provider"
 
 //Fonts
 import { Inter } from "next/font/google"
@@ -14,6 +15,9 @@ import { Inter } from "next/font/google"
 //Translation i18n
 import { NextIntlClientProvider } from "next-intl"
 import { getLocale } from "next-intl/server"
+
+//React Query
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 const inter = Inter({
     subsets: ["latin"],
@@ -36,21 +40,24 @@ export default async function RootLayout({
     return (
         <html lang={locale} className={`${inter.variable}`}>
             <body>
-                <NextIntlClientProvider>
-                    <TooltipProvider delayDuration={400}>
-                        <div className="flex gap-[2px] bg-neutral-200">
-                            {/* <Sidebar /> */}
-                            <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-                                {/* <TopMenu /> */}
-                                <div className=" flex w-full flex-1 overflow-hidden">
-                                    {children}
+                <QueryProvider>
+                    <NextIntlClientProvider>
+                        <TooltipProvider delayDuration={400}>
+                            <div className="flex gap-[2px] bg-neutral-200">
+                                {/* <Sidebar /> */}
+                                <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
+                                    {/* <TopMenu /> */}
+                                    <div className=" flex w-full flex-1 overflow-hidden">
+                                        {children}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <Toaster />
-                        <div id="portal-root"></div>
-                    </TooltipProvider>
-                </NextIntlClientProvider>
+                            <Toaster />
+                            <div id="portal-root"></div>
+                            <ReactQueryDevtools initialIsOpen={false} />
+                        </TooltipProvider>
+                    </NextIntlClientProvider>
+                </QueryProvider>
             </body>
         </html>
     )

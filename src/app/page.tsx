@@ -42,8 +42,13 @@ import {
 
 //Next JS
 import Image from "next/image"
+import { useWorkflows } from "~/lib/hooks/use-worflows"
 
 export default function HomePage() {
+
+    const test = useWorkflows()
+
+    console.log(test)
     return (
         <tableContext.Provider
             value={
