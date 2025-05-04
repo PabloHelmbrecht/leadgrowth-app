@@ -4,37 +4,30 @@ import { type CellContext } from "@tanstack/react-table"
 //UI
 import { Switch } from "~/components/ui/switch"
 
-//Zod & Schemas & Types
-import { type Workflow } from "~/lib/stores/mockData/workflow"
+//Types
+import { type Workflow as Workflow } from "~/lib/hooks/use-workflows"
 
-//Jotai & Atoms
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import {
-    useSelectorReducerAtom,
-    uniqueSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
-
+//Hooks
+import { useWorkflows } from "~/lib/hooks/use-workflows"
 export function StatusColumn({ row }: CellContext<Workflow, unknown>) {
-    const [, setWorkflow] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        uniqueSelectorReducer<Workflow>(row.id),
-    )
+    const { update } = useWorkflows({ workflowId: row.id })
+
     return (
         <Switch
             className={
-                row.getValue("status") === "archived"
+                row.original.status === "archived"
                     ? "data-[state=unchecked]:bg-danger-300"
                     : ""
             }
-            disabled={row.getValue("status") === "archived"}
-            checked={row.getValue("status") === "active"}
-            onCheckedChange={(value) => {
+            disabled={row.original.status === "archived"}
+            checked={row.original.status === "active"}
+            onCheckedChange={async (value) => {
                 if (value) {
-                    setWorkflow((item) => ({ ...item, status: "active" }))
+                    await update({ status: "active" })
                     return
                 }
 
-                setWorkflow((item) => ({ ...item, status: "paused" }))
+                await update({ status: "paused" })
             }}
         />
     )

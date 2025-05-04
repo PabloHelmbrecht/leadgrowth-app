@@ -14,22 +14,12 @@ import { ToastAction } from "~/components/ui/toast"
 import { useToast } from "~/components/ui/use-toast"
 
 //Zod & Schemas & Types
-import { type Workflow } from "~/lib/stores/mockData/workflow"
-
-//Jotai & Atoms
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import {
-    useSelectorReducerAtom,
-    uniqueSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
+import { type Workflow, useWorkflows } from "~/lib/hooks/use-workflows"
 
 export function ArchiveWorkflowAction({ row }: CellContext<Workflow, unknown>) {
     const { toast } = useToast()
 
-    const [workflow, setWorkflow] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        uniqueSelectorReducer<Workflow>(row.id),
-    )
+    const { archive, update, data } = useWorkflows({ workflowId: row.id })
 
     return (
         <AlertDialogContent>
@@ -43,10 +33,11 @@ export function ArchiveWorkflowAction({ row }: CellContext<Workflow, unknown>) {
             <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                    onClick={() => {
+                    onClick={async () => {
                         try {
-                            const oldStatus = workflow?.status
+                            const oldStatus = data?.[0]?.status
 
+                            await archive({})
                             toast({
                                 title: "Workflow deleted",
                                 description: `The selected workflow was successfully deleted from the table`,
@@ -54,10 +45,9 @@ export function ArchiveWorkflowAction({ row }: CellContext<Workflow, unknown>) {
                                     <ToastAction
                                         altText="Undo action"
                                         onClick={() =>
-                                            setWorkflow((item) => ({
-                                                ...item,
+                                            update({
                                                 status: oldStatus ?? "paused",
-                                            }))
+                                            })
                                         }
                                     >
                                         Undo

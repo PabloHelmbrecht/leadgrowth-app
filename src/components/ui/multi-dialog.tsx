@@ -3,6 +3,8 @@ import { createContext, useContext, useCallback, useState } from "react"
 import { AlertDialog } from "./alert-dialog"
 import { Dialog } from "./dialog"
 import { z } from "zod"
+import { cn } from "~/lib/utils/classesMerge"
+
 type Maybe<T> = T | null | undefined
 
 const MultiDialogContainerContext = createContext<{
@@ -28,6 +30,7 @@ export function MultiAlertDialogTrigger<T>({
     value,
     onClick,
     variant,
+    className,
     ...props
 }: SlotProps &
     React.RefAttributes<HTMLElement> & {
@@ -43,7 +46,13 @@ export function MultiAlertDialogTrigger<T>({
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [value, onClick],
     )
-    return <Slot onClick={oc} {...props} />
+    return (
+        <Slot
+            onClick={oc}
+            className={cn("cursor-pointer", className)}
+            {...props}
+        />
+    )
 }
 
 export function MultiDialogContainer<T>({

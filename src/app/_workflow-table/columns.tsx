@@ -9,8 +9,8 @@ import { Checkbox } from "~/components/ui/checkbox"
 //Utils
 import { getPercentage } from "~/lib/utils/formatters"
 
-//Types and Schemas
-import { type Workflow } from "~/lib/stores/mockData/workflow"
+//Types
+import { type Workflow as Workflow } from "~/lib/hooks/use-workflows"
 
 //Actions
 import { ArchiveWorkflowAction } from "./table-columns/row-actions/archive-workflow-action"
@@ -48,7 +48,21 @@ export const columns: ColumnDef<Workflow>[] = [
         accessorKey: "activeProspectsCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={String(row.getValue("activeProspectsCount") ?? "-")}
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.active === "number"
+                            ? row.original.metrics.active
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
+                )}
+                onHoverValue={String(
+                    typeof row.original.metrics?.active === "number"
+                        ? row.original.metrics.active
+                        : 0,
+                )}
                 label="Active"
             />
         ),
@@ -57,7 +71,21 @@ export const columns: ColumnDef<Workflow>[] = [
         accessorKey: "pausedProspectsCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={String(row.getValue("pausedProspectsCount") ?? "-")}
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.paused === "number"
+                            ? row.original.metrics.paused
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
+                )}
+                onHoverValue={String(
+                    typeof row.original.metrics?.paused === "number"
+                        ? row.original.metrics.paused
+                        : 0,
+                )}
                 label="Paused"
             />
         ),
@@ -66,51 +94,91 @@ export const columns: ColumnDef<Workflow>[] = [
         accessorKey: "notSendCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={getPercentage(
-                    row.getValue("notSendCount"),
-                    row.getValue("totalCount"),
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.unsubscribed === "number"
+                            ? row.original.metrics.unsubscribed
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
                 )}
-                onHoverValue={row.getValue("notSendCount")}
+                onHoverValue={String(
+                    typeof row.original.metrics?.unsubscribed === "number"
+                        ? row.original.metrics.unsubscribed
+                        : 0,
+                )}
                 label="Not Send"
             />
         ),
     },
     {
-        accessorKey: "openCount",
+        accessorKey: "bouncedCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={getPercentage(
-                    row.getValue("openCount"),
-                    row.getValue("totalCount"),
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.bounced === "number"
+                            ? row.original.metrics.bounced
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
                 )}
-                onHoverValue={row.getValue("openCount")}
-                label="Opens"
+                onHoverValue={String(
+                    typeof row.original.metrics?.bounced === "number"
+                        ? row.original.metrics.bounced
+                        : 0,
+                )}
+                label="Bounced"
             />
         ),
     },
     {
-        accessorKey: "replyCount",
+        accessorKey: "spamCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={getPercentage(
-                    row.getValue("replyCount"),
-                    row.getValue("totalCount"),
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.spam === "number"
+                            ? row.original.metrics.spam
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
                 )}
-                onHoverValue={row.getValue("replyCount")}
-                label="Replies"
+                onHoverValue={String(
+                    typeof row.original.metrics?.spam === "number"
+                        ? row.original.metrics.spam
+                        : 0,
+                )}
+                label="Spam"
             />
         ),
     },
     {
-        accessorKey: "interestedCount",
+        accessorKey: "finishedCount",
         cell: ({ row }: CellContext<Workflow, unknown>) => (
             <KPIColumn
-                value={getPercentage(
-                    row.getValue("interestedCount"),
-                    row.getValue("totalCount"),
+                value={String(
+                    getPercentage(
+                        typeof row.original.metrics?.finished === "number"
+                            ? row.original.metrics.finished
+                            : 0,
+                        typeof row.original.metrics?.total === "number"
+                            ? row.original.metrics.total
+                            : 0,
+                    ),
                 )}
-                onHoverValue={row.getValue("interestedCount")}
-                label="Interested"
+                onHoverValue={String(
+                    typeof row.original.metrics?.finished === "number"
+                        ? row.original.metrics.finished
+                        : 0,
+                )}
+                label="Finished"
             />
         ),
     },

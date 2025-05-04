@@ -64,9 +64,9 @@ export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
     return (
         <div
             className={cn(
-                "group flex w-[30rem] flex-col overflow-hidden rounded-xl border-2   text-sm transition-colors group-[.selected]:border-primary-700   ",
+                "group flex  w-[30rem] flex-col overflow-hidden rounded-xl border-2   text-sm transition-colors group-[.selected]:border-primary-700   ",
                 !isComplete &&
-                    "danger border-danger-400 group-[.selected]:border-danger-400",
+                    "danger border-danger-400 group-[.selected]:border-primary-700",
             )}
         >
             <div className=" !z-20 flex flex-col items-center justify-start gap-4 !border-none bg-white p-4   ">
@@ -143,7 +143,7 @@ export function ManualEmailNode({ data, id }: NodeProps<ManualEmailNode>) {
                     </div>
                 </div>
                 <div className="flex w-full flex-initial items-center justify-between text-xs font-semibold text-neutral-500">
-                    <div className="premium-transition flex items-center gap-1 hover:text-primary-700">
+                    <div className="premium-transition flex cursor-pointer items-center gap-1 hover:text-primary-700">
                         <Eye weight="bold" height={14} width={14} />
                         Ver métricas
                     </div>

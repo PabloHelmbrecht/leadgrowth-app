@@ -25,30 +25,35 @@ import { cn } from "~/lib/utils/classesMerge"
 //Icons
 import { User, Check } from "@phosphor-icons/react/dist/ssr"
 
+//Hooks
+import { useWorkflows } from "~/lib/hooks/use-workflows"
+import { useUsers } from "~/lib/hooks/use-users"
+
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import { rowSelectionAtom } from "~/lib/stores/workflow-table"
-import {
-    ownersMockDataAtom,
-    workflowsMockDataAtom,
-} from "~/lib/stores/mockData/workflow"
 
 export function OwnerActionButton() {
     //Mock data
-    const [ownersMockData] = useAtom(ownersMockDataAtom)
     const [rowSelection] = useAtom(rowSelectionAtom)
-    const [workflowMockData, setWorkflowsMockData] = useAtom(
-        workflowsMockDataAtom,
-    )
+
+    const { data: workflows, assignOwner } = useWorkflows({})
+    const { data: users } = useUsers({})
 
     const selectedWorkflows = useMemo(
         () =>
-            workflowMockData.filter((workflow) =>
-                Object.keys(rowSelection)
-                    .filter((id) => rowSelection[id])
-                    .includes(workflow.id),
-            ),
-        [workflowMockData, rowSelection],
+            (workflows ?? [])
+                .filter((workflow) =>
+                    Object.keys(rowSelection)
+                        .filter((id) => rowSelection[id])
+                        .includes(workflow.id),
+                )
+                .filter(
+                    (workflow) =>
+                        typeof workflow.owner === "object" ||
+                        workflow.owner == null,
+                ),
+        [workflows, rowSelection],
     )
 
     return (
@@ -80,54 +85,35 @@ export function OwnerActionButton() {
                         <CommandEmpty>No owners found.</CommandEmpty>
 
                         <CommandGroup>
-                            {ownersMockData.map((owner) => (
+                            {users?.map((owner) => (
                                 <CommandItem
-                                    key={owner.value}
-                                    value={owner.value}
-                                    onSelect={(currentValue) => {
-                                        setWorkflowsMockData(
-                                            (oldWorkflowsMockData) =>
-                                                oldWorkflowsMockData.map(
-                                                    (workflow) => {
-                                                        if (
-                                                            Object.keys(
-                                                                rowSelection,
-                                                            )
-                                                                .filter(
-                                                                    (id) =>
-                                                                        rowSelection[
-                                                                            id
-                                                                        ],
-                                                                )
-                                                                .includes(
-                                                                    workflow.id,
-                                                                )
-                                                        ) {
-                                                            return {
-                                                                ...workflow,
-                                                                owner: currentValue,
-                                                            }
-                                                        }
-                                                        return workflow
-                                                    },
-                                                ),
+                                    key={owner.user_id}
+                                    value={`${owner.profile.first_name} ${owner.profile.last_name}`}
+                                    onSelect={async () => {
+                                        await assignOwner(
+                                            (selectedWorkflows ?? []).map(
+                                                (workflow) => ({
+                                                    ownerId: owner.user_id,
+                                                    workflowId: workflow.id,
+                                                }),
+                                            ),
                                         )
                                     }}
                                 >
                                     <Check
                                         className={cn(
                                             "mr-2 h-4 w-4",
-                                            selectedWorkflows
+                                            (selectedWorkflows ?? [])
                                                 .map(
                                                     (workflow) =>
-                                                        workflow.owner,
+                                                        workflow.owner_id,
                                                 )
-                                                .includes(owner.value)
+                                                .includes(owner.user_id)
                                                 ? "opacity-100"
                                                 : "opacity-0",
                                         )}
                                     />
-                                    {owner.label}
+                                    {`${owner.profile.first_name} ${owner.profile.last_name}`}
                                 </CommandItem>
                             ))}
                         </CommandGroup>

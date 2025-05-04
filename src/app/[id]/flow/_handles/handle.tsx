@@ -21,7 +21,6 @@ export function Handle(props: HandleProps) {
         id: props.id,
     })
 
-
     return (
         <div
             className={cn(

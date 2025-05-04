@@ -26,7 +26,6 @@ import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
 import { useAtom } from "jotai"
-import { workflowsMockDataAtom as dataAtom } from "~/lib/stores/mockData/workflow"
 import {
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
@@ -42,18 +41,20 @@ import {
 
 //Next JS
 import Image from "next/image"
-import { useWorkflows } from "~/lib/hooks/use-worflows"
+
+//Hooks
+import { useWorkflows, type Workflow } from "~/lib/hooks/use-workflows"
 
 export default function HomePage() {
+    const { data, isLoading, isError } = useWorkflows({})
 
-    const test = useWorkflows()
-
-    console.log(test)
     return (
         <tableContext.Provider
             value={
                 {
-                    dataAtom,
+                    data,
+                    isLoading,
+                    isError,
                     IsAllRowsSelectedAtom,
                     columnFiltersAtom,
                     rowSelectionAtom,
@@ -121,7 +122,7 @@ export default function HomePage() {
                     <ArchiveActionButton />
                 </div>
 
-                <DataTable
+                <DataTable<Workflow, unknown>
                     hideHeaders={true}
                     tableOptions={{
                         initialState: {

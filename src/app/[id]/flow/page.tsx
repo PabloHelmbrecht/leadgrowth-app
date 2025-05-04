@@ -1,7 +1,7 @@
 "use client"
 
 //React
-import { useCallback, type DragEventHandler } from "react"
+import { useCallback, type DragEventHandler, useEffect, useState } from "react"
 
 //Env Variables
 import { env } from "~/env"
@@ -10,15 +10,10 @@ import { env } from "~/env"
 import { useParams } from "next/navigation"
 
 //Utils
-import { getPercentage, generateId } from "~/lib/utils/formatters"
-import {
-    useSelectorReducerAtom,
-    nodeSelectorReducer,
-    edgeSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
+import { getPercentage } from "~/lib/utils/formatters"
 
 //Icons
-import { Sparkle } from "@phosphor-icons/react/dist/ssr"
+import { Sparkle, CircleNotch } from "@phosphor-icons/react/dist/ssr"
 
 //UI
 import { KPI } from "~/components/ui/kpi"
@@ -28,8 +23,6 @@ import Dagre from "@dagrejs/dagre"
 
 //React Flow
 import {
-    type Node,
-    type Edge,
     type OnConnect,
     type OnNodesChange,
     type OnEdgesChange,
@@ -37,10 +30,9 @@ import {
     type DefaultEdgeOptions,
     type InternalNode,
     type IsValidConnection,
+    type NodeChange,
+    type EdgeChange,
     ReactFlow,
-    addEdge,
-    applyNodeChanges,
-    applyEdgeChanges,
     Background,
     Controls,
     useStoreApi,
@@ -48,6 +40,7 @@ import {
     getOutgoers,
     Panel,
     ControlButton,
+    useKeyPress,
 } from "@xyflow/react"
 
 //NodeTypes
@@ -59,51 +52,53 @@ import { edgeTypes } from "./_edges/edge-types"
 //Connection Line
 import { ConnectionLine } from "./_connection-line/connection-line"
 
-//Atoms & Reducers
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+//Hooks
+import { useWorkflows, type Edge, type Node } from "~/lib/hooks/use-workflows"
+import type { TablesInsert, Json } from "~/lib/supabase/database.types"
+import { useMousePosition } from "~/lib/hooks/use-mouse-position"
+
+//Tanstack Pacer
+import { debounce } from "@tanstack/pacer"
+
+//Jotai & Atoms
+import { copyPasteFlowAtom } from "~/lib/stores/copy-paste-flow"
+import { useAtom } from "jotai"
 
 const defaultEdgeOptions: DefaultEdgeOptions = {
     animated: false,
 }
 
-const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
-    const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
-    g.setGraph({ rankdir: "TB", nodesep: 50, ranksep: 200 })
-
-    edges.forEach((edge) => g.setEdge(edge.source, edge.target))
-    nodes.forEach((node) =>
-        g.setNode(node.id, {
-            ...node,
-            width: node.measured?.width ?? 0,
-            height: node.measured?.height ?? 0,
-        }),
-    )
-
-    Dagre.layout(g)
-
-    return {
-        nodes: nodes.map((node) => {
-            const position = g.node(node.id)
-            const x = position.x - (node.measured?.width ?? 0) / 2
-            const y = position.y - (node.measured?.height ?? 0) / 2
-
-            return { ...node, position: { x, y } }
-        }),
-        edges,
-    }
-}
-
 export default function WorkflowFlowPage() {
     const { id: workflowId } = useParams<{ id: string }>()
-    const [nodes, setNodes] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        nodeSelectorReducer(workflowId),
-    )
+    const shiftPressed = useKeyPress("Shift")
+    const escapePressed = useKeyPress("Escape")
+    const deletePressed = useKeyPress("Delete")
+    const backspacePressed = useKeyPress("Backspace")
+    const copyPressed = useKeyPress("Control+c")
+    const pastePressed = useKeyPress("Control+v")
+    const [allowPaste, setAllowPaste] = useState(false)
 
-    const [edges, setEdges] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        edgeSelectorReducer(workflowId),
-    )
+    const {
+        data: workflow,
+        isLoading,
+        isError,
+        createNode,
+        createEdge,
+        updateNodes,
+        updateEdges,
+        deleteNode,
+        moveNode,
+        deleteEdge,
+        setSelections,
+        clearSelections,
+    } = useWorkflows({ workflowId })
+
+    const { nodes, edges } = workflow?.[0]?.flow ?? { nodes: [], edges: [] }
+
+    const [copyPasteFlow, setCopyPasteFlow] = useAtom(copyPasteFlowAtom)
+
+    const { x, y } = useMousePosition()
+
     const store = useStoreApi()
 
     const {
@@ -114,11 +109,136 @@ export default function WorkflowFlowPage() {
         fitView,
     } = useReactFlow()
 
+    useEffect(() => {
+        if (copyPressed) {
+            setCopyPasteFlow({
+                nodes: nodes.filter((node) => node.selected),
+                edges: edges.filter((edge) => edge.selected),
+            })
+        }
+    }, [copyPressed, nodes, edges, setCopyPasteFlow])
+
+    useEffect(() => {
+        if (!pastePressed) {
+            setAllowPaste(true)
+        }
+
+        if (pastePressed && allowPaste) {
+            debounce(
+                () => {
+                    const mousePosition = screenToFlowPosition({ x, y })
+                    // 1. Obtener la posición del mouse en el flujo
+
+                    const { nodes: copiedNodes } = copyPasteFlow
+
+                    if (copiedNodes && copiedNodes.length > 0) {
+                        // 2. Encontrar el nodo de referencia (más arriba a la izquierda)
+                        const minX = Math.min(
+                            ...copiedNodes.map((n) => n.position.x),
+                        )
+                        const minY = Math.min(
+                            ...copiedNodes.map((n) => n.position.y),
+                        )
+
+                        // 3. Calcular nuevas posiciones relativas y sumarlas a la posición del mouse
+                        copiedNodes.forEach((node) => {
+                            const { id: _, ...rest } = node
+                            void createNode({
+                                node: {
+                                    ...rest,
+                                    type: node.type ?? "placeholder",
+                                    data: JSON.parse(
+                                        JSON.stringify(node.data),
+                                    ) as Record<string, unknown>,
+                                    position: {
+                                        x:
+                                            mousePosition.x +
+                                            (node.position.x - minX),
+                                        y:
+                                            mousePosition.y +
+                                            (node.position.y - minY),
+                                    },
+                                },
+                            })
+                        })
+                    }
+                },
+                { wait: 300 },
+            )()
+
+            setAllowPaste(false)
+        }
+    }, [
+        pastePressed,
+        nodes,
+        edges,
+        copyPasteFlow,
+        createNode,
+        x,
+        y,
+        screenToFlowPosition,
+        allowPaste,
+    ])
+
+    useEffect(() => {
+        if (deletePressed || backspacePressed) {
+            edges.forEach((edge) => {
+                if (edge.selected && edge.deletable) {
+                    void deleteEdge({
+                        sourceId: edge.source,
+                        targetId: edge.target,
+                    })
+                }
+            })
+
+            nodes.forEach((node) => {
+                if (node.selected && node.deletable) {
+                    void deleteNode({
+                        nodeId: node.id,
+                    })
+                }
+            })
+        }
+    }, [deletePressed, backspacePressed, deleteNode, deleteEdge, nodes, edges])
+
+    useEffect(() => {
+        if (escapePressed) {
+            clearSelections({})
+        }
+    }, [escapePressed, clearSelections])
+
+    const getLayoutedElements = (
+        nodes: Node[],
+        edges: Edge[],
+    ): { nodes: Node[]; edges: Edge[] } => {
+        const g = new Dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}))
+        g.setGraph({ rankdir: "TB", nodesep: 800, ranksep: 700 })
+
+        edges.forEach((edge) => g.setEdge(edge.source, edge.target))
+        nodes.forEach((node) =>
+            g.setNode(node.id, {
+                ...node,
+                width: node.measured?.width ?? 0,
+                height: node.measured?.height ?? 0,
+            }),
+        )
+
+        Dagre.layout(g)
+
+        return {
+            nodes: nodes.map((node) => {
+                const position = g.node(node.id)
+                const x = position.x - (node.measured?.width ?? 0) / 2
+                const y = position.y - (node.measured?.height ?? 0) / 2
+
+                return { ...node, position: { x, y } }
+            }),
+            edges,
+        }
+    }
+
     const isValidConnection: IsValidConnection = useCallback(
         (connection) => {
-            // we are using getNodes and getEdges helpers here
-            // to make sure we create isValidConnection function only once
-
             const nodes = getNodes()
             const edges = getEdges()
             const target = nodes.find((node) => node.id === connection.target)
@@ -130,12 +250,20 @@ export default function WorkflowFlowPage() {
 
                 for (const outgoer of getOutgoers(node, nodes, edges)) {
                     if (outgoer.id === connection.source) return true
-                    if (hasCycle(outgoer, visited)) return true
+                    if (hasCycle(outgoer as Node, visited)) return true
                 }
             }
 
             if (target.id === connection.source) return false
-            return !hasCycle(target)
+            if (
+                edges.some(
+                    (edge) =>
+                        edge.id === `${connection.source}-${connection.target}`,
+                )
+            ) {
+                return false
+            }
+            return !hasCycle(target as Node)
         },
         [getNodes, getEdges],
     )
@@ -222,15 +350,25 @@ export default function WorkflowFlowPage() {
                 closestNode.node.internals.positionAbsolute.y <
                 internalNode.internals.positionAbsolute.y
 
-            return {
-                id: closeNodeIsSource
-                    ? `${closestNode.node.id}-${node.id}`
-                    : `${node.id}-${closestNode.node.id}`,
+            const edge: Edge = {
+                id: `${closeNodeIsSource ? closestNode.node.id : node.id}-${closeNodeIsSource ? node.id : closestNode.node.id}`,
                 source: closeNodeIsSource ? closestNode.node.id : node.id,
                 target: closeNodeIsSource ? node.id : closestNode.node.id,
                 sourceHandle: closestNode.sourceHandle,
                 targetHandle: null,
+                className: "group",
+                animated: true,
+                deletable: true,
+                selected: false,
+                data: {
+                    delay: 1,
+                    unit: "days",
+                    order: 1,
+                },
+                type: "custom",
             }
+
+            return edge
         },
         [getInternalNode, store, getEdges],
     )
@@ -238,39 +376,179 @@ export default function WorkflowFlowPage() {
     const onLayout = useCallback(() => {
         const layouted = getLayoutedElements(nodes, edges)
 
-        setNodes([...layouted.nodes])
-        setEdges([...layouted.edges])
+        layouted.nodes.forEach((node) => {
+            void moveNode({
+                nodeId: node.id,
+                position: {
+                    x: node.position.x,
+                    y: node.position.y,
+                },
+            })
+        })
 
         window.requestAnimationFrame(() => {
             void fitView({ padding: 5 })
         })
-    }, [nodes, edges, fitView, setNodes, setEdges])
+    }, [nodes, edges, fitView, moveNode])
 
     const onNodesChange: OnNodesChange = useCallback(
-        (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-        [setNodes],
-    )
-    const onEdgesChange: OnEdgesChange = useCallback(
-        (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-        [setEdges],
-    )
-    const onConnect: OnConnect = useCallback(
-        (connection) =>
-            setEdges((eds) =>
-                addEdge(
-                    {
-                        ...connection,
-                        type: "custom",
-                        data: {
-                            delay: 1,
-                            unit: "days",
+        (changes) => {
+            changes.forEach((change: NodeChange) => {
+                if (change.type === "add") {
+                    void createNode({
+                        node: {
+                            ...change.item,
+                            data: change.item.data as Record<string, unknown> &
+                                Json,
+                            type: change.item
+                                .type as TablesInsert<"nodes">["type"],
                         },
-                        className: "group",
+                    })
+                }
+
+                if (change.type === "remove") {
+                    void deleteNode({
+                        nodeId: change.id,
+                    })
+                }
+
+                if (
+                    change.type === "position" &&
+                    change.position &&
+                    !isNaN(change.position.x) &&
+                    !isNaN(change.position.y)
+                ) {
+                    void moveNode({
+                        nodeId: change.id,
+                        position: change.position,
+                    })
+                }
+
+                if (change.type === "replace") {
+                    const originalNode = nodes.find((n) => n.id === change.id)
+                    if (originalNode) {
+                        const updatedNode = {
+                            ...originalNode,
+                            ...change.item,
+                        } as Node
+                        void updateNodes({ nodes: [updatedNode] })
+                    }
+                }
+
+                if (change.type === "select") {
+                    if (!shiftPressed) {
+                        clearSelections({})
+                    }
+
+                    setSelections({
+                        nodes: nodes.filter((node) => node.id === change.id),
+                    })
+                }
+            })
+        },
+        [
+            nodes,
+            updateNodes,
+            createNode,
+            deleteNode,
+            moveNode,
+            setSelections,
+            clearSelections,
+            shiftPressed,
+        ],
+    )
+
+    const onEdgesChange: OnEdgesChange = useCallback(
+        (changes) => {
+            changes.forEach((change: EdgeChange) => {
+                if (change.type === "add") {
+                    void createEdge({
+                        edge: {
+                            ...change.item,
+                            type: (change.item.type ??
+                                "custom") as Edge["type"],
+                            data: {
+                                delay: 0,
+                                unit: "days",
+                                order: 1,
+                                ...(change.item.data ?? {}),
+                            },
+                        },
+                    })
+                }
+
+                if (change.type === "remove") {
+                    void deleteEdge({
+                        sourceId: change.id,
+                        targetId: change.id,
+                    })
+                }
+                if (change.type === "replace") {
+                    void updateEdges({
+                        edges: [
+                            {
+                                ...change.item,
+                                type: (change.item.type ??
+                                    "custom") as Edge["type"],
+                                data: {
+                                    delay: 1,
+                                    unit: "days",
+                                    order: 1,
+                                    ...(change.item.data ?? {}),
+                                },
+                            },
+                        ],
+                    })
+                }
+                if (change.type === "select") {
+                    if (!shiftPressed) {
+                        clearSelections({})
+                    }
+
+                    setSelections({
+                        edges: edges.filter((edge) => edge.id === change.id),
+                    })
+                }
+            })
+        },
+        [
+            edges,
+            createEdge,
+            deleteEdge,
+            updateEdges,
+            setSelections,
+            clearSelections,
+            shiftPressed,
+        ],
+    )
+
+    const onConnect: OnConnect = useCallback(
+        (connection) => {
+            const edges = store.getState().edges
+
+            if (
+                edges.find(
+                    (edge) =>
+                        edge.id === `${connection.source}-${connection.target}`,
+                )
+            ) {
+                return
+            }
+
+            void createEdge({
+                edge: {
+                    ...connection,
+                    id: `${connection.source}-${connection.target}`,
+                    type: "custom",
+                    data: {
+                        delay: 1,
+                        unit: "days",
+                        order: 1,
                     },
-                    eds,
-                ),
-            ),
-        [setEdges],
+                },
+            })
+        },
+        [createEdge, store],
     )
 
     const onDragOver: DragEventHandler = useCallback((event) => {
@@ -297,90 +575,96 @@ export default function WorkflowFlowPage() {
             position.x = position.x - 384 / 2
             position.y = position.y - 196 / 2
 
-            const newNode = {
-                id: generateId(),
-                type,
-                position,
-                className: "group",
-                data: { label: `${type} node` },
-            }
-
-            setNodes((nds) => nds.concat(newNode))
+            void createNode({
+                node: {
+                    type: type as TablesInsert<"nodes">["type"],
+                    position,
+                    data: { label: `${type} node` },
+                },
+            })
         },
-        [screenToFlowPosition, setNodes],
+        [screenToFlowPosition, createNode],
     )
 
     const onNodeDrag: OnNodeDrag = useCallback(
         (_, node) => {
-            const closeEdge = getClosestEdge(node)
+            const closeEdge = getClosestEdge({
+                ...node,
+                type: node.type,
+            } as Node)
 
-            setEdges((es) => {
-                const nextEdges = es.filter(
-                    (e) => !e.className?.includes("temp"),
-                )
+            const temporalEdges = edges.filter(
+                (edge) => edge.type === "temporal",
+            )
 
+            temporalEdges.forEach((edge) => {
                 if (
-                    closeEdge &&
-                    !nextEdges.find(
-                        (ne) =>
-                            ne.source === closeEdge.source &&
-                            ne.target === closeEdge.target,
+                    !(
+                        edge.source === closeEdge?.source &&
+                        edge.target === closeEdge?.target
                     )
                 ) {
-                    closeEdge.type = "custom"
-                    closeEdge.data = {
-                        delay: 1,
-                        unit: "days",
-                    }
-                    closeEdge.className = "temp group"
-                    closeEdge.animated = true
-                    if (isValidConnection(closeEdge)) {
-                        nextEdges.push(closeEdge)
-                    }
+                    void deleteEdge({
+                        sourceId: edge.source,
+                        targetId: edge.target,
+                    })
                 }
-
-                return nextEdges
             })
+
+            if (
+                closeEdge &&
+                !edges.some(
+                    (edge) =>
+                        edge.source === closeEdge.source &&
+                        edge.target === closeEdge.target,
+                ) &&
+                isValidConnection(closeEdge)
+            ) {
+                void createEdge({
+                    edge: {
+                        ...closeEdge,
+                        type: "temporal",
+                    },
+                })
+            }
         },
-        [getClosestEdge, setEdges, isValidConnection],
+        [getClosestEdge, isValidConnection, createEdge, edges, deleteEdge],
     )
 
     const onNodeDragStop: OnNodeDrag = useCallback(
         (_, node) => {
-            const closeEdge = getClosestEdge(node)
+            const closeEdge = getClosestEdge(node as Node)
 
-            setEdges((es) => {
-                const nextEdges = es.filter(
-                    (e) => !e.className?.includes("temp"),
+            if (closeEdge && isValidConnection(closeEdge)) {
+                const temporalEdge = edges.find(
+                    (edge) =>
+                        edge.source === closeEdge.source &&
+                        edge.target === closeEdge.target,
                 )
 
-                if (
-                    closeEdge &&
-                    !nextEdges.find(
-                        (ne) =>
-                            ne.source === closeEdge.source &&
-                            ne.target === closeEdge.target,
-                    )
-                ) {
-                    closeEdge.type = "custom"
-                    closeEdge.data = {
-                        delay: 1,
-                        unit: "days",
-                    }
-
-                    closeEdge.className = "group"
-                    closeEdge.animated = false
-
-                    if (isValidConnection(closeEdge)) {
-                        nextEdges.push(closeEdge)
-                    }
+                if (temporalEdge) {
+                    temporalEdge.type = "custom"
+                    void updateEdges({
+                        edges: [temporalEdge],
+                    })
                 }
-
-                return nextEdges
-            })
+            }
         },
-        [getClosestEdge, isValidConnection, setEdges],
+        [getClosestEdge, isValidConnection, updateEdges, edges],
     )
+
+    if (isLoading || isError)
+        return (
+            <div className="flex h-full w-full flex-row items-center justify-center gap-2">
+                <CircleNotch
+                    className="animate-spin text-primary-700"
+                    weight="bold"
+                    width={20}
+                    height={20}
+                />
+                Loading...
+            </div>
+        )
 
     return (
         <main className="flex h-full w-full flex-1 flex-col justify-end">

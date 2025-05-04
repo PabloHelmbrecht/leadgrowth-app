@@ -4,59 +4,51 @@ import { type CellContext } from "@tanstack/react-table"
 //Icons
 import { Star } from "@phosphor-icons/react/dist/ssr"
 
-//Zod & Schemas & Types
-import { z } from "zod"
+//Types
+import { type Workflow as Workflow } from "~/lib/hooks/use-workflows"
 
-import { type Workflow } from "~/lib/stores/mockData/workflow"
-
-//Jotai & Atoms
-import { tagsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import {
-    useSelectorReducerAtom,
-    uniqueSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
-import { useAtom } from "jotai"
-
-const arrayStringSchema = z.string().array()
+//Hooks
+import { useTags } from "~/lib/hooks/use-tags"
+import { useWorkflows } from "~/lib/hooks/use-workflows"
 
 export function TagColumn({ row }: CellContext<Workflow, unknown>) {
-    const [, setWorkflow] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        uniqueSelectorReducer<Workflow>(row.id),
-    )
+    const { assignTag, removeTag } = useWorkflows({
+        workflowId: row.original.id,
+    })
+    const { data: tags } = useTags({})
 
-    const [tags] = useAtom(tagsMockDataAtom)
-
-    const isStarred = arrayStringSchema
-        .parse(row.getValue("tag"))
-        .includes("starred")
-
-    const color = tags.find(({ value }) => value === "starred")?.color
+    const starredTag = row.original.tags?.find((tag) => tag.value === "starred")
 
     return (
         <button
             className="flex h-full items-center justify-center"
-            onClick={() => {
-                if (isStarred) {
-                    setWorkflow((item) => ({
-                        ...item,
-                        tag: item.tag.filter((tag) => tag !== "starred"),
-                    }))
+            onClick={async () => {
+                if (starredTag) {
+                    await removeTag({ tagId: starredTag.id })
                     return
                 }
 
-                setWorkflow((item) => ({
-                    ...item,
-                    tag: [...item.tag, "starred"],
-                }))
+                if (!Array.isArray(tags)) return
+
+                const starredTagId = tags.find(
+                    (tag) => tag.value === "starred",
+                )?.id
+                if (!starredTagId) return
+
+                await assignTag({ tagId: starredTagId })
             }}
         >
             <Star
                 size={22}
-                weight={isStarred ? "fill" : "regular"}
+                weight={starredTag ? "fill" : "regular"}
                 className=" text-neutral-900"
-                style={{ color: isStarred ? color : "" }}
+                style={{
+                    color: starredTag
+                        ? (row.original.tags?.find(
+                              (tag) => tag.value === "starred",
+                          )?.color ?? "#eab308")
+                        : "",
+                }}
             />
         </button>
     )

@@ -9,51 +9,30 @@ import { CopySimple } from "@phosphor-icons/react/dist/ssr"
 
 //NextJS
 import { useParams } from "next/navigation"
-
-//Utils
-import {
-    useSelectorReducerAtom,
-    nodeSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
-import { generateId } from "~/lib/utils/formatters"
-
 //Atoms and Reducers
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
 import { useState } from "react"
+
+//Hooks
+import { useWorkflows } from "~/lib/hooks/use-workflows"
 
 export function CloneNode({ nodeId }: { nodeId: string }) {
     const { id: workflowId } = useParams<{ id: string }>()
 
-    const [nodes, setNodes] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        nodeSelectorReducer(workflowId),
-    )
+    const { duplicateNode, deleteNode } = useWorkflows({ workflowId, nodeId })
 
     const { toast } = useToast()
 
-    const [offset, setOffset] = useState(50)
+    const [offset, setOffset] = useState(100)
 
-    function onClone() {
+    async function onClone() {
         try {
-            const clonedNodeId = generateId()
+            const {
+                newNode: { id: clonedNodeId },
+            } = await duplicateNode({
+                offset: { x: offset, y: offset },
+            })
 
-            const foundNode = nodes.find((node) => node.id === nodeId)
-
-            if (!foundNode) return
-
-            setNodes((nodes) => [
-                ...nodes,
-                {
-                    ...foundNode,
-                    id: clonedNodeId,
-                    position: {
-                        x: foundNode.position.x + offset,
-                        y: foundNode.position.y + offset,
-                    },
-                },
-            ])
-
-            setOffset(offset + 50)
+            setOffset(offset + 100)
 
             toast({
                 title: "Workflow cloned",
@@ -76,7 +55,7 @@ export function CloneNode({ nodeId }: { nodeId: string }) {
                     <ToastAction
                         altText="Try again"
                         onClick={() => {
-                            onClone()
+                            void onClone()
                         }}
                     >
                         Try again
@@ -87,7 +66,7 @@ export function CloneNode({ nodeId }: { nodeId: string }) {
     }
 
     function undoOnClone(nodeId: string) {
-        setNodes((nodes) => nodes.filter((node) => node.id !== nodeId))
+        void deleteNode({ nodeId })
 
         toast({
             title: "Action undone",
@@ -101,7 +80,7 @@ export function CloneNode({ nodeId }: { nodeId: string }) {
             weight="bold"
             height={14}
             width={14}
-            className="premium-transition  hover:text-primary-700"
+            className="premium-transition cursor-pointer hover:text-primary-700"
         />
     )
 }

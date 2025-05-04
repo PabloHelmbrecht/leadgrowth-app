@@ -43,7 +43,7 @@ export default function ContactsTable() {
                     rowSelectionAtom,
                     resetAllFiltersAtom,
                     tableAtom,
-                } as TableContext<unknown>
+                } as unknown as TableContext<unknown>
             }
         >
             <main className="flex h-full w-full flex-col gap-8 p-12">

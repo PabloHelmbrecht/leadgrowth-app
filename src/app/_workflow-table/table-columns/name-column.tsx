@@ -10,29 +10,24 @@ import { Badge } from "~/components/ui/badge"
 //Utils
 import { Color } from "~/lib/utils/color"
 
-//Zod & Schemas & Types
-import { z } from "zod"
-import { type Workflow } from "~/lib/stores/mockData/workflow"
+//Tailwind
+import config from "tailwind.config"
+const neutral = config.theme.extend.colors.neutral["500"]
 
-//Jotai & Atoms
-import { tagsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import { useAtom } from "jotai"
-
-const arrayStringSchema = z.string().array()
+//Types
+import { type Workflow as Workflow } from "~/lib/hooks/use-workflows"
 
 export function WorkflowNameColumn({ row }: CellContext<Workflow, unknown>) {
-    const [tags] = useAtom(tagsMockDataAtom)
+    const tags = row.original.tags
+
     return (
         <div className="flex h-full flex-1 flex-col items-start justify-start gap-2 overflow-clip whitespace-nowrap pl-2">
-            <Link href={`/${row.id}/flow`}>{row.getValue("name")}</Link>
+            <Link href={`/${row.id}/flow`}>{row.original.name}</Link>
             <div className=" flex w-full items-start gap-2 overflow-clip ">
-                {arrayStringSchema
-                    .parse(row.getValue("tag"))
-                    .filter((tag) => tag !== "starred")
+                {tags
+                    ?.filter((tag) => tag.value !== "starred")
                     .map((tag, k) => {
-                        const color = new Color(
-                            tags.find(({ value }) => tag === value)?.color,
-                        )
+                        const color = new Color(tag.color ?? neutral)
                         const textColor = color
                             .normalizeSB(90)
                             .adjustHSB({
@@ -59,7 +54,7 @@ export function WorkflowNameColumn({ row }: CellContext<Workflow, unknown>) {
                                     color: textColor,
                                 }}
                             >
-                                {tags.find(({ value }) => tag === value)?.label}
+                                {tag.label}
                             </Badge>
                         )
                     })}

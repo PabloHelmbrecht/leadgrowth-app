@@ -25,15 +25,14 @@ import { Archive } from "@phosphor-icons/react/dist/ssr"
 //Atoms & Jotai
 import { useAtom } from "jotai"
 import { rowSelectionAtom } from "~/lib/stores/workflow-table"
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+import { useWorkflows, type Workflow } from "~/lib/hooks/use-workflows"
+import { useRef } from "react"
 
 export function ArchiveActionButton() {
     const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)
-    const [workflowsMockData, setWorkflowsMockData] = useAtom(
-        workflowsMockDataAtom,
-    )
-
+    const { archive, update, data: workflows } = useWorkflows({})
     const { toast } = useToast()
+    const prevWorkflowsRef = useRef<Record<string, Workflow["status"]>>({})
 
     return (
         <AlertDialog>
@@ -62,47 +61,58 @@ export function ArchiveActionButton() {
                         Are you absolutely sure?
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        This action cannot be undone. This will archive the
+                        selected workflows.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        onClick={() => {
+                        onClick={async () => {
+                            const idRowsSelected = Object.keys(
+                                rowSelection,
+                            ).filter((id) => rowSelection[id])
                             try {
-                                const idRowsSelected = Object.keys(
-                                    rowSelection,
-                                ).filter((id) => rowSelection[id])
-
-                                const oldWorkflowMockData = workflowsMockData
-                                setWorkflowsMockData((oldWorkflowsMockData) =>
-                                    oldWorkflowsMockData.map((workflow) => {
-                                        if (
-                                            idRowsSelected.includes(workflow.id)
-                                        ) {
-                                            return {
-                                                ...workflow,
-                                                status: "archived",
-                                            }
+                                // 1. Guardar estado previo de los workflows seleccionados
+                                prevWorkflowsRef.current = (
+                                    workflows ?? []
+                                ).reduce(
+                                    (acc, wf) => {
+                                        if (idRowsSelected.includes(wf.id)) {
+                                            acc[wf.id] = wf.status
                                         }
-                                        return workflow
-                                    }),
+                                        return acc
+                                    },
+                                    {} as Record<string, Workflow["status"]>,
+                                )
+                                // 2. Archivar
+                                await archive(
+                                    idRowsSelected.map((id) => ({
+                                        workflowId: id,
+                                    })),
                                 )
                                 setRowSelection({})
-
                                 toast({
-                                    title: "Workflows deleted",
-                                    description: `The selected workflows were successfully deleted from the table`,
+                                    title: "Workflows archived",
+                                    description: `The selected workflows were successfully archived.`,
                                     action: (
                                         <ToastAction
                                             altText="Undo action"
-                                            onClick={() =>
-                                                setWorkflowsMockData(
-                                                    oldWorkflowMockData,
+                                            onClick={async () => {
+                                                await update(
+                                                    Object.entries(
+                                                        prevWorkflowsRef.current,
+                                                    ).map(([id, status]) => ({
+                                                        id,
+                                                        status,
+                                                    })),
                                                 )
-                                            }
+                                                toast({
+                                                    title: "Undo successful",
+                                                    description:
+                                                        "The workflows were restored to their previous state.",
+                                                })
+                                            }}
                                         >
                                             Undo
                                         </ToastAction>
@@ -114,7 +124,7 @@ export function ArchiveActionButton() {
                                     variant: "destructive",
                                     title: "Uh oh! Something went wrong.",
                                     description:
-                                        "There was a problem with your request.",
+                                        "There was a problem archiving the workflows.",
                                 })
                             }
                         }}

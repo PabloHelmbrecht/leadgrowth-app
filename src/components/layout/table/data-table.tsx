@@ -22,9 +22,10 @@ import {
     TableHeader,
     TableRow,
 } from "~/components/ui/table"
+//import { Skeleton } from "~/components/ui/skeleton"
 
 //Atoms & Jotai
-import { type PrimitiveAtom, useAtom } from "jotai"
+import { useAtom } from "jotai"
 import { type TableContext, tableContext } from "./table-context"
 
 //Zod and Schemas
@@ -48,13 +49,12 @@ export function DataTable<Entity extends { id: string }, TValue>({
 }) {
     //Mock Data
     const {
-        dataAtom,
+        data,
         tableAtom,
         IsAllRowsSelectedAtom,
         columnFiltersAtom,
         rowSelectionAtom,
     } = useContext(tableContext) ?? ({} as TableContext<Entity>)
-    const [data] = useAtom(dataAtom as PrimitiveAtom<Entity>)
 
     const [rowSelection, setRowSelection] = useAtom(rowSelectionAtom)
 
@@ -62,13 +62,14 @@ export function DataTable<Entity extends { id: string }, TValue>({
     const [, setIsAllRowsSelected] = useAtom(IsAllRowsSelectedAtom)
     const [columnFilters, setColumnFilters] = useAtom(columnFiltersAtom)
 
-    const filteredData = useMemo(
-        () =>
-            filterData
-                ? (data as Entity[]).filter(filterData)
-                : (data as Entity[]),
-        [data, filterData],
-    )
+    const filteredData =
+        useMemo(
+            () =>
+                filterData
+                    ? (data as Entity[]).filter(filterData)
+                    : (data as Entity[]),
+            [data, filterData],
+        ) ?? []
 
     const table = useReactTable<Entity>({
         data: filteredData,

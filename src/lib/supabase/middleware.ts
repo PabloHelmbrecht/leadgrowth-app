@@ -1,6 +1,9 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+//Types
+import { type Database } from "./database.types"
+
 //Env Variables
 import { env } from "~/env"
 
@@ -9,7 +12,7 @@ export async function updateSession(request: NextRequest) {
         request,
     })
 
-    const supabase = createServerClient(
+    const supabase = createServerClient<Database>(
         env.NEXT_PUBLIC_SUPABASE_URL,
         env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
         {
@@ -51,6 +54,26 @@ export async function updateSession(request: NextRequest) {
         const url = request.nextUrl.clone()
         url.pathname = "/auth/login"
         return NextResponse.redirect(url)
+    }
+
+    // Consulta a la tabla teams
+    if (user) {
+        const { data: team, error } = await supabase
+            .from("teams")
+            .select("id")
+            .limit(1)
+            .single()
+
+        if (error) {
+            console.error("Error fetching team:", error)
+        } else if (team) {
+            // Guardar el id del equipo en las cookies
+            supabaseResponse.cookies.set("team_id", team.id, {
+                httpOnly: false,
+                secure: true,
+                sameSite: "strict",
+            })
+        }
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is.

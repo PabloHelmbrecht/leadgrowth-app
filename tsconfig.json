@@ -13,6 +13,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
+    "types": ["vitest/globals"],
 
     /* Bundled projects */
     "lib": ["dom", "dom.iterable", "ES2022"],
@@ -36,7 +37,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts",
+    ".next/types/**/*.ts", "src/lib/hooks/__tests__/use-workflows.test.txs",
   ],
-  "exclude": ["node_modules", "commitlint.config.js"]
+  "exclude": ["node_modules", "commitlint.config.js", "**/database.types.ts"]
 }

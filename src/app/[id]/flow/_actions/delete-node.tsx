@@ -10,47 +10,27 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "~/components/ui/alert-dialog"
-import { ToastAction } from "~/components/ui/toast"
 import { useToast } from "~/components/ui/use-toast"
 
 //NextJS
 import { useParams } from "next/navigation"
 
-//Utils
-import {
-    useSelectorReducerAtom,
-    nodeSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
-
-//Atoms and Reducers
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+//Hooks
+import { useWorkflows } from "~/lib/hooks/use-workflows"
 
 export function DeleteNode({ nodeId }: { nodeId: string }) {
     const { id: workflowId } = useParams<{ id: string }>()
 
-    const [nodes, setNodes] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        nodeSelectorReducer(workflowId),
-    )
-
     const { toast } = useToast()
+    const { deleteNode } = useWorkflows({ workflowId, nodeId })
 
-    function onDelete() {
+    async function onDelete() {
         try {
-            const oldNodes = structuredClone(nodes)
-            setNodes((nodes) => nodes.filter((node) => node.id !== nodeId))
+            await deleteNode({})
 
             toast({
                 title: "Node deleted",
                 description: `The selected node were successfully deleted from the workflow`,
-                action: (
-                    <ToastAction
-                        altText="Undo action"
-                        onClick={() => setNodes(oldNodes)}
-                    >
-                        Undo
-                    </ToastAction>
-                ),
             })
         } catch (e) {
             console.error(e)

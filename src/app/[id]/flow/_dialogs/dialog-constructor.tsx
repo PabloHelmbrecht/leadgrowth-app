@@ -11,23 +11,22 @@ import { useParams } from "next/navigation"
 //React Hook Form & Form Resolver
 import { type DefaultValues as FormDefaultValues } from "react-hook-form"
 
-//Atoms and Reducers
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
-import type { Node } from "~/lib/stores/mockData/flow"
-
 //Zod & Schemas
 import { type infer as ZodInfer, type ZodSchema } from "zod"
 
-//Utils
-import {
-    useSelectorReducerAtom,
-    uniqueNodeSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
+//Hooks
+import { useWorkflows, type Node } from "~/lib/hooks/use-workflows"
+
+//React
+import { useMemo } from "react"
 
 export function DialogConstructor<
     SchemaType extends ZodSchema<Node["data"]>,
     DefaultValues extends FormDefaultValues<ZodInfer<SchemaType>>,
->(props: {
+>({
+    nodeId,
+    ...props
+}: {
     schema: SchemaType
     nodeId: string
     title?: string
@@ -36,23 +35,26 @@ export function DialogConstructor<
 }) {
     const [, setOpen] = useMultiDialog("dialog")
     const { id: workflowId } = useParams<{ id: string }>()
-    const [node, setNode] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        uniqueNodeSelectorReducer(workflowId, props.nodeId),
-    )
+    const { data: workflows, editNodeData } = useWorkflows({
+        workflowId,
+        nodeId,
+    })
+
+    const nodeData = useMemo(() => {
+        return workflows?.[0]?.flow?.nodes.find(({ id }) => id === nodeId)?.data
+    }, [workflows, nodeId])
 
     function handleSubmit(submitData: ZodInfer<SchemaType>) {
-        setNode((node) => ({
-            ...node,
-            data: props.schema?.parse({ ...node.data, ...submitData }),
-        }))
+        void editNodeData({
+            data: props.schema?.parse({ ...nodeData, ...submitData }),
+        })
         setOpen(false)
     }
 
     return (
         <DialogConstructorPrimitive
             onSubmit={handleSubmit}
-            defaultValues={node?.data as DefaultValues}
+            defaultValues={nodeData as DefaultValues}
             {...props}
         >
             {props.children}

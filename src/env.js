@@ -29,8 +29,8 @@ export const env = createEnv({
      * middlewares) or client-side so we need to destruct manually.
      */
     runtimeEnv: {
-        NEXT_PUBLIC_SINGLE_CONNECTION_MODE: (String(process.env.NEXT_PUBLIC_SINGLE_CONNECTION_MODE) === "true")
-        ,
+        NEXT_PUBLIC_SINGLE_CONNECTION_MODE:
+            String(process.env.NEXT_PUBLIC_SINGLE_CONNECTION_MODE) === "true",
         NODE_ENV: process.env.NODE_ENV,
         NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
         NEXT_PUBLIC_SUPABASE_ANON_KEY:

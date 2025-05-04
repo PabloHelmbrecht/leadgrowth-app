@@ -72,20 +72,19 @@ export function SettingsColumn<Entity>({
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {actions.map((action, index) =>
-                        action.type === "link" ? (
-                            <></>
-                        ) : (
-                            <Container
-                                value={index}
-                                variant={action.type}
-                                key={index}
-                            >
-                                {action.component && (
-                                    <action.component {...cellContext} />
-                                )}
-                            </Container>
-                        ),
+                    {actions.map(
+                        (action, index) =>
+                            action.type !== "link" && (
+                                <Container
+                                    value={index}
+                                    variant={action.type}
+                                    key={index}
+                                >
+                                    {action.component && (
+                                        <action.component {...cellContext} />
+                                    )}
+                                </Container>
+                            ),
                     )}
                 </>
             )}

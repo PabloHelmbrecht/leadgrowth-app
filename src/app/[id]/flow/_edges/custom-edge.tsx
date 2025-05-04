@@ -39,10 +39,6 @@ import { Label } from "~/components/ui/label"
 //Utils
 import { getBezierEdgePosition } from "~/lib/utils/bezier"
 import { numberToLetters } from "~/lib/utils/formatters"
-import {
-    useSelectorReducerAtom,
-    uniqueEdgeSelectorReducer,
-} from "~/lib/hooks/use-selector-reducer-atom"
 
 //React Flow
 import {
@@ -50,7 +46,6 @@ import {
     EdgeLabelRenderer,
     getBezierPath,
     type EdgeProps,
-    type Edge,
 } from "@xyflow/react"
 
 //React Hook Form & Form Resolver
@@ -63,8 +58,8 @@ import { ClockCountdown, PencilSimple } from "@phosphor-icons/react/dist/ssr"
 //Zod
 import { z } from "zod"
 
-//Atoms and Reducers
-import { workflowsMockDataAtom } from "~/lib/stores/mockData/workflow"
+//Hooks
+import { useWorkflows, type Edge } from "~/lib/hooks/use-workflows"
 
 //Schemas & Types
 const timeUnitsLabels = ["hours", "days", "weeks"] as const
@@ -79,19 +74,18 @@ export const customDataSchema = z.object({
     order: z.number().optional(),
 })
 
-export type CustomEdge = Edge<z.infer<typeof customDataSchema>, "custom">
-
 export function CustomEdge({
     sourceX,
     sourceY,
     targetX,
     targetY,
+    source,
+    target,
     sourcePosition,
     targetPosition,
     markerEnd,
     data,
-    id,
-}: EdgeProps<CustomEdge>) {
+}: EdgeProps<Edge>) {
     const [edgePath, labelX, labelY] = getBezierPath({
         sourceX,
         sourceY,
@@ -100,9 +94,20 @@ export function CustomEdge({
         targetY,
         targetPosition,
     })
+    const { id: workflowId } = useParams<{ id: string }>()
+    const { data: workflow } = useWorkflows({ workflowId })
+
+    const workflowEdges = workflow?.[0]?.flow?.edges
+
+    const amountEdges = useMemo(() => {
+        return (
+            workflowEdges?.filter((edge: Edge) => edge.source === source)
+                .length ?? 0
+        )
+    }, [workflowEdges, source])
 
     //Top Label x,y position and angle calculated based on t parameter using Bezier Cubic Function
-    const distanceFromSource = 30
+    const distanceFromSource = 75
     const diagonal = useMemo(
         () =>
             Math.sqrt(
@@ -158,7 +163,7 @@ export function CustomEdge({
             />
 
             <EdgeLabelRenderer>
-                {topLabelLetter && (
+                {amountEdges && amountEdges > 1 && topLabelLetter && (
                     <div
                         style={{
                             transform: `translate(-50%, -50%) translate(${topLabelX}px,${topLabelY}px) rotate(${topLabelAngle}rad) `,
@@ -174,7 +179,8 @@ export function CustomEdge({
                         {...data}
                         labelX={labelX}
                         labelY={labelY}
-                        id={id}
+                        sourceId={source}
+                        targetId={target}
                     />
                 )}
             </EdgeLabelRenderer>
@@ -187,22 +193,22 @@ export function DelayLabel({
     unit,
     labelX,
     labelY,
-    id,
-}: z.infer<typeof customDataSchema> & {
+    sourceId,
+    targetId,
+}: Edge["data"] & {
     labelX: number
     labelY: number
-    id: string
+    sourceId: string
+    targetId: string
 }) {
     const [open, setOpen] = useState<boolean>(false)
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [skipDelay, setSkipDelay] = useState<boolean>(false)
     const { id: workflowId } = useParams<{ id: string }>()
-    const [, setEdge] = useSelectorReducerAtom(
-        workflowsMockDataAtom,
-        uniqueEdgeSelectorReducer(workflowId, id),
-    )
 
-    const form = useForm<z.infer<typeof customDataSchema>>({
+    const { assignEdgeDelay } = useWorkflows({ workflowId })
+
+    const form = useForm<Edge["data"]>({
         resolver: zodResolver(customDataSchema),
         defaultValues: {
             delay,
@@ -216,21 +222,25 @@ export function DelayLabel({
         setSkipDelay(checked)
     }
 
-    const onSubmit = (data: z.infer<typeof customDataSchema>) => {
+    const onSubmit = (data: Edge["data"]) => {
         try {
-            setEdge((edge) => {
-                if (skipDelay) {
-                    data.delay = 0
-                    data.unit = "days"
-                }
-                return {
-                    ...edge,
-                    data: {
-                        ...customDataSchema?.parse(edge.data),
-                        ...data,
-                    },
-                }
-            })
+            if (skipDelay) {
+                void assignEdgeDelay({
+                    workflowId,
+                    sourceId,
+                    targetId,
+                    delay: 0,
+                    unit: "days",
+                })
+            } else {
+                void assignEdgeDelay({
+                    workflowId,
+                    sourceId,
+                    targetId,
+                    delay: data.delay,
+                    unit: data.unit,
+                })
+            }
             setOpen(false)
         } catch (e) {
             toast({

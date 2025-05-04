@@ -3,7 +3,9 @@ import { type PrimitiveAtom } from "jotai"
 import { createContext } from "react"
 
 export interface TableContext<Entity> {
-    dataAtom: PrimitiveAtom<Entity>
+    data: Entity[]
+    isLoading: boolean
+    isError: boolean
     tableAtom: PrimitiveAtom<Table<Entity> | null>
     IsAllRowsSelectedAtom: PrimitiveAtom<boolean>
     rowSelectionAtom: PrimitiveAtom<Record<string, boolean>>
