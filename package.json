@@ -19,7 +19,6 @@
     "analyze": "env ANALYZE=true pnpm build",
     "types": "tsc",
     "prepare": "husky",
-    "test": "vitest",
     "format": "bun prettier --write \"./src/**/*.{js,jsx,ts,tsx}\"",
     "release": "standard-version && git push --follow-tags --no-verify",
     "pre-commit": "bun run types && bun run format && bun run lint && bun lint-staged && bun run db:types",
@@ -105,7 +104,8 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "@types/bun": "latest"
   },
   "ct3aMetadata": {
     "initVersion": "7.34.0"
