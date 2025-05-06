@@ -1,9 +1,10 @@
 import { atom } from "jotai"
 import { z } from "zod"
+import primitiveColors from "tailwindcss/colors"
 
 //Colors
 import config from "tailwind.config"
-const colors = config.theme.extend.colors
+const colors = { ...config.theme.extend.colors, slate: primitiveColors.slate }
 
 //Schemas
 export const activitySchema = z.object({
@@ -206,7 +207,7 @@ export const priorityMockData: Priority[] = [
     {
         label: "Low",
         value: "low",
-        color: colors.neutral[500],
+        color: colors.slate[500],
     },
 ]
 
@@ -224,12 +225,12 @@ export const statusMockData: Status[] = [
     {
         label: "Skipped",
         value: "skipped",
-        color: colors.neutral[500],
+        color: colors.slate[500],
     },
     {
         label: "Pending",
         value: "pending",
-        color: colors.neutral[500],
+        color: colors.slate[500],
     },
     {
         label: "Delayed",

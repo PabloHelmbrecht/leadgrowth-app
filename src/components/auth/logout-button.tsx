@@ -1,10 +1,15 @@
 "use client"
 
 import { createClient } from "~/lib/supabase/client"
-import { Button } from "~/components/ui/button"
 import { useRouter } from "next/navigation"
-
-export function LogoutButton() {
+import { cn } from "~/lib/utils/classesMerge"
+export function LogoutButton({
+    children,
+    className,
+}: {
+    children: React.ReactNode
+    className?: string
+}) {
     const router = useRouter()
 
     const logout = async () => {
@@ -13,5 +18,9 @@ export function LogoutButton() {
         router.push("/auth/login")
     }
 
-    return <Button onClick={logout}>Logout</Button>
+    return (
+        <span onClick={logout} className={cn(className)}>
+            {children}
+        </span>
+    )
 }

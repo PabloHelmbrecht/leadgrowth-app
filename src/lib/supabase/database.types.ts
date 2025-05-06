@@ -456,7 +456,7 @@ export type Database = {
                     action_id: string
                     created_at: string
                     data: Json | null
-                    id: number
+                    id: string
                     team_id: string
                     type: Database["public"]["Enums"]["event_type"]
                 }
@@ -464,7 +464,7 @@ export type Database = {
                     action_id: string
                     created_at?: string
                     data?: Json | null
-                    id?: number
+                    id?: string
                     team_id: string
                     type: Database["public"]["Enums"]["event_type"]
                 }
@@ -472,7 +472,7 @@ export type Database = {
                     action_id?: string
                     created_at?: string
                     data?: Json | null
-                    id?: number
+                    id?: string
                     team_id?: string
                     type?: Database["public"]["Enums"]["event_type"]
                 }
@@ -621,18 +621,21 @@ export type Database = {
             }
             profiles: {
                 Row: {
+                    avatar_url: string | null
                     email: string
                     first_name: string | null
                     id: string
                     last_name: string | null
                 }
                 Insert: {
+                    avatar_url?: string | null
                     email: string
                     first_name?: string | null
                     id: string
                     last_name?: string | null
                 }
                 Update: {
+                    avatar_url?: string | null
                     email?: string
                     first_name?: string | null
                     id?: string
@@ -713,18 +716,21 @@ export type Database = {
                     created_at: string
                     id: string
                     is_active: boolean
+                    logo_url: string | null
                     name: string | null
                 }
                 Insert: {
                     created_at?: string
                     id?: string
                     is_active?: boolean
+                    logo_url?: string | null
                     name?: string | null
                 }
                 Update: {
                     created_at?: string
                     id?: string
                     is_active?: boolean
+                    logo_url?: string | null
                     name?: string | null
                 }
                 Relationships: []
@@ -844,6 +850,10 @@ export type Database = {
                 Returns: {
                     team_id: string
                 }[]
+            }
+            user_is_group_member: {
+                Args: { id: string }
+                Returns: boolean
             }
         }
         Enums: {

@@ -40,7 +40,7 @@ export function DueDateBadgeColumn<Entity>(
             className={
                 isDue
                     ? "bg-danger-100 text-danger-800"
-                    : "bg-neutral-100 text-neutral-800"
+                    : "bg-slate-100 text-slate-800"
             }
         />
     )

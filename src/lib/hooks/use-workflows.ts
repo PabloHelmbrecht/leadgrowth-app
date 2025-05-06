@@ -107,8 +107,9 @@ export function useWorkflows({
     nodeId?: string
 }) {
     // Permite inyectar teamId o usar cookie
-    const cookieTeamId = useCookie("team_id")!
-    const teamId = injectedTeamId ?? cookieTeamId
+    const { cookie: cookieTeamId } = useCookie("team_id")
+    const teamId = injectedTeamId ?? cookieTeamId!
+
     const queryClient = useQueryClient()
     const { toast } = useToast()
 
@@ -617,6 +618,7 @@ export function useWorkflows({
                                           email: "",
                                           first_name: "",
                                           last_name: "",
+                                          avatar_url: "",
                                       },
                                   }
                                 : item,
@@ -639,6 +641,7 @@ export function useWorkflows({
                                           email: "loadingemail@loading.com",
                                           first_name: "Loading",
                                           last_name: "Name",
+                                          avatar_url: "",
                                       },
                                   }
                                 : item,
@@ -661,6 +664,7 @@ export function useWorkflows({
                                               email: "loadingemail@loading.com",
                                               first_name: "Loading",
                                               last_name: "Name",
+                                              avatar_url: "",
                                           },
                                       }
                                     : item,

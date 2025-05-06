@@ -185,7 +185,7 @@ export const statusMockData: Status[] = [
     {
         value: "paused",
         label: "Paused",
-        color: "bg-neutral-500",
+        color: "bg-slate-500",
     },
     {
         value: "unsubscribed",
@@ -213,17 +213,17 @@ export const stagesMockData: Stage[] = [
     {
         value: "New",
         label: "New",
-        color: "bg-neutral-500",
+        color: "bg-slate-500",
     },
     {
         value: "In progress",
         label: "In progress",
-        color: "bg-neutral-500",
+        color: "bg-slate-500",
     },
     {
         value: "Replied",
         label: "Replied",
-        color: "bg-neutral-500",
+        color: "bg-slate-500",
     },
     {
         value: "Interested",

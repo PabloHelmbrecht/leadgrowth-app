@@ -43,17 +43,11 @@ export default async function RootLayout({
                 <QueryProvider>
                     <NextIntlClientProvider>
                         <TooltipProvider delayDuration={400}>
-                            <div className="flex gap-[2px] bg-neutral-200">
-                                {/* <Sidebar /> */}
-                                <div className="flex h-screen w-0 flex-1 flex-col gap-[2px] ">
-                                    {/* <TopMenu /> */}
-                                    <div className=" flex w-full flex-1 overflow-hidden">
-                                        {children}
-                                    </div>
-                                </div>
-                            </div>
+                            {children}
+
                             <Toaster />
                             <div id="portal-root"></div>
+
                             <ReactQueryDevtools initialIsOpen={false} />
                         </TooltipProvider>
                     </NextIntlClientProvider>

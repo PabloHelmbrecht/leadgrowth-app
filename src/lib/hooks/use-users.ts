@@ -11,7 +11,9 @@ import { useToast } from "~/components/ui/use-toast"
 const client = createClient()
 
 // Tipos
-export type Member = Tables<"members">
+export interface Member extends Tables<"members"> {
+    isCurrent: boolean
+}
 export type Profile = Tables<"profiles">
 export type MemberWithProfile = Member & { profile: Profile }
 export type MemberUpdate = TablesUpdate<"members">
@@ -41,8 +43,8 @@ export function useUsers({
     userId?: string
     injectedTeamId?: string
 }) {
-    const cookieTeamId = useCookie("team_id")!
-    const teamId = injectedTeamId ?? cookieTeamId
+    const { cookie: cookieTeamId } = useCookie("team_id")
+    const teamId = injectedTeamId ?? cookieTeamId!
     const queryClient = useQueryClient()
     const { toast } = useToast()
 
@@ -55,16 +57,23 @@ export function useUsers({
         queryFn: async () => {
             if (!teamId)
                 throw new Error("Falta teamId para consultar usuarios.")
+            const {
+                data: { user },
+            } = await client.auth.getUser()
+
             let query = client
                 .from("members")
                 .select(
-                    `joined_at, role, status, user_id, profile:user_id(first_name, last_name, email)`,
+                    `joined_at, role, status, user_id, profile:user_id(first_name, last_name, email, avatar_url)`,
                 ) // join con profiles
                 .eq("team_id", teamId)
             if (userId) query = query.eq("user_id", userId)
             const { data, error } = await query
             if (error) throw error
-            return data
+            return data.map((member) => ({
+                ...member,
+                isCurrent: member.user_id === user?.id,
+            }))
         },
         enabled,
     })
@@ -86,7 +95,7 @@ export function useUsers({
                 .eq("id", user_id)
             if (error) throw error
         },
-        onMutate: async (input: UpdateUserInput) => {
+        onMutate: (input: UpdateUserInput) => {
             if (!teamId) return
             const previous = queryClient.getQueryData<MemberWithProfile[]>(
                 getUsersQueryKey({ teamId }),
@@ -153,7 +162,7 @@ export function useUsers({
                 .eq("team_id", teamId)
             if (error) throw error
         },
-        onMutate: async (input: ChangeStatusInput) => {
+        onMutate: (input: ChangeStatusInput) => {
             if (!teamId) return
             const previous = queryClient.getQueryData<MemberWithProfile[]>(
                 getUsersQueryKey({ teamId }),

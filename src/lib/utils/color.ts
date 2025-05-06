@@ -1,4 +1,5 @@
-import { neutral } from "tailwindcss/colors"
+import colors from "tailwindcss/colors"
+const slate = colors.slate
 
 //Types
 type hsb = { hue: number; saturation: number; brightness: number }
@@ -8,8 +9,8 @@ export class Color {
     hsb: hsb
 
     constructor(hex: string | undefined) {
-        this.hex = hex ?? neutral["500"]
-        this.hsb = this.hexToHSB(hex ?? neutral["500"])
+        this.hex = hex ?? slate["500"]
+        this.hsb = this.hexToHSB(hex ?? slate["500"])
     }
 
     isValidHex(hex: string): boolean {

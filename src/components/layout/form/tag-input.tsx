@@ -91,7 +91,7 @@ export function TagInput({
                                         />
                                     ) : (
                                         <div
-                                            className=" aspect-square w-2 rounded-full bg-neutral-500"
+                                            className=" aspect-square w-2 rounded-full bg-slate-500"
                                             style={{
                                                 backgroundColor:
                                                     tags.find(
@@ -157,7 +157,7 @@ export function TagInput({
                                         />
                                     ) : (
                                         <div
-                                            className=" aspect-square w-2 rounded-full bg-neutral-500"
+                                            className=" aspect-square w-2 rounded-full bg-slate-500"
                                             style={{
                                                 backgroundColor:
                                                     tags.find(
@@ -233,7 +233,7 @@ export function TagInput({
                                             />
                                         ) : (
                                             <div
-                                                className=" aspect-square w-2 rounded-full bg-neutral-500"
+                                                className=" aspect-square w-2 rounded-full bg-slate-500"
                                                 style={{
                                                     backgroundColor:
                                                         tags.find(

@@ -34,8 +34,8 @@ export function useTags({
     injectedTeamId?: string
 }) {
     // Permite inyectar teamId o usar cookie
-    const cookieTeamId = useCookie("team_id")!
-    const teamId = injectedTeamId ?? cookieTeamId
+    const { cookie: cookieTeamId } = useCookie("team_id")
+    const teamId = injectedTeamId ?? cookieTeamId!
     const queryClient = useQueryClient()
     const { toast } = useToast()
 

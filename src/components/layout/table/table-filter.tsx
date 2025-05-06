@@ -116,7 +116,7 @@ export function TableFilter({
                     />
                     {columnName}
                     {columnFilters.length !== 0 && (
-                        <div className="-ml-1 text-xs text-neutral-500">
+                        <div className="-ml-1 text-xs text-slate-500">
                             {`+${columnFilters.length}`}
                         </div>
                     )}
@@ -158,7 +158,7 @@ export function TableFilter({
                                             />
                                         ) : (
                                             <div
-                                                className=" aspect-square w-2 rounded-full bg-neutral-500"
+                                                className=" aspect-square w-2 rounded-full bg-slate-500"
                                                 style={{
                                                     backgroundColor:
                                                         validatedOptions.find(
@@ -238,7 +238,7 @@ export function TableFilter({
                                                 />
                                             ) : (
                                                 <div
-                                                    className=" aspect-square w-2 rounded-full bg-neutral-500"
+                                                    className=" aspect-square w-2 rounded-full bg-slate-500"
                                                     style={{
                                                         backgroundColor:
                                                             validatedOptions.find(

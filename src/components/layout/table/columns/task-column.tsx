@@ -55,7 +55,7 @@ export function TaskColumn<Entity extends Action>({
             <div className="flex flex-row items-stretch gap-2">
                 <div
                     className={
-                        "aspect-square h-fit w-fit flex-initial rounded-md bg-neutral-100 p-2 text-neutral-800"
+                        "aspect-square h-fit w-fit flex-initial rounded-md bg-slate-100 p-2 text-slate-800"
                     }
                     style={{
                         color: flowAction?.textColor,
@@ -89,9 +89,9 @@ export function TaskColumn<Entity extends Action>({
             </div>
 
             {isPendingTask && (
-                <div className=" absolute  right-2  top-1/2 hidden -translate-y-1/2 transform flex-row items-center divide-x overflow-hidden rounded-md border border-neutral-200 bg-white shadow-sm group-hover:flex ">
+                <div className=" absolute  right-2  top-1/2 hidden -translate-y-1/2 transform flex-row items-center divide-x overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm group-hover:flex ">
                     <button
-                        className="h-fit w-fit rounded-none p-2  hover:bg-neutral-100 hover:text-neutral-900"
+                        className="h-fit w-fit rounded-none p-2  hover:bg-slate-100 hover:text-slate-900"
                         onClick={() =>
                             setAction((action) => ({
                                 ...action,
@@ -108,7 +108,7 @@ export function TaskColumn<Entity extends Action>({
                         />
                     </button>
                     <button
-                        className="h-fit w-fit rounded-none p-2  hover:bg-neutral-100 hover:text-neutral-900"
+                        className="h-fit w-fit rounded-none p-2  hover:bg-slate-100 hover:text-slate-900"
                         onClick={() =>
                             setAction((action) => ({
                                 ...action,

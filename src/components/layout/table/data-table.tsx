@@ -123,7 +123,7 @@ export function DataTable<Entity extends { id: string }, TValue>({
 
     return (
         <div className="flex  h-0 flex-1 flex-col gap-4">
-            <div className=" relative overflow-hidden rounded-lg bg-white ">
+            <div className=" relative overflow-hidden rounded-lg border border-neutral-200 ">
                 <div className="scroll h-full overflow-auto">
                     <Table>
                         {hideHeaders || (

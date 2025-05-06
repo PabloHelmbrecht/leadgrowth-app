@@ -57,7 +57,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Consulta a la tabla teams
-    if (user) {
+    if (user && !supabaseResponse.cookies.get("team_id")?.value) {
         const { data: team, error } = await supabase
             .from("teams")
             .select("id")

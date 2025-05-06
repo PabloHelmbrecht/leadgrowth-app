@@ -18,6 +18,9 @@ import {
 //Icon
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr"
 
+//UI
+import { Separator } from "~/components/ui/separator"
+
 export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
     const pathname = usePathname()
 
@@ -26,24 +29,29 @@ export function FlowSideBar({}: React.HTMLAttributes<HTMLDivElement>) {
     if (!pathname.endsWith("/flow")) return <></>
 
     return (
-        <div className="flex w-64 flex-initial flex-col gap-4 bg-white p-8 pr-5">
-            <div className="flex flex-col gap-3 pr-3">
-                <h2 className=" text-lg font-semibold">Choose a Step</h2>
-                <div className="relative flex w-full items-center">
-                    <Input
-                        placeholder="Search steps..."
-                        className="w-full pl-10  focus-visible:outline-0 focus-visible:ring-0"
-                        onChange={(e) => setFlowSidebarQuery(e.target.value)}
-                    />
-                    <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 transform opacity-50 " />
+        <>
+            <Separator orientation="vertical" className="h-full" />
+            <div className="flex w-64 flex-initial flex-col gap-4 bg-white p-8 pr-5">
+                <div className="flex flex-col gap-3 pr-3">
+                    <h2 className=" text-lg font-semibold">Choose a Step</h2>
+                    <div className="relative flex w-full items-center">
+                        <Input
+                            placeholder="Search steps..."
+                            className="w-full pl-10  focus-visible:outline-0 focus-visible:ring-0"
+                            onChange={(e) =>
+                                setFlowSidebarQuery(e.target.value)
+                            }
+                        />
+                        <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 transform opacity-50 " />
+                    </div>
+                </div>
+                <div className="scroll flex  w-full flex-col overflow-auto pr-1  ">
+                    {flowActionsBlocks.map((block, key) => (
+                        <StepBlock key={key} {...block} />
+                    ))}
                 </div>
             </div>
-            <div className="scroll flex  w-full flex-col overflow-auto pr-1  ">
-                {flowActionsBlocks.map((block, key) => (
-                    <StepBlock key={key} {...block} />
-                ))}
-            </div>
-        </div>
+        </>
     )
 
     function StepBlock({ title, items }: flowActionBlock) {
