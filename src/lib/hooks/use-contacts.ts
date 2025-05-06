@@ -6,21 +6,40 @@ import { useToast } from "~/components/ui/use-toast"
 
 const client = createClient()
 
+type Action = Tables<"actions"> & {
+    nodes: Pick<Tables<"nodes">, "id" | "type"> | null
+    events: Tables<"events">[]
+}
+
 // Tipos
-export type Contact = Tables<"contacts">
+export interface Contact extends Tables<"contacts"> {
+    events: Tables<"events">[]
+    executions: Tables<"executions">[]
+    company: Tables<"companies"> | null
+    actions: Action[]
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+    stage: Tables<"contacts_stages"> | null
+    custom_fields: Record<string, unknown>
+}
 export type ContactUpdate = TablesUpdate<"contacts">
 
 // Utilidad para la queryKey
 function getContactsQueryKey({
     teamId,
     contactId,
+    workflowId,
 }: {
     teamId: string
     contactId?: string
+    workflowId?: string
 }) {
     return [
         "contacts",
-        { teamId, ...(contactId ? { recordId: contactId } : {}) },
+        {
+            teamId,
+            ...(contactId ? { recordId: contactId } : {}),
+            ...(workflowId ? { workflowId: workflowId } : {}),
+        },
     ]
 }
 
@@ -32,9 +51,11 @@ function getContactsQueryKey({
 export function useContacts({
     contactId,
     injectedTeamId,
+    workflowId,
 }: {
     contactId?: string
     injectedTeamId?: string
+    workflowId?: string
 }) {
     // Permite inyectar teamId o usar cookie
     const { cookie: cookieTeamId } = useCookie("team_id")
@@ -57,17 +78,48 @@ export function useContacts({
                 .select(
                     `*,
                     custom_fields:contacts_custom_fields(custom_fields),
-                    actions:actions(*),
-                    executions:executions(workflow_id, status, current_step, workflow:workflows(*))
+                    actions:actions(*, events:events(*), nodes(*)),
+                    executions!inner(*),
+                    company:companies(*),
+                    stage:contacts_stages(*)
                 `,
                 )
                 .eq("team_id", teamId)
                 .order("created_at", { ascending: false })
             if (contactId) query = query.eq("id", contactId)
+            if (workflowId)
+                query = query.eq("executions.workflow_id", workflowId)
             const { data, error } = await query
+
+            const dataParsed = data?.map((contact) => {
+                return {
+                    ...contact,
+                    events:
+                        contact.actions?.flatMap((action) => action.events) ??
+                        [],
+                    custom_fields: contact.custom_fields.reduce(
+                        (acc, { custom_fields }) => ({
+                            ...acc,
+                            ...(custom_fields as Record<string, unknown>),
+                        }),
+                        {},
+                    ),
+                    actions: workflowId
+                        ? contact.actions?.filter(
+                              (action) => action.workflow_id === workflowId,
+                          )
+                        : contact.actions,
+                    execution: workflowId
+                        ? contact.executions?.filter(
+                              (execution) =>
+                                  execution.workflow_id === workflowId,
+                          )
+                        : contact.executions,
+                }
+            })
             if (error) throw error
-            if (contactId) return data?.[0] ?? null
-            return data || []
+            if (contactId) return dataParsed ?? null
+            return dataParsed ?? []
         },
         enabled,
     })

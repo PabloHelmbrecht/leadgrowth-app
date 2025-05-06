@@ -92,7 +92,7 @@ export function TableFilter({
     }, [options]) as options
 
     const hasColor = useMemo(
-        () => validatedOptions.some((d) => d.color),
+        () => validatedOptions?.some((d) => d.color),
         [validatedOptions],
     )
 
@@ -149,7 +149,7 @@ export function TableFilter({
                                                 className=" -mx-[3px]"
                                                 style={{
                                                     color:
-                                                        validatedOptions.find(
+                                                        validatedOptions?.find(
                                                             (item) =>
                                                                 item.value ===
                                                                 currentValue,
@@ -161,7 +161,7 @@ export function TableFilter({
                                                 className=" aspect-square w-2 rounded-full bg-slate-500"
                                                 style={{
                                                     backgroundColor:
-                                                        validatedOptions.find(
+                                                        validatedOptions?.find(
                                                             (item) =>
                                                                 item.value ===
                                                                 currentValue,
@@ -170,7 +170,7 @@ export function TableFilter({
                                             />
                                         ))}
                                     {
-                                        validatedOptions.find(
+                                        validatedOptions?.find(
                                             (item) =>
                                                 item.value === currentValue,
                                         )?.label
@@ -186,7 +186,7 @@ export function TableFilter({
 
                         <CommandGroup>
                             {validatedOptions
-                                .filter(
+                                ?.filter(
                                     (filterOption) =>
                                         !columnFilters.includes(
                                             filterOption.value,
@@ -229,7 +229,7 @@ export function TableFilter({
                                                     className=" -mx-[3px]"
                                                     style={{
                                                         color:
-                                                            validatedOptions.find(
+                                                            validatedOptions?.find(
                                                                 (item) =>
                                                                     item.value ===
                                                                     filterOption.value,
@@ -241,7 +241,7 @@ export function TableFilter({
                                                     className=" aspect-square w-2 rounded-full bg-slate-500"
                                                     style={{
                                                         backgroundColor:
-                                                            validatedOptions.find(
+                                                            validatedOptions?.find(
                                                                 (item) =>
                                                                     item.value ===
                                                                     filterOption.value,

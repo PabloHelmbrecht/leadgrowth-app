@@ -7,30 +7,41 @@ import { useToast } from "~/components/ui/use-toast"
 const client = createClient()
 
 // Tipos
-export type Tag = Tables<"tags">
-export type TagUpdate = TablesUpdate<"tags">
+export interface Company extends Tables<"companies"> {
+    custom_fields: Record<string, unknown>
+}
+export type CompanyUpdate = TablesUpdate<"companies">
 
 // Utilidad para la queryKey
-export function getTagsQueryKey({
+function getCompaniesQueryKey({
     teamId,
-    tagId,
+    companyId,
+    workflowId,
 }: {
     teamId: string
-    tagId?: string
+    companyId?: string
+    workflowId?: string
 }) {
-    return ["tags", { teamId, ...(tagId ? { recordId: tagId } : {}) }]
+    return [
+        "companies",
+        {
+            teamId,
+            ...(companyId ? { recordId: companyId } : {}),
+            ...(workflowId ? { workflowId: workflowId } : {}),
+        },
+    ]
 }
 
 /**
- * Hook para consultar y mutar tags.
- * @param tagId Opcional, filtra por ID específico
+ * Hook para consultar y mutar contactos.
+ * @param contactId Opcional, filtra por ID específico
  * @param injectedTeamId Opcional, permite inyectar teamId (por defecto usa cookie)
  */
-export function useTags({
-    tagId,
+export function useCompanies({
+    companyId,
     injectedTeamId,
 }: {
-    tagId?: string
+    companyId?: string
     injectedTeamId?: string
 }) {
     // Permite inyectar teamId o usar cookie
@@ -41,61 +52,88 @@ export function useTags({
 
     // Validación temprana: no ejecutar si falta teamId
     const enabled = Boolean(teamId)
-    const queryKey = teamId ? getTagsQueryKey({ teamId, tagId }) : []
+    const queryKey = teamId ? getCompaniesQueryKey({ teamId, companyId }) : []
 
-    // Query principal: todos los tags o uno específico
-    const { data, ...rest } = useQuery<Tag[]>({
+    // Query principal: todos los contactos o uno específico
+    const { data, ...rest } = useQuery<Company[] | null>({
         queryKey,
         queryFn: async () => {
-            if (!teamId) throw new Error("Falta teamId para consultar tags.")
+            if (!teamId)
+                throw new Error("Falta teamId para consultar empresas.")
             let query = client
-                .from("tags")
-                .select("*")
+                .from("companies")
+                .select(
+                    `*,
+                    custom_fields:companies_custom_fields(custom_fields)
+                `,
+                )
                 .eq("team_id", teamId)
                 .order("created_at", { ascending: false })
-            if (tagId) query = query.eq("id", tagId)
+            if (companyId) query = query.eq("id", companyId)
+
             const { data, error } = await query
+
+            const dataParsed = data?.map((company) => {
+                return {
+                    ...company,
+                    custom_fields: (
+                        company.custom_fields as {
+                            custom_fields: Record<string, unknown>
+                        }[]
+                    ).reduce(
+                        (acc: Record<string, unknown>, { custom_fields }) => ({
+                            ...acc,
+                            ...custom_fields,
+                        }),
+                        {},
+                    ),
+                }
+            })
             if (error) throw error
-            return data || []
+            if (companyId) return dataParsed ?? null
+            return dataParsed ?? []
         },
         enabled,
     })
 
     // Mutación (update/upsert) con manejo optimista
     const updateMutation = useMutation({
-        mutationFn: async (input: TagUpdate) => {
-            if (!teamId) throw new Error("Falta teamId para actualizar tag.")
+        mutationFn: async (input: CompanyUpdate) => {
+            if (!teamId)
+                throw new Error("Falta teamId para actualizar empresa.")
             const { id, ...rest } = input
-            const upsertId = tagId ?? id
-            if (!upsertId) throw new Error("Falta id para upsert de tag.")
+            const upsertId = companyId ?? id
+            if (!upsertId) throw new Error("Falta id para upsert de empresa.")
             const upsertData = {
                 ...rest,
                 id: upsertId,
                 team_id: input.team_id ?? teamId,
             }
-            const { error } = await client.from("tags").upsert([upsertData])
+            const { error } = await client
+                .from("companies")
+                .upsert([upsertData])
             if (error) throw error
         },
-        onMutate: async (newData: TagUpdate) => {
+        onMutate: async (newData: CompanyUpdate) => {
             if (!teamId) return
             await queryClient.cancelQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
             await queryClient.cancelQueries({
-                queryKey: getTagsQueryKey({ teamId, tagId }),
+                queryKey: getCompaniesQueryKey({ teamId, companyId }),
             })
-            const previousGeneral = queryClient.getQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            const previousGeneral = queryClient.getQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
             )
-            const previousSpecific = tagId
-                ? queryClient.getQueryData<Tag>(
-                      getTagsQueryKey({ teamId, tagId }),
+            const previousSpecific = companyId
+                ? queryClient.getQueryData<Company>(
+                      getCompaniesQueryKey({ teamId, companyId }),
                   )
                 : undefined
-            const updateFn = (old?: Tag[]) => {
+            const updateFn = (old?: Company[]) => {
                 if (!old) return old
                 return old.map((item) =>
-                    item.id === (newData.id ?? tagId)
+                    item.id === (newData.id ?? companyId)
                         ? {
                               ...item,
                               ...newData,
@@ -104,15 +142,15 @@ export function useTags({
                         : item,
                 )
             }
-            queryClient.setQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            queryClient.setQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
                 updateFn,
             )
-            if (tagId) {
-                queryClient.setQueryData<Tag>(
-                    getTagsQueryKey({ teamId, tagId }),
+            if (companyId) {
+                queryClient.setQueryData<Company>(
+                    getCompaniesQueryKey({ teamId, companyId }),
                     (old) =>
-                        old && old.id === (newData.id ?? tagId)
+                        old && old.id === (newData.id ?? companyId)
                             ? {
                                   ...old,
                                   ...newData,
@@ -127,23 +165,23 @@ export function useTags({
             err,
             _newData,
             context:
-                | { previousGeneral?: Tag[]; previousSpecific?: Tag }
+                | { previousGeneral?: Company[]; previousSpecific?: Company }
                 | undefined,
         ) => {
             if (context?.previousGeneral) {
                 queryClient.setQueryData(
-                    getTagsQueryKey({ teamId }),
+                    getCompaniesQueryKey({ teamId }),
                     context.previousGeneral,
                 )
             }
-            if (tagId && context?.previousSpecific) {
+            if (companyId && context?.previousSpecific) {
                 queryClient.setQueryData(
-                    getTagsQueryKey({ teamId, tagId }),
+                    getCompaniesQueryKey({ teamId, companyId }),
                     context.previousSpecific,
                 )
             }
             toast({
-                title: "Error al actualizar el tag",
+                title: "Error al actualizar la empresa",
                 description:
                     err instanceof Error
                         ? err.message
@@ -154,47 +192,47 @@ export function useTags({
         onSettled: async () => {
             if (!teamId) return
             await queryClient.invalidateQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
-            if (tagId) {
+            if (companyId) {
                 await queryClient.invalidateQueries({
-                    queryKey: getTagsQueryKey({ teamId, tagId }),
+                    queryKey: getCompaniesQueryKey({ teamId, companyId }),
                 })
             }
         },
     })
 
-    // Crear tag
+    // Crear contacto
     const createMutation = useMutation({
-        mutationFn: async (input: Omit<TagUpdate, "id">) => {
-            if (!teamId) throw new Error("Falta teamId para crear tag.")
+        mutationFn: async (input: Omit<CompanyUpdate, "id">) => {
+            if (!teamId) throw new Error("Falta teamId para crear empresa.")
             const { data, error } = await client
-                .from("tags")
+                .from("companies")
                 .insert([{ ...input, team_id: teamId }])
                 .select()
                 .single()
             if (error) throw error
             return data
         },
-        onMutate: async (input: Omit<TagUpdate, "id">) => {
+        onMutate: async (input: Omit<CompanyUpdate, "id">) => {
             if (!teamId) return
             await queryClient.cancelQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
-            const previous = queryClient.getQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            const previous = queryClient.getQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
             )
             const tempId = crypto.randomUUID()
-            const tempTag: Partial<Tag> = {
+            const tempContact: Partial<Company> = {
                 ...input,
                 id: tempId,
                 team_id: teamId,
             }
-            queryClient.setQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            queryClient.setQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
                 (old) => {
                     if (!old) return old
-                    return [tempTag as Tag, ...old]
+                    return [tempContact as Company, ...old]
                 },
             )
             return { previous }
@@ -202,16 +240,16 @@ export function useTags({
         onError: (
             err: unknown,
             _input,
-            context: { previous?: Tag[] } | undefined,
+            context: { previous?: Company[] } | undefined,
         ) => {
             if (context?.previous) {
                 queryClient.setQueryData(
-                    getTagsQueryKey({ teamId }),
+                    getCompaniesQueryKey({ teamId }),
                     context.previous,
                 )
             }
             toast({
-                title: "Error al crear tag",
+                title: "Error al crear empresa",
                 description:
                     err instanceof Error
                         ? err.message
@@ -221,32 +259,35 @@ export function useTags({
         },
         onSettled: async () => {
             await queryClient.invalidateQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
         },
     })
 
-    // Eliminar tag
+    // Eliminar contacto
     const removeMutation = useMutation({
         mutationFn: async (id: string) => {
-            if (!teamId) throw new Error("Falta teamId para eliminar tag.")
-            const { error } = await client.from("tags").delete().eq("id", id)
+            if (!teamId) throw new Error("Falta teamId para eliminar empresa.")
+            const { error } = await client
+                .from("companies")
+                .delete()
+                .eq("id", id)
             if (error) throw error
             return id
         },
         onMutate: async (id: string) => {
             if (!teamId) return
             await queryClient.cancelQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
-            const previous = queryClient.getQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            const previous = queryClient.getQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
             )
-            queryClient.setQueryData<Tag[]>(
-                getTagsQueryKey({ teamId }),
+            queryClient.setQueryData<Company[]>(
+                getCompaniesQueryKey({ teamId }),
                 (old) => {
                     if (!old) return old
-                    return old.filter((tag) => tag.id !== id)
+                    return old.filter((company) => company.id !== id)
                 },
             )
             return { previous }
@@ -254,16 +295,16 @@ export function useTags({
         onError: (
             err: unknown,
             _id,
-            context: { previous?: Tag[] } | undefined,
+            context: { previous?: Company[] } | undefined,
         ) => {
             if (context?.previous) {
                 queryClient.setQueryData(
-                    getTagsQueryKey({ teamId }),
+                    getCompaniesQueryKey({ teamId }),
                     context.previous,
                 )
             }
             toast({
-                title: "Error al eliminar tag",
+                title: "Error al eliminar empresa",
                 description:
                     err instanceof Error
                         ? err.message
@@ -273,7 +314,7 @@ export function useTags({
         },
         onSettled: async () => {
             await queryClient.invalidateQueries({
-                queryKey: getTagsQueryKey({ teamId }),
+                queryKey: getCompaniesQueryKey({ teamId }),
             })
         },
     })

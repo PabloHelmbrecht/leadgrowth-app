@@ -9,12 +9,11 @@ import {
 } from "@phosphor-icons/react/dist/ssr"
 
 //Types
-import { type Event } from "~/lib/stores/mockData/system"
-
+import { type Tables } from "~/lib/supabase/database.types"
 //Utils
 import { cn } from "~/lib/utils/classesMerge"
 
-export function EventsColumn<Entity extends { events: Event[] }>({
+export function EventsColumn<Entity extends { events: Tables<"events">[] }>({
     row,
 }: CellContext<Entity, unknown>) {
     const isEmailOpenedByContact = row.original.events.some(

@@ -1,4 +1,6 @@
 "use client"
+//React
+import { useMemo } from "react"
 
 //UI
 import { Button } from "~/components/ui/button"
@@ -26,7 +28,6 @@ import {
 import { Gear } from "@phosphor-icons/react/dist/ssr"
 
 //Atoms & Jotai
-import { useAtom } from "jotai"
 import {
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
@@ -34,17 +35,39 @@ import {
     resetAllFiltersAtom,
     tableAtom,
 } from "~/lib/stores/workflow-table"
-import {
-    tagsMockDataAtom,
-    statusMockDataAtom,
-    ownersMockDataAtom,
-} from "~/lib/stores/mockData/workflow"
+
+//Constants
+import { workflowStatus } from "~/lib/constants/status"
 
 //Hooks
 import { useWorkflows, type Workflow } from "~/lib/hooks/use-workflows"
+import { useTags } from "~/lib/hooks/use-tags"
+import { useUsers } from "~/lib/hooks/use-users"
 
 export default function HomePage() {
     const { data, isLoading, isError } = useWorkflows({})
+
+    const { data: tags } = useTags({})
+    const { data: users } = useUsers({})
+
+    const tagsOptions = useMemo(
+        () =>
+            tags?.map((tag) => ({
+                label: tag.label ?? "",
+                value: tag.value ?? "",
+                color: tag.color ?? undefined,
+            })) ?? [],
+        [tags],
+    )
+
+    const usersOptions = useMemo(
+        () =>
+            users?.map((user) => ({
+                label: user.profile.first_name + " " + user.profile.last_name,
+                value: user.user_id,
+            })) ?? [],
+        [users],
+    )
 
     return (
         <tableContext.Provider
@@ -88,18 +111,18 @@ export default function HomePage() {
                     <SelectAllCheckbox />
 
                     <TableFilter
-                        options={useAtom(ownersMockDataAtom)[0]}
-                        filterName="owner"
+                        options={usersOptions}
+                        filterName="owner_id"
                         columnName="Owners"
                     />
                     <TableFilter
-                        options={useAtom(statusMockDataAtom)[0]}
+                        options={workflowStatus}
                         filterName="status"
                         columnName="Status"
                     />
                     <TableFilter
-                        options={useAtom(tagsMockDataAtom)[0]}
-                        filterName="tag"
+                        options={tagsOptions}
+                        filterName="tags"
                         columnName="Tags"
                     />
 
@@ -114,7 +137,7 @@ export default function HomePage() {
                     tableOptions={{
                         initialState: {
                             columnVisibility: {
-                                owner: false,
+                                owner_id: false,
                                 totalCount: false,
                             },
                         },

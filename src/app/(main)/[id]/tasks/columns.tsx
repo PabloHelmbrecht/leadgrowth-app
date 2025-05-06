@@ -15,7 +15,7 @@ import { SettingsColumn } from "~/components/layout/table/columns/settings-colum
 import { NameColumn } from "~/components/layout/table/columns/name-column"
 import { DueDateBadgeColumn } from "~/components/layout/table/columns/duedate-badge-column"
 import { TaskColumn } from "~/components/layout/table/columns/task-column"
-import { UserColumn } from "~/components/layout/table/columns/user-column"
+import { AvatarColumn } from "~/components/layout/table/columns/avatar-column"
 
 export const columns: ColumnDef<Action>[] = [
     {
@@ -33,7 +33,7 @@ export const columns: ColumnDef<Action>[] = [
     {
         accessorKey: "type",
         header: "Task",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Action, unknown>) => (
             <TaskColumn {...cellContext} />
         ),
@@ -49,7 +49,7 @@ export const columns: ColumnDef<Action>[] = [
     {
         accessorKey: "status",
         header: "Status",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Action, unknown>) => {
             const stateDictionary = {
                 scheduled: {
@@ -94,7 +94,7 @@ export const columns: ColumnDef<Action>[] = [
     {
         accessorKey: "priority",
         header: "Priority",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Action, unknown>) => {
             const stateDictionary = {
                 high: {
@@ -127,7 +127,7 @@ export const columns: ColumnDef<Action>[] = [
     {
         accessorKey: "due_at",
         header: "Due at",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Action, unknown>) => (
             <DueDateBadgeColumn {...cellContext} />
         ),
@@ -135,9 +135,10 @@ export const columns: ColumnDef<Action>[] = [
     {
         accessorKey: "user",
         header: "User",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Action, unknown>) => (
-            <UserColumn {...cellContext} />
+            <></>
+            // <AvatarColumn profile={cellContext.row.original.user} />
         ),
     },
 

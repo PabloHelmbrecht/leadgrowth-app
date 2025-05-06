@@ -178,6 +178,7 @@ export type Database = {
                     last_name: string | null
                     owner_id: string | null
                     phone: string | null
+                    stage_id: string | null
                     team_id: string
                     title: string | null
                     updated_at: string
@@ -192,6 +193,7 @@ export type Database = {
                     last_name?: string | null
                     owner_id?: string | null
                     phone?: string | null
+                    stage_id?: string | null
                     team_id: string
                     title?: string | null
                     updated_at?: string
@@ -206,6 +208,7 @@ export type Database = {
                     last_name?: string | null
                     owner_id?: string | null
                     phone?: string | null
+                    stage_id?: string | null
                     team_id?: string
                     title?: string | null
                     updated_at?: string
@@ -233,7 +236,49 @@ export type Database = {
                         referencedColumns: ["id"]
                     },
                     {
+                        foreignKeyName: "contacts_stage_id_fkey"
+                        columns: ["stage_id"]
+                        isOneToOne: false
+                        referencedRelation: "contacts_stages"
+                        referencedColumns: ["id"]
+                    },
+                    {
                         foreignKeyName: "contacts_team_id_fkey"
+                        columns: ["team_id"]
+                        isOneToOne: false
+                        referencedRelation: "teams"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
+            contacts_stages: {
+                Row: {
+                    created_at: string
+                    id: string
+                    label: string
+                    team_id: string
+                    type: Database["public"]["Enums"]["stage_type"]
+                    value: string
+                }
+                Insert: {
+                    created_at?: string
+                    id?: string
+                    label: string
+                    team_id: string
+                    type?: Database["public"]["Enums"]["stage_type"]
+                    value: string
+                }
+                Update: {
+                    created_at?: string
+                    id?: string
+                    label?: string
+                    team_id?: string
+                    type?: Database["public"]["Enums"]["stage_type"]
+                    value?: string
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "contacts_stages_team_id_fkey"
                         columns: ["team_id"]
                         isOneToOne: false
                         referencedRelation: "teams"
@@ -792,6 +837,21 @@ export type Database = {
             }
         }
         Views: {
+            companies_custom_fields: {
+                Row: {
+                    company_id: string | null
+                    custom_fields: Json | null
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "custom_field_values_company_id_fkey"
+                        columns: ["company_id"]
+                        isOneToOne: false
+                        referencedRelation: "companies"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
             contacts_custom_fields: {
                 Row: {
                     contact_id: string | null
@@ -899,6 +959,11 @@ export type Database = {
             node_type: "trigger" | "manualEmail" | "placeholder" | "default"
             priority: "high" | "medium" | "low"
             role: "admin" | "non_admin"
+            stage_type:
+                | "no category"
+                | "in progress"
+                | "succeded"
+                | "not succeded"
             time_delay_unit: "hours" | "days" | "weeks"
             workflow_status: "active" | "paused" | "archived"
         }
@@ -1062,6 +1127,12 @@ export const Constants = {
             node_type: ["trigger", "manualEmail", "placeholder", "default"],
             priority: ["high", "medium", "low"],
             role: ["admin", "non_admin"],
+            stage_type: [
+                "no category",
+                "in progress",
+                "succeded",
+                "not succeded",
+            ],
             time_delay_unit: ["hours", "days", "weeks"],
             workflow_status: ["active", "paused", "archived"],
         },

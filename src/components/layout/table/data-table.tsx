@@ -79,31 +79,49 @@ export function DataTable<Entity extends { id: string }, TValue>({
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         filterFns: {
-            arrIncludesSomeAndShowWithEmptyFilter: (
-                row,
-                columnId,
-                filterValue,
-            ) => {
-                if (arrayStringSchema.parse(filterValue).length === 0)
-                    return true
-                return arrayStringSchema
-                    .parse(filterValue)
-                    .some((tag) =>
-                        arrayStringSchema
-                            .parse(row.getValue(columnId))
-                            .includes(tag),
-                    )
+            includesSomeInArray: (row, columnId, filterValue: string[]) => {
+                if (filterValue.length === 0) return true
+                return filterValue.some((tag) =>
+                    arrayStringSchema
+                        .parse(row.getValue(columnId))
+                        .includes(tag),
+                )
             },
-            includesStringInArrAndShowWithEmptyFilter: (
+            includesSomeInObjectArray: (
                 row,
                 columnId,
-                filterValue,
+                filterValue: string[],
             ) => {
-                if (arrayStringSchema.parse(filterValue).length === 0)
-                    return true
-                return arrayStringSchema
-                    .parse(filterValue)
-                    .includes(String(row.getValue(columnId)))
+                debugger
+                if (filterValue.length === 0) return true
+                return filterValue.some((item) =>
+                    z
+                        .array(
+                            z.object({
+                                id: z.string().optional(),
+                                value: z.string().optional(),
+                            }),
+                        )
+                        .parse(row.getValue(columnId))
+                        .some(({ id, value }) => id === item || value === item),
+                )
+            },
+            includesSomeInObject: (row, columnId, filterValue: string[]) => {
+                debugger
+                if (filterValue.length === 0) return true
+                return filterValue.some((item) => {
+                    const value = z
+                        .object({
+                            id: z.string().optional(),
+                            value: z.string().optional(),
+                        })
+                        .parse(row.getValue(columnId))
+                    return value.id === item || value.value === item
+                })
+            },
+            includesValueInArray: (row, columnId, filterValue: string[]) => {
+                if (filterValue.length === 0) return true
+                return filterValue.includes(String(row.getValue(columnId)))
             },
         },
         getRowId: (row: Entity) => row.id,

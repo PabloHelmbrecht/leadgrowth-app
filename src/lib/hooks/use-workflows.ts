@@ -53,11 +53,8 @@ export interface Edge extends EdgePrimitive {
 
 export type Workflow = TablesUpdate<"workflows"> & {
     id: string
-    tags?: Omit<Tables<"tags">, "team_id" | "created_at" | "updated_at">[]
-    owner?: Omit<
-        Tables<"profiles">,
-        "team_id" | "created_at" | "updated_at"
-    > | null
+    tags?: Tables<"tags">[]
+    owner?: Tables<"profiles"> | null
     metrics?: Tables<"workflows_metrics">
     flow?: {
         nodes: Node[]
@@ -128,9 +125,9 @@ export function useWorkflows({
                 .select(
                     `
                     *,
-                    owner:owner_id(id, first_name, last_name, email),
-                    tags:tags(id, value, label, color),
-                    metrics:workflows_metrics(total, active, paused, unsubscribed, bounced, spam, finished),
+                    owner:owner_id(*),
+                    tags:tags(*),
+                    metrics:workflows_metrics(*),
                     flow:workflows_flows(flow)
                 `,
                 )

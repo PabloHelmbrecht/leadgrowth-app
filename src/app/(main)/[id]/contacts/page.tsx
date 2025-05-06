@@ -1,5 +1,8 @@
 "use client"
 
+//React
+import { useMemo } from "react"
+
 //Data Table
 import { columns } from "./columns"
 
@@ -15,15 +18,11 @@ import { DataTable } from "~/components/layout/table/data-table"
 import { ClearFilterActionButton } from "~/components/layout/table/actions/clean-filters"
 import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 
+//Consts
+import { flowActions } from "~/lib/constants/flow-actions"
+import { contactStatus } from "~/lib/constants/status"
+
 //Atoms & Jotai
-import { useAtom } from "jotai"
-import {
-    stagesMockDataAtom,
-    statusMockDataAtom,
-    companiesMockDataAtom,
-    contactsMockDataAtom as dataAtom,
-} from "~/lib/stores/mockData/contact"
-import { stepsMockDataAtom } from "~/lib/stores/mockData/system"
 import {
     IsAllRowsSelectedAtom,
     columnFiltersAtom,
@@ -32,12 +31,49 @@ import {
     tableAtom,
 } from "~/lib/stores/contact-table"
 
+//NextJs
+import { useParams } from "next/navigation"
+
+//Hooks
+import { useContacts } from "~/lib/hooks/use-contacts"
+import { useCompanies } from "~/lib/hooks/use-companies"
+import { useContactStages } from "~/lib/hooks/use-contacts-stages"
+
 export default function ContactsTable() {
+    const { id: workflowId } = useParams<{ id: string }>()
+
+    const { data, isLoading, isError } = useContacts({
+        workflowId,
+    })
+
+    const { data: companies } = useCompanies({})
+    const { data: stagesOptions } = useContactStages({})
+
+    const companiesOptions = useMemo(
+        () =>
+            companies?.map((company) => ({
+                label: company.name ?? "",
+                value: company.id,
+            })) ?? [],
+        [companies],
+    )
+
+    const stepsOptions = useMemo(
+        () =>
+            flowActions.map((step) => ({
+                label: step.name ?? "",
+                value: step.type,
+            })) ?? [],
+        [],
+    )
+
     return (
         <tableContext.Provider
             value={
                 {
-                    dataAtom,
+                    data,
+                    isLoading,
+                    isError,
                     IsAllRowsSelectedAtom,
                     columnFiltersAtom,
                     rowSelectionAtom,
@@ -51,22 +87,22 @@ export default function ContactsTable() {
                     <div className="flex gap-6">
                         <SelectAllCheckbox />
                         <TableFilter
-                            options={useAtom(companiesMockDataAtom)[0]}
+                            options={companiesOptions}
                             filterName="company"
                             columnName="Companies"
                         />
                         <TableFilter
-                            options={useAtom(stagesMockDataAtom)[0]}
+                            options={stagesOptions ?? []}
                             filterName="stage"
                             columnName="Stages"
                         />
                         <TableFilter
-                            options={useAtom(stepsMockDataAtom)[0]}
+                            options={stepsOptions}
                             filterName="step"
                             columnName="Steps"
                         />
                         <TableFilter
-                            options={useAtom(statusMockDataAtom)[0]}
+                            options={contactStatus}
                             filterName="status"
                             columnName="Status"
                         />

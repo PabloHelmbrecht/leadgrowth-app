@@ -65,7 +65,7 @@ export function TeamSwitcher() {
                                 </div>
                                 <CaretUpDown
                                     weight="bold"
-                                    className="ml-auto"
+                                    className="ml-auto data-[state=open]:hidden"
                                 />
                             </SidebarMenuButton>
                         )}
@@ -79,7 +79,7 @@ export function TeamSwitcher() {
                         <DropdownMenuLabel className="text-xs text-slate-500 dark:text-slate-400">
                             Teams
                         </DropdownMenuLabel>
-                        {teams?.map((team: Team, index: number) => (
+                        {teams?.map((team: Team) => (
                             <DropdownMenuItem
                                 key={team.id}
                                 onClick={() => switchTeam(team.id)}

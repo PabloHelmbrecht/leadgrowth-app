@@ -42,8 +42,6 @@ export type flowAction = {
     textColor: string
 }
 
-colors.success[100]
-
 export const flowActions: flowAction[] = [
     {
         block: "emails",

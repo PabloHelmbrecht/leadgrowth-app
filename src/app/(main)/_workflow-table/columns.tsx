@@ -22,6 +22,7 @@ import { WorkflowNameColumn } from "./table-columns/name-column"
 import { TagColumn } from "./table-columns/tag-column"
 import { SettingsColumn } from "~/components/layout/table/columns/settings-column"
 import { KPIColumn } from "~/components/layout/table/columns/kpi-column"
+import { AvatarColumn } from "~/components/layout/table/columns/avatar-column"
 
 export const columns: ColumnDef<Workflow>[] = [
     {
@@ -183,15 +184,21 @@ export const columns: ColumnDef<Workflow>[] = [
         ),
     },
     {
+        accessorKey: "owner",
+        cell: (cellContext: CellContext<Workflow, unknown>) => (
+            <AvatarColumn profile={cellContext.row.original.owner} />
+        ),
+    },
+    {
         accessorKey: "status",
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
         cell: (cellContext: CellContext<Workflow, unknown>) => (
             <StatusColumn {...cellContext} />
         ),
     },
     {
-        accessorKey: "tag",
-        filterFn: "arrIncludesSomeAndShowWithEmptyFilter" as "auto",
+        accessorKey: "tags",
+        filterFn: "includesSomeInObjectArray" as "auto",
         cell: (cellContext: CellContext<Workflow, unknown>) => (
             <TagColumn {...cellContext} />
         ),
@@ -222,9 +229,9 @@ export const columns: ColumnDef<Workflow>[] = [
         ),
     },
     {
-        accessorKey: "owner",
+        accessorKey: "owner_id",
         enableHiding: false,
-        filterFn: "includesStringInArrAndShowWithEmptyFilter" as "auto",
+        filterFn: "includesValueInArray" as "auto",
     },
     {
         accessorKey: "totalCount",
