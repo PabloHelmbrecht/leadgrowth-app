@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.39](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.38...v0.1.39) (2025-05-07)
+
+
+### Features
+
+* refactor workflow actions and enhance UI components ([dc568cf](https://github.com/PabloHelmbrecht/leadgrowth-app/commit/dc568cf1dd5c9382373f9f749816a5b7c3c15df3))
+
 ### [0.1.38](https://github.com/PabloHelmbrecht/leadgrowth-app/compare/v0.1.37...v0.1.38) (2025-05-06)
 
 
