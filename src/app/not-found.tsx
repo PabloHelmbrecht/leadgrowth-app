@@ -2,6 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "~/components/ui/button"
 
+//Styles
+import "~/styles/globals.css"
+import "~/styles/react-flow-styles.css"
+
 export default function NotFound() {
     return (
         <div className="flex h-full w-full flex-col items-center justify-center gap-8">

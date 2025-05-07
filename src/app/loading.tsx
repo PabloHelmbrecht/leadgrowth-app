@@ -1,5 +1,9 @@
 import { CircleNotch } from "@phosphor-icons/react/dist/ssr"
 
+//Styles
+import "~/styles/globals.css"
+import "~/styles/react-flow-styles.css"
+
 export default function Loading() {
     return (
         <div className="flex h-screen w-screen flex-row items-center justify-center gap-2">

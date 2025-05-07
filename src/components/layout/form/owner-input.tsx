@@ -51,7 +51,7 @@ export function OwnerInput({
     const [open, setOpen] = useState<boolean>(false)
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover open={open} onOpenChange={setOpen} modal={true}>
             <PopoverTrigger asChild>
                 <FormControl>
                     <Button
@@ -77,11 +77,11 @@ export function OwnerInput({
                     </Button>
                 </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-72 p-0">
+            <PopoverContent className="w-72 p-0 ">
                 <Command>
                     <CommandInput
                         placeholder="Search owner..."
-                        className="h-9"
+                        className="h-9 "
                     />
                     <CommandList>
                         <CommandEmpty>No owner found.</CommandEmpty>

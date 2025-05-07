@@ -7,10 +7,10 @@ import { Button } from "~/components/ui/button"
 import { TriggerAndBreadcrumb } from "~/components/layout/nav-sidebar/trigger-breadcrumb"
 import { Separator } from "~/components/ui/separator"
 //Filters & Actions
-import { TagActionButton } from "./_workflow_actions/tag-actionbutton"
-import { OwnerActionButton } from "./_workflow_actions/owner-actionbutton"
-import { ArchiveActionButton } from "./_workflow_actions/archive-actionbutton"
-import { AddWorkflow } from "./_workflow_actions/addworkflow-actionbutton"
+import { TagActionButton } from "./_workflow/actions/tag-actionbutton"
+import { OwnerActionButton } from "./_workflow/actions/owner-actionbutton"
+import { ArchiveActionButton } from "./_workflow/actions/archive-actionbutton"
+import { AddWorkflow } from "./_workflow/actions/addworkflow-actionbutton"
 import { TableFilter } from "~/components/layout/table/table-filter"
 import { ClearFilterActionButton } from "~/components/layout/table/actions/clean-filters"
 import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
@@ -18,7 +18,7 @@ import { SelectAllCheckbox } from "~/components/layout/table/actions/select-all"
 //Data Table
 //import { DataTable } from "./_workflow-table/data-table"
 import { DataTable } from "~/components/layout/table/data-table"
-import { columns } from "./_workflow-table/columns"
+import { columns } from "./_workflow/table/columns"
 import {
     type TableContext,
     tableContext,

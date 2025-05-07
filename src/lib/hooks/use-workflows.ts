@@ -872,7 +872,7 @@ export function useWorkflows({
             const newWorkflow = {
                 ...restOriginal,
                 ...fields,
-                name: (fields.name ?? original.name) + " (Copia)",
+                name: fields.name ?? original.name + " (Copy)",
                 status: "active" as const,
                 team_id: original.team_id,
                 creator_id,

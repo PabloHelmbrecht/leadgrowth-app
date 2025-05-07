@@ -50,7 +50,7 @@ export function CloneWorkflowAction({ row }: CellContext<Workflow, unknown>) {
     const form = useForm<z.infer<typeof cloneWorkflowFormSquema>>({
         resolver: zodResolver(cloneWorkflowFormSquema),
         defaultValues: {
-            name: `${row.original.name} - Copy`,
+            name: `${row.original.name} (Copy)`,
             tags: row.original.tags?.map((tag) => tag.id ?? undefined) ?? [],
             owner_id: row.original.owner?.id ?? "",
         },

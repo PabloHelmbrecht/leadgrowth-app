@@ -46,8 +46,6 @@ export default async function RootLayout({
                             {children}
 
                             <Toaster />
-                            <div id="portal-root"></div>
-
                             <ReactQueryDevtools initialIsOpen={false} />
                         </TooltipProvider>
                     </NextIntlClientProvider>

@@ -45,7 +45,7 @@ export function TeamSwitcher() {
                                 size="lg"
                                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground  "
                             >
-                                <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <Image
                                         src={supabaseLoader({
                                             storage: "team-logo",
@@ -65,7 +65,7 @@ export function TeamSwitcher() {
                                 </div>
                                 <CaretUpDown
                                     weight="bold"
-                                    className="ml-auto data-[state=open]:hidden"
+                                    className="ml-auto"
                                 />
                             </SidebarMenuButton>
                         )}

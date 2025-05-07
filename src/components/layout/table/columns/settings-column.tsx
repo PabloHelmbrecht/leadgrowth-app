@@ -4,6 +4,9 @@ import Link from "next/link"
 //Tanstack Table
 import { type CellContext } from "@tanstack/react-table"
 
+//React
+import { useState } from "react"
+
 //UI
 import { Button } from "~/components/ui/button"
 import {
@@ -30,11 +33,16 @@ export function SettingsColumn<Entity>({
         href?: string
     }[]
 } & CellContext<Entity, unknown>) {
+    const [open, setOpen] = useState(false)
     return (
         <MultiDialogProvider>
             {({ Trigger, Container }) => (
                 <>
-                    <DropdownMenu key={"dropdown-menu"}>
+                    <DropdownMenu
+                        key={"dropdown-menu"}
+                        open={open}
+                        onOpenChange={setOpen}
+                    >
                         <DropdownMenuTrigger asChild>
                             <Button
                                 variant="secondary"
@@ -51,7 +59,13 @@ export function SettingsColumn<Entity>({
 
                                 if (type === "link") {
                                     return (
-                                        <DropdownMenuItem key={index}>
+                                        <DropdownMenuItem
+                                            key={index}
+                                            onSelect={(e) => {
+                                                e.preventDefault()
+                                                setOpen(false)
+                                            }}
+                                        >
                                             <Link href={href ?? ""}>Edit</Link>
                                         </DropdownMenuItem>
                                     )
@@ -63,7 +77,12 @@ export function SettingsColumn<Entity>({
                                         key={index}
                                         variant={type}
                                     >
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            onSelect={(e) => {
+                                                e.preventDefault()
+                                                setOpen(false)
+                                            }}
+                                        >
                                             <button>{name}</button>
                                         </DropdownMenuItem>
                                     </Trigger>
