@@ -30,12 +30,14 @@ export function NavMain({
             <SidebarGroupLabel>{label}</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
-                    <SidebarMenuItem key={item.title}>
+                    <Link href={item.url} key={item.title}>
+                    <SidebarMenuItem >
                         <SidebarMenuButton tooltip={item.title}>
                             {item.icon && <item.icon weight="bold" />}
-                            <Link href={item.url}>{item.title}</Link>
+                            {item.title}
                         </SidebarMenuButton>
                     </SidebarMenuItem>
+                    </Link>
                 ))}
             </SidebarMenu>
         </SidebarGroup>

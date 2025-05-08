@@ -107,17 +107,23 @@ export const columns: ColumnDef<Contact>[] = [
 
             const stepType = mostRecentAction?.nodes?.type
 
+            const flowAction = flowActions.find(
+                (action) => action.type === stepType,
+            )
+
             return (
                 <BadgeColumn
                     {...cellContext}
                     className="bg-slate-500 text-white"
                     label={
                         stepType
-                            ? flowActions.find(
-                                  (action) => action.type === stepType,
-                              )?.name
+                            ? flowAction?.name
                             : "No step"
                     }
+                    style={{
+                        backgroundColor: flowAction?.bgColor,
+                        color: flowAction?.textColor,
+                    }}
                 />
             )
         },

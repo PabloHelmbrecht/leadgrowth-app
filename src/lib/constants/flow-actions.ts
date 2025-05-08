@@ -50,7 +50,7 @@ export const flowActions: flowAction[] = [
         name: "Automatic Email",
         type: "automaticEmail",
         bgColor: colors.success[100],
-        textColor: colors.success[600],
+        textColor: colors.success[800],
         generatesTask: false,
     },
     {
@@ -59,7 +59,7 @@ export const flowActions: flowAction[] = [
         name: "Manual Email",
         type: "manualEmail",
         bgColor: colors.success[100],
-        textColor: colors.success[600],
+        textColor: colors.success[800],
         generatesTask: true,
     },
     {
@@ -69,7 +69,7 @@ export const flowActions: flowAction[] = [
         queryValue: "Linkedin Connection Request",
         type: "linkedinConnection",
         bgColor: colors.primary[100],
-        textColor: colors.primary[600],
+        textColor: colors.primary[800],
         generatesTask: true,
     },
     {
@@ -78,7 +78,7 @@ export const flowActions: flowAction[] = [
         name: "Linkedin Message",
         type: "linkedinMessage",
         bgColor: colors.primary[100],
-        textColor: colors.primary[600],
+        textColor: colors.primary[800],
         generatesTask: true,
     },
     {
@@ -88,7 +88,7 @@ export const flowActions: flowAction[] = [
         queryValue: "View Linkedin Profile",
         type: "linkedinViewProfile",
         bgColor: colors.primary[100],
-        textColor: colors.primary[600],
+        textColor: colors.primary[800],
         generatesTask: true,
     },
     {
@@ -98,7 +98,7 @@ export const flowActions: flowAction[] = [
         queryValue: "Interact With Linkedin Post",
         type: "linkedinPostInteraction",
         bgColor: colors.primary[100],
-        textColor: colors.primary[600],
+        textColor: colors.primary[800],
         generatesTask: true,
     },
     {
@@ -107,7 +107,7 @@ export const flowActions: flowAction[] = [
         name: "Phone Call",
         type: "phoneCall",
         bgColor: colors.purple[100],
-        textColor: colors.purple[600],
+        textColor: colors.purple[800],
         generatesTask: true,
     },
     {
@@ -116,7 +116,7 @@ export const flowActions: flowAction[] = [
         name: "Manual Task",
         type: "manualTask",
         bgColor: colors.amber[100],
-        textColor: colors.amber[600],
+        textColor: colors.amber[800],
         generatesTask: true,
     },
     {
@@ -125,7 +125,7 @@ export const flowActions: flowAction[] = [
         name: "Testing A/B",
         type: "testingAB",
         bgColor: colors.slate[100],
-        textColor: colors.slate[600],
+        textColor: colors.slate[800],
         generatesTask: false,
     },
     {
@@ -134,7 +134,7 @@ export const flowActions: flowAction[] = [
         name: "Conditional",
         type: "conditional",
         bgColor: colors.slate[100],
-        textColor: colors.slate[600],
+        textColor: colors.slate[800],
         generatesTask: false,
     },
     {
@@ -143,7 +143,7 @@ export const flowActions: flowAction[] = [
         name: "Splitter",
         type: "splitter",
         bgColor: colors.slate[100],
-        textColor: colors.slate[600],
+        textColor: colors.slate[800],
         generatesTask: false,
     },
     {
@@ -152,7 +152,7 @@ export const flowActions: flowAction[] = [
         name: "Internal Email",
         type: "internalEmail",
         bgColor: colors.rose[100],
-        textColor: colors.rose[600],
+        textColor: colors.rose[800],
         generatesTask: false,
     },
     {
@@ -161,7 +161,7 @@ export const flowActions: flowAction[] = [
         name: "Update Field",
         type: "updateField",
         bgColor: colors.rose[100],
-        textColor: colors.rose[600],
+        textColor: colors.rose[800],
         generatesTask: false,
     },
     {
@@ -170,7 +170,7 @@ export const flowActions: flowAction[] = [
         name: "App Notification",
         type: "appNotification",
         bgColor: colors.rose[100],
-        textColor: colors.rose[600],
+        textColor: colors.rose[800],
         generatesTask: false,
     },
     {
@@ -179,7 +179,7 @@ export const flowActions: flowAction[] = [
         name: "Manage Workflows",
         type: "manageWorkflows",
         bgColor: colors.rose[100],
-        textColor: colors.rose[600],
+        textColor: colors.rose[800],
         generatesTask: false,
     },
 ]
