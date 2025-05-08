@@ -7,7 +7,7 @@ import type { TablesUpdate, Tables } from "../supabase/database.types"
 import { contactStageType } from "../constants/status"
 
 //Colors
-import colors from "tailwindcss/colors"
+import { slate } from "tailwindcss/colors"
 
 const client = createClient()
 
@@ -52,7 +52,7 @@ export function useContactStages({
     const queryKey = teamId ? getContactStagesQueryKey({ teamId }) : []
 
     // Query principal: todos los contactos o uno específico
-    const { data, ...rest } = useQuery<ContactStage[] | null>({
+    const { data, ...rest } = useQuery<ContactStage[]>({
         queryKey,
         queryFn: async () => {
             if (!teamId) throw new Error("Falta teamId para consultar stages.")
@@ -65,7 +65,7 @@ export function useContactStages({
             const dataParsed = data?.map((stage) => {
                 return {
                     ...stage,
-                    color: contactStageType[stage.type] ?? colors.slate[500],
+                    color: contactStageType[stage.type] ?? slate[500],
                 }
             })
             if (error) throw error

@@ -1,5 +1,4 @@
-import colors from "tailwindcss/colors"
-const slate = colors.slate
+import { slate } from "tailwindcss/colors"
 
 //Types
 type hsb = { hue: number; saturation: number; brightness: number }

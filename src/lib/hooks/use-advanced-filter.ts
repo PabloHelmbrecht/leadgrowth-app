@@ -1,9 +1,8 @@
-//Zod
-import { z } from "zod"
-
-//Entities Schemas
-import { contactSchema } from "../stores/mockData/contact"
-import { workflowSchema } from "../stores/mockData/workflow"
+//Zod & Types
+import type {
+    supportedEntityTypes,
+    supportedInputTypes,
+} from "../schemas/advanced-filter"
 
 //Constants
 import {
@@ -11,50 +10,68 @@ import {
     supportedCompanyFields,
     supportedWorkflowFields,
 } from "../constants/fields"
-import { supportedOperators } from "../constants/operators"
-import type { supportedEntityTypes } from "../constants/schemas"
+import { supportedOperators } from "../schemas/operators"
 
-//Utils
-import { getZodType } from "../utils/zod-utils"
-import { useCallback, useMemo } from "react"
+import { useCallback } from "react"
+
+// Mapas de tipos de campo para cada entidad
+const contactFieldTypes: Record<string, supportedInputTypes> = {
+    first_name: "string",
+    last_name: "string",
+    email: "string",
+    phone: "string",
+    company: "string", // Podría ser un objeto, pero para filtro es string (nombre o id)
+    stage: "string", // Id o nombre de stage
+    created_at: "date",
+}
+
+const companyFieldTypes: Record<string, supportedInputTypes> = {
+    name: "string",
+    status: "string",
+}
+
+const workflowFieldTypes: Record<string, supportedInputTypes> = {
+    name: "string",
+    status: "string",
+}
+
+const entityFieldTypes: Record<
+    supportedEntityTypes,
+    Record<string, supportedInputTypes>
+> = {
+    contact: contactFieldTypes,
+    company: companyFieldTypes,
+    workflow: workflowFieldTypes,
+}
+
+const entityFields: Record<
+    supportedEntityTypes,
+    { label: string; value: string }[]
+> = {
+    contact: supportedContactFields,
+    company: supportedCompanyFields,
+    workflow: supportedWorkflowFields,
+}
 
 export function useAdvancedFilter(entityType: supportedEntityTypes) {
-    const entities = useMemo(
-        () => ({
-            contact: {
-                schema: contactSchema,
-                fields: supportedContactFields,
-            },
-            company: {
-                schema: z.object({}),
-                fields: supportedCompanyFields,
-            },
-            workflow: {
-                schema: workflowSchema,
-                fields: supportedWorkflowFields,
-            },
-        }),
-        [],
-    )
+    // Devuelve los campos soportados para la entidad
+    const getFields = useCallback(() => entityFields[entityType], [entityType])
 
-    const entity = useMemo(() => entities[entityType], [entities, entityType])
-
-    const getFields = useCallback(() => entity.fields, [entity.fields])
-
+    // Devuelve el tipo de campo (string, number, date, etc) para un campo dado
     const getFieldType = useCallback(
-        (field: keyof typeof entity.schema.shape) => {
-            const fieldType = getZodType(entity.schema.shape[field])
-            return fieldType
+        (field: string): supportedInputTypes => {
+            return entityFieldTypes[entityType][field] ?? "unknown"
         },
-        [entity],
+        [entityType],
     )
 
+    // Devuelve los operadores soportados para el tipo de campo
     const getOperators = useCallback(
-        (field: keyof typeof entity.schema.shape) => {
+        (field: string) => {
             const fieldType = getFieldType(field)
             return supportedOperators[fieldType]
         },
-        [entity, getFieldType],
+        [getFieldType],
     )
 
     return {

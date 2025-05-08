@@ -40,6 +40,7 @@ export type flowAction = {
     queryValue?: string
     bgColor: string
     textColor: string
+    generatesTask: boolean
 }
 
 export const flowActions: flowAction[] = [
@@ -50,6 +51,7 @@ export const flowActions: flowAction[] = [
         type: "automaticEmail",
         bgColor: colors.success[100],
         textColor: colors.success[600],
+        generatesTask: false,
     },
     {
         block: "emails",
@@ -58,6 +60,7 @@ export const flowActions: flowAction[] = [
         type: "manualEmail",
         bgColor: colors.success[100],
         textColor: colors.success[600],
+        generatesTask: true,
     },
     {
         block: "linkedin",
@@ -67,6 +70,7 @@ export const flowActions: flowAction[] = [
         type: "linkedinConnection",
         bgColor: colors.primary[100],
         textColor: colors.primary[600],
+        generatesTask: true,
     },
     {
         block: "linkedin",
@@ -75,6 +79,7 @@ export const flowActions: flowAction[] = [
         type: "linkedinMessage",
         bgColor: colors.primary[100],
         textColor: colors.primary[600],
+        generatesTask: true,
     },
     {
         block: "linkedin",
@@ -84,6 +89,7 @@ export const flowActions: flowAction[] = [
         type: "linkedinViewProfile",
         bgColor: colors.primary[100],
         textColor: colors.primary[600],
+        generatesTask: true,
     },
     {
         block: "linkedin",
@@ -93,6 +99,7 @@ export const flowActions: flowAction[] = [
         type: "linkedinPostInteraction",
         bgColor: colors.primary[100],
         textColor: colors.primary[600],
+        generatesTask: true,
     },
     {
         block: "calls",
@@ -101,6 +108,7 @@ export const flowActions: flowAction[] = [
         type: "phoneCall",
         bgColor: colors.purple[100],
         textColor: colors.purple[600],
+        generatesTask: true,
     },
     {
         block: "tasks",
@@ -109,6 +117,7 @@ export const flowActions: flowAction[] = [
         type: "manualTask",
         bgColor: colors.amber[100],
         textColor: colors.amber[600],
+        generatesTask: true,
     },
     {
         block: "flow control",
@@ -117,6 +126,7 @@ export const flowActions: flowAction[] = [
         type: "testingAB",
         bgColor: colors.slate[100],
         textColor: colors.slate[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -125,6 +135,7 @@ export const flowActions: flowAction[] = [
         type: "conditional",
         bgColor: colors.slate[100],
         textColor: colors.slate[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -133,6 +144,7 @@ export const flowActions: flowAction[] = [
         type: "splitter",
         bgColor: colors.slate[100],
         textColor: colors.slate[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -141,6 +153,7 @@ export const flowActions: flowAction[] = [
         type: "internalEmail",
         bgColor: colors.rose[100],
         textColor: colors.rose[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -149,6 +162,7 @@ export const flowActions: flowAction[] = [
         type: "updateField",
         bgColor: colors.rose[100],
         textColor: colors.rose[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -157,6 +171,7 @@ export const flowActions: flowAction[] = [
         type: "appNotification",
         bgColor: colors.rose[100],
         textColor: colors.rose[600],
+        generatesTask: false,
     },
     {
         block: "flow control",
@@ -165,6 +180,7 @@ export const flowActions: flowAction[] = [
         type: "manageWorkflows",
         bgColor: colors.rose[100],
         textColor: colors.rose[600],
+        generatesTask: false,
     },
 ]
 

@@ -123,7 +123,15 @@ export function TableFilter({
                 </Button>
             </PopoverTrigger>
             <PopoverContent className=" w-72 p-0">
-                <Command>
+                <Command
+                    filter={(value, search, keywords) => {
+                        const extendValue =
+                            keywords?.map((x) => x.toLowerCase())?.join(" ") ??
+                            value
+                        if (extendValue.includes(search)) return 1
+                        return 0
+                    }}
+                >
                     <CommandInput
                         placeholder={`Search ${columnName.toLowerCase()}...`}
                     />
@@ -196,6 +204,7 @@ export function TableFilter({
                                     <CommandItem
                                         key={filterOption.value}
                                         value={filterOption.value}
+                                        keywords={[filterOption.label]}
                                         onSelect={(currentValue) => {
                                             if (
                                                 !columnFilters.includes(

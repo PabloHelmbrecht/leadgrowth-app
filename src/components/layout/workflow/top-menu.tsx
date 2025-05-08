@@ -21,21 +21,16 @@ import {
     Gear,
 } from "@phosphor-icons/react/dist/ssr"
 
-//Zod & Schemas
-import { z } from "zod"
-import { workflowSchema } from "~/lib/stores/mockData/workflow"
 const actionButtons = [
     { icon: PaperPlaneRight, name: "Flow", subPath: "/flow" },
     { icon: Users, name: "Contacts", subPath: "/contacts" },
     { icon: CheckSquare, name: "Tasks", subPath: "/tasks" },
     { icon: Newspaper, name: "Actions", subPath: "/actions" },
-    { icon: Gear, name: "Settings", subPath: "/settings" },
+    { icon: Gear, name: "Settings", subPath: "#" },
 ]
 
 export function TopMenu({ ...props }: React.HTMLAttributes<HTMLDivElement>) {
-    const paramSchema = z.object({ id: workflowSchema.shape.id })
-
-    const { id } = useParams<z.infer<typeof paramSchema>>()
+    const { id: workflowId } = useParams<{ id: string }>()
     const pathname = usePathname()
 
     return (
@@ -53,14 +48,14 @@ export function TopMenu({ ...props }: React.HTMLAttributes<HTMLDivElement>) {
                 <div className="flex gap-4">
                     {actionButtons.map((actionButton, key) => (
                         <Link
-                            href={`/${id}${actionButton.subPath}`}
+                            href={`/${workflowId}${actionButton.subPath}`}
                             key={key}
                             className="flex justify-center"
                         >
                             <Button
                                 variant={
                                     pathname.startsWith(
-                                        `/${id}${actionButton.subPath}`,
+                                        `/${workflowId}${actionButton.subPath}`,
                                     )
                                         ? "terciary"
                                         : "ghost"

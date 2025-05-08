@@ -918,10 +918,10 @@ export type Database = {
         }
         Enums: {
             action_status:
+                | "pending"
+                | "skipped"
                 | "scheduled"
                 | "completed"
-                | "skipped"
-                | "pending"
                 | "delayed"
                 | "error"
             contact_status:
@@ -1082,10 +1082,10 @@ export const Constants = {
     public: {
         Enums: {
             action_status: [
+                "pending",
+                "skipped",
                 "scheduled",
                 "completed",
-                "skipped",
-                "pending",
                 "delayed",
                 "error",
             ],

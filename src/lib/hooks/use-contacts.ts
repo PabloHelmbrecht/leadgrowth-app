@@ -68,7 +68,7 @@ export function useContacts({
     const queryKey = teamId ? getContactsQueryKey({ teamId, contactId }) : []
 
     // Query principal: todos los contactos o uno específico
-    const { data, ...rest } = useQuery<Contact[] | Contact | null>({
+    const { data, ...rest } = useQuery<Contact[]>({
         queryKey,
         queryFn: async () => {
             if (!teamId)
@@ -118,7 +118,6 @@ export function useContacts({
                 }
             })
             if (error) throw error
-            if (contactId) return dataParsed ?? null
             return dataParsed ?? []
         },
         enabled,

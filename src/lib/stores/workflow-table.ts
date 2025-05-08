@@ -2,7 +2,7 @@ import { atom } from "jotai"
 
 //Types
 import type { Table, ColumnFiltersState } from "@tanstack/react-table"
-import type { Workflow } from "./mockData/workflow"
+import type { Workflow } from "~/lib/hooks/use-workflows"
 
 //Atoms
 export const tableAtom = atom<Table<Workflow> | null>(null)

@@ -55,7 +55,7 @@ export function useCompanies({
     const queryKey = teamId ? getCompaniesQueryKey({ teamId, companyId }) : []
 
     // Query principal: todos los contactos o uno específico
-    const { data, ...rest } = useQuery<Company[] | null>({
+    const { data, ...rest } = useQuery<Company[]>({
         queryKey,
         queryFn: async () => {
             if (!teamId)
@@ -90,7 +90,6 @@ export function useCompanies({
                 }
             })
             if (error) throw error
-            if (companyId) return dataParsed ?? null
             return dataParsed ?? []
         },
         enabled,

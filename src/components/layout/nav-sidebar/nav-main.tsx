@@ -2,6 +2,9 @@
 
 import { type Icon } from "@phosphor-icons/react"
 
+//Next
+import Link from "next/link"
+
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -30,7 +33,7 @@ export function NavMain({
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton tooltip={item.title}>
                             {item.icon && <item.icon weight="bold" />}
-                            <span>{item.title}</span>
+                            <Link href={item.url}>{item.title}</Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}

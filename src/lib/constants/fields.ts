@@ -1,5 +1,6 @@
-import type { Contact } from "../stores/mockData/contact"
-import type { Workflow } from "../stores/mockData/workflow"
+//Types
+import { type Contact } from "../hooks/use-contacts"
+import { type Workflow } from "../hooks/use-workflows"
 
 export type supportedContactFieldsType = {
     label: string
@@ -17,15 +18,13 @@ export type supportedWorkflowFieldsType = {
 }[]
 
 export const supportedContactFields: supportedContactFieldsType = [
-    { label: "First Name", value: "firstName" },
-    { label: "Last Name", value: "lastName" },
+    { label: "First Name", value: "first_name" },
+    { label: "Last Name", value: "last_name" },
     { label: "Email", value: "email" },
     { label: "Phone", value: "phone" },
     { label: "Company", value: "company" },
     { label: "Stage", value: "stage" },
-    { label: "Zip", value: "zip" },
-    { label: "Is Active", value: "isActive" },
-    { label: "Created At", value: "createdAt" },
+    { label: "Created At", value: "created_at" },
 ]
 
 export const supportedWorkflowFields: supportedWorkflowFieldsType = [

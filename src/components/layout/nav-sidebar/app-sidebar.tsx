@@ -25,13 +25,13 @@ const menuItems = [
         items: [
             {
                 title: "Companies",
-                url: "#",
+                url: "/companies",
                 icon: Buildings,
                 isActive: true,
             },
             {
                 title: "People",
-                url: "#",
+                url: "/people",
                 icon: Users,
             },
         ],
@@ -42,7 +42,7 @@ const menuItems = [
         items: [
             {
                 title: "Workflows",
-                url: "#",
+                url: "/",
                 icon: PaperPlaneTilt,
                 isActive: true,
             },

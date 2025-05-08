@@ -15,7 +15,10 @@ export interface Member extends Tables<"members"> {
     isCurrent: boolean
 }
 export type Profile = Tables<"profiles">
-export type MemberWithProfile = Member & { profile: Profile }
+export type MemberWithProfile = Member & {
+    profile: Profile
+    isCurrent: boolean
+}
 export type MemberUpdate = TablesUpdate<"members">
 export type MemberInsert = TablesInsert<"members">
 
@@ -52,7 +55,7 @@ export function useUsers({
     const queryKey = teamId ? getUsersQueryKey({ teamId, userId }) : []
 
     // Query: obtener miembros + perfil
-    const { data, ...rest } = useQuery({
+    const { data, ...rest } = useQuery<MemberWithProfile[]>({
         queryKey,
         queryFn: async () => {
             if (!teamId)
@@ -63,9 +66,7 @@ export function useUsers({
 
             let query = client
                 .from("members")
-                .select(
-                    `joined_at, role, status, user_id, profile:user_id(first_name, last_name, email, avatar_url)`,
-                ) // join con profiles
+                .select(`*, profile:user_id(*)`) // join con profiles
                 .eq("team_id", teamId)
             if (userId) query = query.eq("user_id", userId)
             const { data, error } = await query

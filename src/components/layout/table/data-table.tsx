@@ -65,7 +65,7 @@ export function DataTable<Entity extends { id: string }, TValue>({
     const filteredData =
         useMemo(
             () =>
-                filterData
+                filterData && data
                     ? (data as Entity[]).filter(filterData)
                     : (data as Entity[]),
             [data, filterData],

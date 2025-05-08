@@ -103,19 +103,20 @@ import { cn } from "~/lib/utils/classesMerge"
 import { useAdvancedFilter } from "~/lib/hooks/use-advanced-filter"
 import { useDynamicNumberParser } from "~/lib/hooks/use-dynamic-number-parser"
 
-//Zod & Schemas
+//Zod & Schemas & Types
 import { z } from "zod"
-import { durationSchema } from "~/lib/constants/schemas"
+import {
+    durationSchema,
+    type supportedEntityTypes,
+    type Duration,
+} from "~/lib/schemas/advanced-filter"
+
 import {
     conjunctionSchema,
     simpleFilterCriteriaDataSchema,
     groupFilterCriteriaDataSchema,
-} from "~/lib/stores/mockData/flow"
-
-//Types
-import type { supportedEntityTypes } from "~/lib/constants/schemas"
-import type { Duration } from "~/lib/constants/schemas"
-import type { conditionalOperatorsType } from "~/lib/constants/operators"
+} from "~/lib/schemas/advanced-filter"
+import type { conditionalOperatorsType } from "~/lib/schemas/operators"
 
 //Translation
 import { useFormatter } from "next-intl"
