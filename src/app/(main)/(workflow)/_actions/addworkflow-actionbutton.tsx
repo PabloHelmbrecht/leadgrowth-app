@@ -170,12 +170,11 @@ export function AddWorkflow() {
                                             <FormLabel className="pb-1">
                                                 Tags
                                             </FormLabel>
-
                                             <TagInput
                                                 field={field}
                                                 form={form}
+                                                nameKey="tags"
                                             />
-
                                             <FormDescription>
                                                 This are your workflow tags.
                                             </FormDescription>
@@ -191,12 +190,11 @@ export function AddWorkflow() {
                                             <FormLabel className="pb-1">
                                                 Owner
                                             </FormLabel>
-
                                             <OwnerInput
                                                 field={field}
                                                 form={form}
+                                                nameKey="owner_id"
                                             />
-
                                             <FormDescription>
                                                 This is the new workflow owner.
                                             </FormDescription>

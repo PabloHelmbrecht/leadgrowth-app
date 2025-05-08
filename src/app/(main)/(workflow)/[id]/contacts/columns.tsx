@@ -115,11 +115,7 @@ export const columns: ColumnDef<Contact>[] = [
                 <BadgeColumn
                     {...cellContext}
                     className="bg-slate-500 text-white"
-                    label={
-                        stepType
-                            ? flowAction?.name
-                            : "No step"
-                    }
+                    label={stepType ? flowAction?.name : "No step"}
                     style={{
                         backgroundColor: flowAction?.bgColor,
                         color: flowAction?.textColor,

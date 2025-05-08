@@ -59,8 +59,6 @@ export const useColumns = () => {
             header: field.label ?? field.id,
             filterFn: "includesValueInArray" as "auto",
             // cell: (cellContext: CellContext<Contact, unknown>) => {
-
-            //     r
             // },
         })) ?? []
 

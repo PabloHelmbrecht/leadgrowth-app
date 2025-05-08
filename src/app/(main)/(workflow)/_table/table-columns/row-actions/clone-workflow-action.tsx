@@ -150,9 +150,11 @@ export function CloneWorkflowAction({ row }: CellContext<Workflow, unknown>) {
                             render={({ field }) => (
                                 <FormItem className="flex flex-col gap-0 ">
                                     <FormLabel className="pb-1">Tags</FormLabel>
-
-                                    <TagInput field={field} form={form} />
-
+                                    <TagInput
+                                        field={field}
+                                        form={form}
+                                        nameKey="tags"
+                                    />
                                     <FormDescription>
                                         This are your cloned tags.
                                     </FormDescription>
@@ -168,9 +170,11 @@ export function CloneWorkflowAction({ row }: CellContext<Workflow, unknown>) {
                                     <FormLabel className="pb-1">
                                         Owner
                                     </FormLabel>
-
-                                    <OwnerInput field={field} form={form} />
-
+                                    <OwnerInput
+                                        field={field}
+                                        form={form}
+                                        nameKey="owner_id"
+                                    />
                                     <FormDescription>
                                         This is the cloned workflows owner.
                                     </FormDescription>

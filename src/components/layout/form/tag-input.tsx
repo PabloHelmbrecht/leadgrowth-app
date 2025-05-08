@@ -30,22 +30,25 @@ import { cn } from "~/lib/utils/classesMerge"
 import { useTags } from "~/lib/hooks/use-tags"
 
 //React Hook Form & Form Resolver
-import { type ControllerRenderProps, type UseFormReturn } from "react-hook-form"
+import {
+    type ControllerRenderProps,
+    type UseFormReturn,
+    type Path,
+    type PathValue,
+} from "react-hook-form"
 
-export function TagInput({
+export function TagInput<TForm extends Record<string, unknown>>({
     field,
     form,
+    nameKey,
 }: {
-    field: ControllerRenderProps<
-        { name: string; tags: string[]; owner_id: string },
-        "tags"
-    >
-    form: UseFormReturn<{ name: string; tags: string[]; owner_id: string }>
+    field: ControllerRenderProps<TForm, Path<TForm>>
+    form: UseFormReturn<TForm>
+    nameKey: Path<TForm>
 }) {
-    //Mock data
     const { data } = useTags({})
-
     const tags = data && Array.isArray(data) ? data : []
+    const value = Array.isArray(field.value) ? (field.value as string[]) : []
 
     return (
         <Popover>
@@ -56,20 +59,20 @@ export function TagInput({
                         role="combobox"
                         className={cn(
                             "flex h-11 max-w-full flex-wrap justify-start overflow-hidden ",
-                            !field.value && "text-muted-foreground",
+                            !value.length && "text-muted-foreground",
                         )}
                     >
                         <div className="flex h-full flex-1 flex-row flex-wrap gap-2 overflow-hidden">
-                            {field.value?.map((currentValue) => (
+                            {value.map((currentValue) => (
                                 <CommandTagSimple
                                     key={currentValue}
                                     className="flex items-center justify-start gap-2 "
                                     onClick={() =>
                                         form.setValue(
-                                            "tags",
-                                            field.value.filter(
+                                            nameKey,
+                                            value.filter(
                                                 (item) => item !== currentValue,
-                                            ),
+                                            ) as PathValue<TForm, Path<TForm>>,
                                         )
                                     }
                                 >
@@ -91,7 +94,7 @@ export function TagInput({
                                         />
                                     ) : (
                                         <div
-                                            className=" aspect-square w-2 rounded-full bg-slate-500"
+                                            className="aspect-square w-2 rounded-full bg-slate-500"
                                             style={{
                                                 backgroundColor:
                                                     tags.find(
@@ -110,31 +113,30 @@ export function TagInput({
                                 </CommandTagSimple>
                             ))}
                         </div>
-
                         <CaretDown
                             width={16}
                             height={16}
                             weight="bold"
                             className="aspect-square min-w-4 flex-initial"
-                            alt={"see all tags button"}
+                            alt="ver todos los tags"
                         />
                     </Button>
                 </FormControl>
             </PopoverTrigger>
-            <PopoverContent className=" w-72 p-0">
+            <PopoverContent className="w-72 p-0">
                 <Command>
-                    <CommandInput placeholder="Search tags..." />
-                    {field.value && field.value.length !== 0 && (
+                    <CommandInput placeholder="Buscar tag..." />
+                    {value.length !== 0 && (
                         <CommandTagsGroup>
-                            {field.value.map((currentValue) => (
+                            {value.map((currentValue) => (
                                 <CommandTag
                                     key={currentValue}
                                     onClick={() =>
                                         form.setValue(
-                                            "tags",
-                                            field.value.filter(
+                                            nameKey,
+                                            value.filter(
                                                 (item) => item !== currentValue,
-                                            ),
+                                            ) as PathValue<TForm, Path<TForm>>,
                                         )
                                     }
                                     className="flex items-center justify-start gap-2"
@@ -157,7 +159,7 @@ export function TagInput({
                                         />
                                     ) : (
                                         <div
-                                            className=" aspect-square w-2 rounded-full bg-slate-500"
+                                            className="aspect-square w-2 rounded-full bg-slate-500"
                                             style={{
                                                 backgroundColor:
                                                     tags.find(
@@ -178,40 +180,39 @@ export function TagInput({
                         </CommandTagsGroup>
                     )}
                     <CommandList>
-                        <CommandEmpty>No tags found.</CommandEmpty>
-
+                        <CommandEmpty>No se encontraron tags.</CommandEmpty>
                         <CommandGroup>
                             {tags
                                 .filter(
                                     (tag) =>
-                                        tag.value &&
-                                        !field.value?.includes(tag.value),
+                                        tag.value && !value.includes(tag.id),
                                 )
                                 .map((tag) => (
                                     <CommandItem
                                         key={tag.value}
                                         value={tag.id}
                                         onSelect={(currentValue) => {
-                                            if (
-                                                !field.value?.includes(
-                                                    currentValue,
-                                                )
-                                            ) {
-                                                field.value &&
-                                                    form.setValue("tags", [
-                                                        ...new Set([
-                                                            ...field.value,
-                                                            currentValue,
-                                                        ]),
-                                                    ])
+                                            if (!value.includes(currentValue)) {
+                                                form.setValue(nameKey, [
+                                                    ...new Set([
+                                                        ...value,
+                                                        currentValue,
+                                                    ]),
+                                                ] as PathValue<
+                                                    TForm,
+                                                    Path<TForm>
+                                                >)
                                             } else {
                                                 form.setValue(
-                                                    "tags",
-                                                    field.value?.filter(
+                                                    nameKey,
+                                                    value.filter(
                                                         (item) =>
                                                             item !==
                                                             currentValue,
-                                                    ),
+                                                    ) as PathValue<
+                                                        TForm,
+                                                        Path<TForm>
+                                                    >,
                                                 )
                                             }
                                         }}
@@ -233,7 +234,7 @@ export function TagInput({
                                             />
                                         ) : (
                                             <div
-                                                className=" aspect-square w-2 rounded-full bg-slate-500"
+                                                className="aspect-square w-2 rounded-full bg-slate-500"
                                                 style={{
                                                     backgroundColor:
                                                         tags.find(

@@ -27,31 +27,31 @@ import { cn } from "~/lib/utils/classesMerge"
 import { useUsers } from "~/lib/hooks/use-users"
 
 //React Hook Form & Form Resolver
-import { type ControllerRenderProps, type UseFormReturn } from "react-hook-form"
+import {
+    type ControllerRenderProps,
+    type UseFormReturn,
+    type Path,
+    type PathValue,
+} from "react-hook-form"
 
 //React
 import { useState } from "react"
 
-export function OwnerInput({
+export function OwnerInput<TForm extends Record<string, unknown>>({
     field,
     form,
+    nameKey,
 }: {
-    field: ControllerRenderProps<
-        { name: string; tags: string[]; owner_id: string },
-        "owner_id"
-    >
-    form: UseFormReturn<{ name: string; tags: string[]; owner_id: string }>
+    field: ControllerRenderProps<TForm, Path<TForm>>
+    form: UseFormReturn<TForm>
+    nameKey: Path<TForm>
 }) {
-    //Mock data
-
     const { data: users } = useUsers({})
-
     const owner = users?.find((user) => user.user_id === field.value)
-
-    const [open, setOpen] = useState<boolean>(false)
+    const [open, setOpen] = useState(false)
 
     return (
-        <Popover open={open} onOpenChange={setOpen} modal={true}>
+        <Popover open={open} onOpenChange={setOpen} modal>
             <PopoverTrigger asChild>
                 <FormControl>
                     <Button
@@ -65,41 +65,47 @@ export function OwnerInput({
                         <div className="flex flex-1 items-center justify-start font-normal">
                             {owner
                                 ? `${owner.profile.first_name} ${owner.profile.last_name}`
-                                : "Select owner"}
+                                : "Selecciona un responsable"}
                         </div>
                         <CaretDown
                             width={16}
                             height={16}
                             weight="bold"
                             className="aspect-square min-w-4 flex-initial"
-                            alt={"see all button"}
+                            alt="ver todos"
                         />
                     </Button>
                 </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-72 p-0 ">
+            <PopoverContent className="w-72 p-0">
                 <Command>
                     <CommandInput
-                        placeholder="Search owner..."
-                        className="h-9 "
+                        placeholder="Buscar responsable..."
+                        className="h-9"
                     />
                     <CommandList>
-                        <CommandEmpty>No owner found.</CommandEmpty>
+                        <CommandEmpty>No se encontró responsable.</CommandEmpty>
                         <CommandGroup>
-                            {users?.map((owner) => (
+                            {users?.map((user) => (
                                 <CommandItem
-                                    value={`${owner.profile.first_name} ${owner.profile.last_name}`}
-                                    key={owner.user_id}
+                                    value={`${user.profile.first_name} ${user.profile.last_name}`}
+                                    key={user.user_id}
                                     onSelect={() => {
-                                        form.setValue("owner_id", owner.user_id)
+                                        form.setValue(
+                                            nameKey,
+                                            user.user_id as PathValue<
+                                                TForm,
+                                                Path<TForm>
+                                            >,
+                                        )
                                         setOpen(false)
                                     }}
                                 >
-                                    {`${owner.profile.first_name} ${owner.profile.last_name}`}
+                                    {`${user.profile.first_name} ${user.profile.last_name}`}
                                     <Check
                                         className={cn(
                                             "ml-auto h-4 w-4",
-                                            owner.user_id === field.value
+                                            user.user_id === field.value
                                                 ? "opacity-100"
                                                 : "opacity-0",
                                         )}

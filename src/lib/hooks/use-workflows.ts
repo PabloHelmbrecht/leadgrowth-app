@@ -6,6 +6,7 @@ import type {
     Tables,
     TablesInsert,
     Enums,
+    Json,
 } from "../supabase/database.types"
 import { useToast } from "~/components/ui/use-toast"
 
@@ -1284,7 +1285,7 @@ export function useWorkflows({
             const { error } = await client.from("nodes").insert({
                 id: nodeId,
                 workflow_id: effectiveWorkflowId,
-                data: JSON.stringify(data),
+                data: data as Json,
                 type: type ?? "placeholder",
                 position_x: position?.x ?? 0,
                 position_y: position?.y ?? 0,
@@ -1484,7 +1485,7 @@ export function useWorkflows({
                 throw new Error("Falta nodeId para editar data del nodo.")
             const { error } = await client
                 .from("nodes")
-                .update({ data: JSON.stringify(params.data) })
+                .update({ data: params.data as Json })
                 .eq("id", effectiveNodeId)
             if (error) throw error
             return {
@@ -1897,7 +1898,7 @@ export function useWorkflows({
                     type: node.type ?? "placeholder",
                     position_x: node.position.x,
                     position_y: node.position.y,
-                    data: JSON.stringify(node.data),
+                    data: node.data as Json,
                 })
             })
 

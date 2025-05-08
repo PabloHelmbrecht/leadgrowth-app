@@ -361,12 +361,7 @@ function TriggersList({
             <div>
                 Run the workflow when any of the following events occur...
             </div>
-            <div className="flex w-full flex-col items-start gap-4 rounded-md bg-slate-100 p-2">
-                {getTriggerDescription({
-                    type: "manualActivation",
-                    parameters: {},
-                })}
-            </div>
+
             {triggers && triggers.length > 0 ? (
                 triggers.map((trigger, key) => (
                     <div

@@ -265,17 +265,19 @@ export function useCompanies({
 
     // Eliminar contacto
     const removeMutation = useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (idOrIds: string | string[]) => {
             if (!teamId) throw new Error("Falta teamId para eliminar empresa.")
+            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds]
             const { error } = await client
                 .from("companies")
                 .delete()
-                .eq("id", id)
+                .in("id", ids)
             if (error) throw error
-            return id
+            return ids
         },
-        onMutate: async (id: string) => {
+        onMutate: async (idOrIds: string | string[]) => {
             if (!teamId) return
+            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds]
             await queryClient.cancelQueries({
                 queryKey: getCompaniesQueryKey({ teamId }),
             })
@@ -286,14 +288,14 @@ export function useCompanies({
                 getCompaniesQueryKey({ teamId }),
                 (old) => {
                     if (!old) return old
-                    return old.filter((company) => company.id !== id)
+                    return old.filter((company) => !ids.includes(company.id))
                 },
             )
             return { previous }
         },
         onError: (
             err: unknown,
-            _id,
+            _idOrIds,
             context: { previous?: Company[] } | undefined,
         ) => {
             if (context?.previous) {

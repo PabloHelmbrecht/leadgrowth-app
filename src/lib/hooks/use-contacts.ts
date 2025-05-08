@@ -291,17 +291,19 @@ export function useContacts({
 
     // Eliminar contacto
     const removeMutation = useMutation({
-        mutationFn: async (id: string) => {
+        mutationFn: async (idOrIds: string | string[]) => {
             if (!teamId) throw new Error("Falta teamId para eliminar contacto.")
+            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds]
             const { error } = await client
                 .from("contacts")
                 .delete()
-                .eq("id", id)
+                .in("id", ids)
             if (error) throw error
-            return id
+            return ids
         },
-        onMutate: async (id: string) => {
+        onMutate: async (idOrIds: string | string[]) => {
             if (!teamId) return
+            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds]
             await queryClient.cancelQueries({
                 queryKey: getContactsQueryKey({ teamId }),
             })
@@ -312,14 +314,14 @@ export function useContacts({
                 getContactsQueryKey({ teamId }),
                 (old) => {
                     if (!old) return old
-                    return old.filter((contact) => contact.id !== id)
+                    return old.filter((contact) => !ids.includes(contact.id))
                 },
             )
             return { previous }
         },
         onError: (
             err: unknown,
-            _id,
+            _idOrIds,
             context: { previous?: Contact[] } | undefined,
         ) => {
             if (context?.previous) {
@@ -347,11 +349,8 @@ export function useContacts({
     // --- MUTACIONES DE ACCIÓN (React Query) ---
     // Agregar contacto a un workflow
     /**
-     * Agrega un contacto a un workflow.
-     * @param params.contactId ID del contacto
-     * @param params.workflowId ID del workflow
-     * @param params.currentStep ID del nodo inicial del workflow (obligatorio)
-     * @param params.status Estado del contacto en el workflow (por defecto 'active')
+     * Agrega uno o varios contactos a uno o varios workflows.
+     * Si no se pasa currentStep, busca el primer nodo de tipo 'trigger' del workflow.
      */
     const addToWorkflowMutation = useMutation({
         mutationFn: async ({
@@ -360,9 +359,9 @@ export function useContacts({
             currentStep,
             status = "active",
         }: {
-            contactId: string
-            workflowId: string
-            currentStep: string
+            contactId: string | string[]
+            workflowId: string | string[]
+            currentStep?: string
             status?:
                 | "active"
                 | "paused"
@@ -375,17 +374,63 @@ export function useContacts({
                 throw new Error(
                     "Falta teamId para agregar contacto a workflow.",
                 )
-            if (!contactId || !workflowId || !currentStep)
-                throw new Error(
-                    "Faltan IDs obligatorios para la relación contacto-workflow.",
-                )
-            const { error } = await client.from("executions").insert({
-                contact_id: contactId,
-                workflow_id: workflowId,
-                current_step: currentStep,
-                status,
-            })
-            if (error) throw error
+            const contactIds = Array.isArray(contactId)
+                ? contactId
+                : [contactId]
+            const workflowIds = Array.isArray(workflowId)
+                ? workflowId
+                : [workflowId]
+
+            // Buscar currentStep si no se pasa
+            const stepMap: Record<string, string> = {}
+            if (!currentStep) {
+                // Buscar el nodo trigger para cada workflow
+                const { data: nodes, error } = await client
+                    .from("nodes")
+                    .select("id, type, workflow_id")
+                    .in("workflow_id", workflowIds)
+                if (error) throw error
+                for (const wfId of workflowIds) {
+                    const triggerNode = nodes?.find(
+                        (n) => n.workflow_id === wfId && n.type === "trigger",
+                    )
+                    if (!triggerNode) {
+                        toast({
+                            title: "No se encontró nodo trigger",
+                            description: `No hay nodo de tipo trigger en el workflow ${wfId}`,
+                            variant: "destructive",
+                        })
+                        // Si falta alguno, abortar todo
+                        throw new Error(
+                            `No hay nodo trigger en el workflow ${wfId}`,
+                        )
+                    }
+                    stepMap[wfId] = triggerNode.id
+                }
+            }
+
+            // Generar inserciones
+            const inserts = []
+            for (const cId of contactIds) {
+                for (const wId of workflowIds) {
+                    const step = currentStep ?? stepMap[wId]
+                    if (!step) {
+                        throw new Error(
+                            `No se pudo determinar el current_step para el workflow ${wId}`,
+                        )
+                    }
+                    inserts.push({
+                        contact_id: cId,
+                        workflow_id: wId,
+                        current_step: step,
+                        status,
+                    })
+                }
+            }
+            const { error: insertError } = await client
+                .from("executions")
+                .insert(inserts)
+            if (insertError) throw insertError
         },
         onError: (err: unknown) => {
             toast({
@@ -400,32 +445,41 @@ export function useContacts({
     })
 
     /**
-     * Remueve un contacto de un workflow.
-     * @param params.contactId ID del contacto
-     * @param params.workflowId ID del workflow
+     * Remueve uno o varios contactos de uno o varios workflows.
      */
     const removeFromWorkflowMutation = useMutation({
         mutationFn: async ({
             contactId,
             workflowId,
         }: {
-            contactId: string
-            workflowId: string
+            contactId: string | string[]
+            workflowId: string | string[]
         }) => {
             if (!teamId)
                 throw new Error(
                     "Falta teamId para remover contacto de workflow.",
                 )
-            if (!contactId || !workflowId)
-                throw new Error(
-                    "Faltan IDs para la relación contacto-workflow.",
-                )
-            const { error } = await client
-                .from("executions")
-                .delete()
-                .eq("contact_id", contactId)
-                .eq("workflow_id", workflowId)
-            if (error) throw error
+            const contactIds = Array.isArray(contactId)
+                ? contactId
+                : [contactId]
+            const workflowIds = Array.isArray(workflowId)
+                ? workflowId
+                : [workflowId]
+            const deletePromises = []
+            for (const cId of contactIds) {
+                for (const wId of workflowIds) {
+                    deletePromises.push(
+                        client
+                            .from("executions")
+                            .delete()
+                            .eq("contact_id", cId)
+                            .eq("workflow_id", wId),
+                    )
+                }
+            }
+            const results = await Promise.all(deletePromises)
+            const errors = results.map((r) => r.error).filter(Boolean)
+            if (errors.length > 0) throw errors[0]
         },
         onError: (err: unknown) => {
             toast({

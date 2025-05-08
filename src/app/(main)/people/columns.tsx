@@ -20,6 +20,10 @@ import { EventsColumn } from "~/components/layout/table/columns/events-column"
 import { BadgeColumn } from "~/components/layout/table/columns/badge-column"
 import { SettingsColumn } from "~/components/layout/table/columns/settings-column"
 
+//Row Actions
+import { DeleteContactAction } from "./_row-actions/delete-contact-action"
+import { AddToSequenceAction } from "./_row-actions/add-to-sequence-action"
+
 export const useColumns = () => {
     const { data: customFields } = useCustomFields({
         entityType: "contact",
@@ -87,7 +91,21 @@ export const useColumns = () => {
         {
             id: "actions",
             cell: (cellContext: CellContext<Contact, unknown>) => (
-                <SettingsColumn actions={[]} {...cellContext} />
+                <SettingsColumn
+                    actions={[
+                        {
+                            name: "Add workflow",
+                            type: "dialog",
+                            component: AddToSequenceAction,
+                        },
+                        {
+                            name: "Delete",
+                            type: "alert",
+                            component: DeleteContactAction,
+                        },
+                    ]}
+                    {...cellContext}
+                />
             ),
         },
     ]
